@@ -11,7 +11,7 @@ export interface StreamDeckButtonControlDefinitionBase extends StreamDeckControl
 	type: 'button'
 
 	index: number
-	hidIndex: number
+	hidId: number
 
 	feedbackType: 'none' | 'lcd'
 }

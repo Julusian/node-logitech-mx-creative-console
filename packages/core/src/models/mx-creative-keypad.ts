@@ -31,7 +31,7 @@ export function mxCreativeKeypadFactory(device: HIDDevice, options: Required<Ope
 		properties: new Gen2PropertiesService(device),
 		buttonsLcd: new DefaultButtonsLcdService(
 			new StreamdeckDefaultImageWriter(),
-			new JpegButtonLcdImagePacker(options.encodeJPEG, true),
+			new JpegButtonLcdImagePacker(options.encodeJPEG),
 			device,
 			keypadProperties,
 		),

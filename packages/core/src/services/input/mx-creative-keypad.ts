@@ -3,41 +3,76 @@ import type { MXCreativeConsoleInputService } from './interface.js'
 import type { MXCreativeConsoleEvents } from '../../types.js'
 import type { CallbackHook } from '../callback-hook.js'
 import type { StreamDeckButtonControlDefinition } from '../../controlDefinition.js'
+import { uint8ArrayToDataView } from '../../util.js'
 
 export class KeypadInputService implements MXCreativeConsoleInputService {
 	protected readonly deviceProperties: Readonly<StreamDeckProperties>
-	readonly #keyState: boolean[]
 	readonly #eventSource: CallbackHook<MXCreativeConsoleEvents>
+
+	readonly #buttonControlsByEncoded = new Map<number, StreamDeckButtonControlDefinition>()
+	readonly #pushedButtons = new Set<number>()
 
 	constructor(deviceProperties: Readonly<StreamDeckProperties>, eventSource: CallbackHook<MXCreativeConsoleEvents>) {
 		this.deviceProperties = deviceProperties
 		this.#eventSource = eventSource
 
-		const maxButtonIndex = this.deviceProperties.CONTROLS.filter(
-			(control): control is StreamDeckButtonControlDefinition => control.type === 'button',
-		).map((control) => control.index)
-		this.#keyState = new Array<boolean>(Math.max(-1, ...maxButtonIndex) + 1).fill(false)
+		for (const control of this.deviceProperties.CONTROLS) {
+			if (control.type !== 'button') continue
+
+			this.#buttonControlsByEncoded.set(control.hidId, control)
+		}
 	}
 
 	handleInput(data: Uint8Array): void {
 		if (data[2] === 0x2b) return // Ignore acks to drawing
 
 		console.log('got', data)
-		const dataOffset = 0
 
-		for (const control of this.deviceProperties.CONTROLS) {
-			if (control.type !== 'button') continue
+		const dataView = uint8ArrayToDataView(data)
 
-			const keyPressed = Boolean(data[dataOffset + control.hidIndex])
-			const stateChanged = keyPressed !== this.#keyState[control.index]
-			if (stateChanged) {
-				this.#keyState[control.index] = keyPressed
-				if (keyPressed) {
-					this.#eventSource.emit('down', control)
-				} else {
-					this.#eventSource.emit('up', control)
-				}
-			}
+		this.#handleButtonInput(dataView)
+	}
+
+	#handleButtonInput(view: DataView): void {
+		if (
+			view.getUint8(0) !== 0xff ||
+			view.getUint8(1) !== 0x02 ||
+			view.getUint8(2) !== 0x00 ||
+			view.getUint8(4) !== 0x01
+		)
+			return
+
+		const pushedControls: StreamDeckButtonControlDefinition[] = []
+		const pushedControlIds = new Set<number>()
+
+		for (let i = 5; i < view.byteLength; i += 1) {
+			const value = view.getUint16(i, true)
+			if (value === 0) break
+
+			const control = this.#buttonControlsByEncoded.get(value)
+			if (!control) continue
+
+			pushedControlIds.add(control.hidId)
+			pushedControls.push(control)
+		}
+
+		// Check for key ups
+		for (const keyId of this.#pushedButtons) {
+			// Check if still pressed
+			if (pushedControlIds.has(keyId)) continue
+
+			const control = this.#buttonControlsByEncoded.get(keyId)
+			if (control) this.#eventSource.emit('up', control)
+
+			this.#pushedButtons.delete(keyId)
+		}
+
+		for (const control of pushedControls) {
+			// Check if already pressed
+			if (this.#pushedButtons.has(control.hidId)) continue
+
+			this.#pushedButtons.add(control.hidId)
+			this.#eventSource.emit('down', control)
 		}
 	}
 }

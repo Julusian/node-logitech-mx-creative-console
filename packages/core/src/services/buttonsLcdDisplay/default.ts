@@ -242,6 +242,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 				}),
 			)
 		}
+
 		await Promise.all(ps)
 	}
 

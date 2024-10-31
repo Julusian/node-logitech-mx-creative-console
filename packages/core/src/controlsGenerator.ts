@@ -14,14 +14,14 @@ export function generateButtonsGrid(
 	for (let row = 0; row < height; row++) {
 		for (let column = 0; column < width; column++) {
 			const index = row * width + column
-			const hidIndex = index
+			const hidIndex = index + 1
 
 			controls.push({
 				type: 'button',
 				row,
 				column: column + columnOffset,
 				index,
-				hidIndex,
+				hidId: hidIndex,
 				feedbackType: 'lcd',
 				pixelSize,
 				pixelPosition: {

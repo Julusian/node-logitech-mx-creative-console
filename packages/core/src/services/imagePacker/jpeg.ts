@@ -5,11 +5,9 @@ import type { Dimension } from '../../id.js'
 
 export class JpegButtonLcdImagePacker implements ButtonLcdImagePacker {
 	readonly #encodeJPEG: EncodeJPEGHelper
-	readonly #xyFlip: boolean
 
-	constructor(encodeJPEG: EncodeJPEGHelper, xyFlip: boolean) {
+	constructor(encodeJPEG: EncodeJPEGHelper) {
 		this.#encodeJPEG = encodeJPEG
-		this.#xyFlip = xyFlip
 	}
 
 	public async convertPixelBuffer(
@@ -20,7 +18,7 @@ export class JpegButtonLcdImagePacker implements ButtonLcdImagePacker {
 		const byteBuffer = transformImageBuffer(
 			sourceBuffer,
 			sourceOptions,
-			{ colorMode: 'rgba', xFlip: this.#xyFlip, yFlip: this.#xyFlip },
+			{ colorMode: 'rgba' },
 			0,
 			targetSize.width,
 			targetSize.height,
