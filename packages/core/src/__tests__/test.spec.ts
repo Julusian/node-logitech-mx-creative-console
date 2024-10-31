@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 
 import { readFixtureJSON } from './helpers.js'
-import type { StreamDeck } from '../index.js'
+import type { MXCreativeConsole } from '../index.js'
 import { DeviceModelId, DEVICE_MODELS } from '../index.js'
 import type { OpenStreamDeckOptions, EncodeJPEGHelper } from '../models/base.js'
 import { DummyHID } from './hid.js'
 
-function openStreamDeck(path: string, deviceModel: DeviceModelId, userOptions?: OpenStreamDeckOptions): StreamDeck {
+function openStreamDeck(
+	path: string,
+	deviceModel: DeviceModelId,
+	userOptions?: OpenStreamDeckOptions,
+): MXCreativeConsole {
 	const encodeJpegMock: jest.MockedFunction<EncodeJPEGHelper> = jest.fn((_b: Uint8Array, _w: number, _h: number) => {
 		throw new Error('Not implemented')
 	})
@@ -30,8 +34,8 @@ function openStreamDeck(path: string, deviceModel: DeviceModelId, userOptions?: 
 }
 
 function runForDevice(path: string, model: DeviceModelId, supportsRgbKeyFill: boolean): void {
-	let streamDeck: StreamDeck
-	function getDevice(sd?: StreamDeck): DummyHID {
+	let streamDeck: MXCreativeConsole
+	function getDevice(sd?: MXCreativeConsole): DummyHID {
 		return (sd || (streamDeck as any)).device
 	}
 
@@ -376,8 +380,8 @@ function runForDevice(path: string, model: DeviceModelId, supportsRgbKeyFill: bo
 
 describe('StreamDeck', () => {
 	const devicePath = 'some_random_path_here'
-	let streamDeck: StreamDeck
-	function getDevice(sd?: StreamDeck): DummyHID {
+	let streamDeck: MXCreativeConsole
+	function getDevice(sd?: MXCreativeConsole): DummyHID {
 		return (sd || (streamDeck as any)).device
 	}
 
@@ -487,8 +491,8 @@ describe('StreamDeck', () => {
 
 describe('StreamDeck Mini', () => {
 	const devicePath = 'some_path_for_mini'
-	let streamDeck: StreamDeck
-	function getDevice(sd?: StreamDeck): DummyHID {
+	let streamDeck: MXCreativeConsole
+	function getDevice(sd?: MXCreativeConsole): DummyHID {
 		return (sd || (streamDeck as any)).device
 	}
 
@@ -557,8 +561,8 @@ describe('StreamDeck Mini', () => {
 
 describe('StreamDeck XL', () => {
 	const devicePath = 'some_path_for_xl'
-	let streamDeck: StreamDeck
-	function getDevice(sd?: StreamDeck): DummyHID {
+	let streamDeck: MXCreativeConsole
+	function getDevice(sd?: MXCreativeConsole): DummyHID {
 		return (sd || (streamDeck as any)).device
 	}
 
@@ -686,8 +690,8 @@ describe('StreamDeck XL', () => {
 
 describe('StreamDeck Original V2', () => {
 	const devicePath = 'some_path_for_v2'
-	let streamDeck: StreamDeck
-	function getDevice(sd?: StreamDeck): DummyHID {
+	let streamDeck: MXCreativeConsole
+	function getDevice(sd?: MXCreativeConsole): DummyHID {
 		return (sd || (streamDeck as any)).device
 	}
 

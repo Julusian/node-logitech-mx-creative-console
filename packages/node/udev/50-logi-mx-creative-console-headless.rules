@@ -1,0 +1,2 @@
+SUBSYSTEM=="input", GROUP="input", MODE="0660", GROUP="plugdev"
+KERNEL=="hidraw*", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c354", MODE="660", GROUP="plugdev"

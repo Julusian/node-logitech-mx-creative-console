@@ -1,4 +1,4 @@
-import type { KeyIndex, StreamDeck, StreamDeckButtonControlDefinition } from '@logi-mx-creative-console/core'
+import type { KeyIndex, MXCreativeConsole, StreamDeckButtonControlDefinition } from '@logi-mx-creative-console/core'
 import { StreamDeckProxy } from '@logi-mx-creative-console/core'
 import type { WebHIDDevice } from './hid-device.js'
 
@@ -9,7 +9,7 @@ import type { WebHIDDevice } from './hid-device.js'
 export class StreamDeckWeb extends StreamDeckProxy {
 	private readonly hid: WebHIDDevice
 
-	constructor(device: StreamDeck, hid: WebHIDDevice) {
+	constructor(device: MXCreativeConsole, hid: WebHIDDevice) {
 		super(device)
 		this.hid = hid
 	}

@@ -26,14 +26,14 @@ export interface LcdPosition {
 	y: number
 }
 
-export type StreamDeckEvents = {
+export type MXCreativeConsoleEvents = {
 	down: [control: StreamDeckButtonControlDefinition | StreamDeckEncoderControlDefinition]
 	up: [control: StreamDeckButtonControlDefinition | StreamDeckEncoderControlDefinition]
 	error: [err: unknown]
 	rotate: [control: StreamDeckEncoderControlDefinition, amount: number]
 }
 
-export interface StreamDeck extends EventEmitter<StreamDeckEvents> {
+export interface MXCreativeConsole extends EventEmitter<MXCreativeConsoleEvents> {
 	/** List of the controls on this streamdeck */
 	readonly CONTROLS: Readonly<StreamDeckControlDefinition[]>
 

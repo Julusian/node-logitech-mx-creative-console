@@ -1,15 +1,15 @@
 import type { StreamDeckProperties } from '../../models/base.js'
 import type { StreamDeckInputService } from './interface.js'
-import type { StreamDeckEvents } from '../../types.js'
+import type { MXCreativeConsoleEvents } from '../../types.js'
 import type { CallbackHook } from '../callback-hook.js'
 import type { StreamDeckButtonControlDefinition } from '../../controlDefinition.js'
 
 export class ButtonOnlyInputService implements StreamDeckInputService {
 	protected readonly deviceProperties: Readonly<StreamDeckProperties>
 	readonly #keyState: boolean[]
-	readonly #eventSource: CallbackHook<StreamDeckEvents>
+	readonly #eventSource: CallbackHook<MXCreativeConsoleEvents>
 
-	constructor(deviceProperties: Readonly<StreamDeckProperties>, eventSource: CallbackHook<StreamDeckEvents>) {
+	constructor(deviceProperties: Readonly<StreamDeckProperties>, eventSource: CallbackHook<MXCreativeConsoleEvents>) {
 		this.deviceProperties = deviceProperties
 		this.#eventSource = eventSource
 

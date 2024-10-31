@@ -1,4 +1,4 @@
-import type { OpenStreamDeckOptions, StreamDeck } from '@logi-mx-creative-console/core'
+import type { OpenStreamDeckOptions, MXCreativeConsole } from '@logi-mx-creative-console/core'
 import { DEVICE_MODELS, VENDOR_ID } from '@logi-mx-creative-console/core'
 import * as HID from 'node-hid'
 import { NodeHIDDevice, StreamDeckDeviceInfo } from './hid-device.js'
@@ -8,7 +8,7 @@ export {
 	VENDOR_ID,
 	DeviceModelId,
 	KeyIndex,
-	StreamDeck,
+	MXCreativeConsole as StreamDeck,
 	LcdPosition,
 	Dimension,
 	StreamDeckControlDefinitionBase,
@@ -72,7 +72,10 @@ export async function getStreamDeckInfo(path: string): Promise<StreamDeckDeviceI
  * @param devicePath The path of the device to open.
  * @param userOptions Options to customise the device behvaiour
  */
-export async function openStreamDeck(devicePath: string, userOptions?: OpenStreamDeckOptionsNode): Promise<StreamDeck> {
+export async function openStreamDeck(
+	devicePath: string,
+	userOptions?: OpenStreamDeckOptionsNode,
+): Promise<MXCreativeConsole> {
 	// Clone the options, to ensure they dont get changed
 	// const jpegOptions: JPEGEncodeOptions | undefined = userOptions?.jpegOptions
 	// 	? { ...userOptions.jpegOptions }

@@ -5,8 +5,8 @@ import type {
 	FillImageOptions,
 	FillPanelDimensionsOptions,
 	FillPanelOptions,
-	StreamDeck,
-	StreamDeckEvents,
+	MXCreativeConsole,
+	MXCreativeConsoleEvents,
 } from '../types.js'
 import type { ButtonsLcdDisplayService } from '../services/buttonsLcdDisplay/interface.js'
 import type { StreamDeckButtonControlDefinition, StreamDeckControlDefinition } from '../controlDefinition.js'
@@ -43,13 +43,13 @@ export type StreamDeckProperties = Readonly<{
 
 export interface StreamDeckServicesDefinition {
 	deviceProperties: StreamDeckProperties
-	events: CallbackHook<StreamDeckEvents>
+	events: CallbackHook<MXCreativeConsoleEvents>
 	properties: PropertiesService
 	buttonsLcd: ButtonsLcdDisplayService
 	inputService: StreamDeckInputService
 }
 
-export class StreamDeckBase extends EventEmitter<StreamDeckEvents> implements StreamDeck {
+export class StreamDeckBase extends EventEmitter<MXCreativeConsoleEvents> implements MXCreativeConsole {
 	get CONTROLS(): Readonly<StreamDeckControlDefinition[]> {
 		return this.deviceProperties.CONTROLS
 	}

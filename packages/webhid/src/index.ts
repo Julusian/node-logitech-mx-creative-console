@@ -1,6 +1,6 @@
 /* eslint-disable n/no-unsupported-features/node-builtins */
 
-import type { OpenStreamDeckOptions, StreamDeck } from '@logi-mx-creative-console/core'
+import type { OpenStreamDeckOptions, MXCreativeConsole } from '@logi-mx-creative-console/core'
 import { DEVICE_MODELS, VENDOR_ID } from '@logi-mx-creative-console/core'
 import { WebHIDDevice } from './hid-device.js'
 import { encodeJPEG } from './jpeg.js'
@@ -10,7 +10,7 @@ export {
 	VENDOR_ID,
 	DeviceModelId,
 	KeyIndex,
-	StreamDeck,
+	MXCreativeConsole as StreamDeck,
 	LcdPosition,
 	Dimension,
 	StreamDeckControlDefinitionBase,
@@ -82,7 +82,7 @@ export async function openDevice(
 		}
 
 		const browserHid = new WebHIDDevice(browserDevice)
-		const device: StreamDeck = model.factory(browserHid, options || {})
+		const device: MXCreativeConsole = model.factory(browserHid, options || {})
 		return new StreamDeckWeb(device, browserHid)
 	} catch (e) {
 		await browserDevice.close().catch(() => null) // Suppress error

@@ -1,15 +1,15 @@
 import type { StreamDeckProperties } from '../../models/base.js'
-import type { StreamDeckEvents } from '../../types.js'
+import type { MXCreativeConsoleEvents } from '../../types.js'
 import type { CallbackHook } from '../callback-hook.js'
 import type { StreamDeckEncoderControlDefinition } from '../../controlDefinition.js'
 import { ButtonOnlyInputService } from './gen1.js'
 
 export class Gen2InputService extends ButtonOnlyInputService {
-	readonly #eventSource: CallbackHook<StreamDeckEvents>
+	readonly #eventSource: CallbackHook<MXCreativeConsoleEvents>
 	readonly #encoderControls: Readonly<StreamDeckEncoderControlDefinition[]>
 	readonly #encoderState: boolean[]
 
-	constructor(deviceProperties: Readonly<StreamDeckProperties>, eventSource: CallbackHook<StreamDeckEvents>) {
+	constructor(deviceProperties: Readonly<StreamDeckProperties>, eventSource: CallbackHook<MXCreativeConsoleEvents>) {
 		super(deviceProperties, eventSource)
 
 		this.#eventSource = eventSource

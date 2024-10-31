@@ -1,9 +1,9 @@
-import type { StreamDeck } from '@logi-mx-creative-console/core'
+import type { MXCreativeConsole } from '@logi-mx-creative-console/core'
 import { StreamDeckProxy } from '@logi-mx-creative-console/core'
 
 export class StreamDeckNode extends StreamDeckProxy {
 	constructor(
-		device: StreamDeck,
+		device: MXCreativeConsole,
 		private readonly resetToLogoOnClose: boolean,
 	) {
 		super(device)
