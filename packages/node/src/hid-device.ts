@@ -5,7 +5,7 @@ import type { HIDAsync, Device as NodeHIDDeviceInfo } from 'node-hid'
 /**
  * Information about a found streamdeck
  */
-export interface StreamDeckDeviceInfo {
+export interface MXCreativeConsoleDeviceInfo {
 	/** The model of the device */
 	model: DeviceModelId
 	/** The connected path of the device in the usb tree */

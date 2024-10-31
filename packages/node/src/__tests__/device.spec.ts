@@ -10,14 +10,14 @@ const hidOpenMock = jest.fn<Promise<HIDAsync>, [path: string]>()
 HIDAsync.open = hidOpenMock as any
 
 // Must be required after we register a mock for `node-hid`.
-import { getStreamDeckInfo, listStreamDecks, openStreamDeck } from '../index.js'
+import { getMXCreativeConsoleInfo, listMXCreativeConsoleDevices, openMxCreativeConsole } from '../index.js'
 import { VENDOR_ID } from '@logi-mx-creative-console/core'
 
 describe('StreamDeck Devices', () => {
 	test('no devices', async () => {
 		mocked(devicesAsync).mockImplementation(async () => [])
 
-		await expect(listStreamDecks()).resolves.toEqual([])
+		await expect(listMXCreativeConsoleDevices()).resolves.toEqual([])
 	})
 	test('some devices', async () => {
 		mocked(devicesAsync).mockImplementation(async () => [
@@ -60,7 +60,7 @@ describe('StreamDeck Devices', () => {
 			},
 		])
 
-		await expect(listStreamDecks()).resolves.toEqual([
+		await expect(listMXCreativeConsoleDevices()).resolves.toEqual([
 			{
 				model: 'original',
 				path: 'path-original',
@@ -97,10 +97,10 @@ describe('StreamDeck Devices', () => {
 			},
 		])
 
-		const info = await getStreamDeckInfo('not-a-real-path')
+		const info = await getMXCreativeConsoleInfo('not-a-real-path')
 		expect(info).toBeFalsy()
 
-		const info2 = await getStreamDeckInfo('path-bad-product')
+		const info2 = await getMXCreativeConsoleInfo('path-bad-product')
 		expect(info2).toBeFalsy()
 	})
 	test('info for good path', async () => {
@@ -123,7 +123,7 @@ describe('StreamDeck Devices', () => {
 			},
 		])
 
-		const info2 = await getStreamDeckInfo('path-original2')
+		const info2 = await getMXCreativeConsoleInfo('path-original2')
 		expect(info2).toEqual({
 			model: 'original',
 			path: 'path-original2',
@@ -143,7 +143,9 @@ describe('StreamDeck Devices', () => {
 				interface: 0,
 			}
 		})
-		await expect(openStreamDeck('not-a-real-path')).rejects.toThrow(new Error(`Stream Deck is of unexpected type.`))
+		await expect(openMxCreativeConsole('not-a-real-path')).rejects.toThrow(
+			new Error(`Stream Deck is of unexpected type.`),
+		)
 		expect(hidOpenMock).toHaveBeenLastCalledWith('not-a-real-path')
 
 		// bad vendorId
@@ -155,7 +157,7 @@ describe('StreamDeck Devices', () => {
 				interface: 0,
 			}
 		})
-		await expect(openStreamDeck('path-bad-product')).rejects.toThrow(
+		await expect(openMxCreativeConsole('path-bad-product')).rejects.toThrow(
 			new Error(`Stream Deck is of unexpected type.`),
 		)
 		expect(hidOpenMock).toHaveBeenLastCalledWith('path-bad-product')
@@ -173,7 +175,7 @@ describe('StreamDeck Devices', () => {
 				interface: 0,
 			}
 		})
-		await expect(openStreamDeck('not-a-real-path')).resolves.toBeTruthy()
+		await expect(openMxCreativeConsole('not-a-real-path')).resolves.toBeTruthy()
 		expect(hidOpenMock).toHaveBeenLastCalledWith('not-a-real-path')
 	})
 })

@@ -49,7 +49,7 @@
 		"udev"
 	],
 	"engines": {
-		"node": ">=18.18"
+		"node": ">=20.18"
 	},
 	"dependencies": {
 		"@logi-mx-creative-console/core": "0.1.0",

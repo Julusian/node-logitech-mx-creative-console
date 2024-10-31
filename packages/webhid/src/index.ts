@@ -4,7 +4,7 @@ import type { OpenStreamDeckOptions, MXCreativeConsole } from '@logi-mx-creative
 import { DEVICE_MODELS, VENDOR_ID } from '@logi-mx-creative-console/core'
 import { WebHIDDevice } from './hid-device.js'
 import { encodeJPEG } from './jpeg.js'
-import { StreamDeckWeb } from './wrapper.js'
+import { MXCreativeConsoleWeb } from './wrapper.js'
 
 export {
 	VENDOR_ID,
@@ -22,13 +22,13 @@ export {
 	StreamDeckControlDefinition,
 	OpenStreamDeckOptions,
 } from '@logi-mx-creative-console/core'
-export { StreamDeckWeb } from './wrapper.js'
+export { MXCreativeConsoleWeb as StreamDeckWeb } from './wrapper.js'
 
 /**
  * Request the user to select some streamdecks to open
  * @param userOptions Options to customise the device behvaiour
  */
-export async function requestStreamDecks(options?: OpenStreamDeckOptions): Promise<StreamDeckWeb[]> {
+export async function requestStreamDecks(options?: OpenStreamDeckOptions): Promise<MXCreativeConsoleWeb[]> {
 	// TODO - error handling
 	const browserDevices = await navigator.hid.requestDevice({
 		filters: [
@@ -46,7 +46,7 @@ export async function requestStreamDecks(options?: OpenStreamDeckOptions): Promi
  * The browser remembers what the user previously allowed your site to access, and this will open those without the request dialog
  * @param options Options to customise the device behvaiour
  */
-export async function getStreamDecks(options?: OpenStreamDeckOptions): Promise<StreamDeckWeb[]> {
+export async function getStreamDecks(options?: OpenStreamDeckOptions): Promise<MXCreativeConsoleWeb[]> {
 	const browserDevices = await navigator.hid.getDevices()
 	const validDevices = browserDevices.filter((d) => d.vendorId === VENDOR_ID)
 
@@ -54,7 +54,7 @@ export async function getStreamDecks(options?: OpenStreamDeckOptions): Promise<S
 		validDevices.map(async (dev) => openDevice(dev, options).catch((_) => null)), // Ignore failures
 	)
 
-	return resultDevices.filter((v): v is StreamDeckWeb => !!v)
+	return resultDevices.filter((v): v is MXCreativeConsoleWeb => !!v)
 }
 
 /**
@@ -65,7 +65,7 @@ export async function getStreamDecks(options?: OpenStreamDeckOptions): Promise<S
 export async function openDevice(
 	browserDevice: HIDDevice,
 	userOptions?: OpenStreamDeckOptions,
-): Promise<StreamDeckWeb> {
+): Promise<MXCreativeConsoleWeb> {
 	const model = DEVICE_MODELS.find(
 		(m) => browserDevice.vendorId === VENDOR_ID && m.productIds.includes(browserDevice.productId),
 	)
@@ -83,7 +83,7 @@ export async function openDevice(
 
 		const browserHid = new WebHIDDevice(browserDevice)
 		const device: MXCreativeConsole = model.factory(browserHid, options || {})
-		return new StreamDeckWeb(device, browserHid)
+		return new MXCreativeConsoleWeb(device, browserHid)
 	} catch (e) {
 		await browserDevice.close().catch(() => null) // Suppress error
 

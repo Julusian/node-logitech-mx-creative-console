@@ -10,7 +10,7 @@ export * from './id.js'
 export * from './controlDefinition.js'
 export type { HIDDevice, HIDDeviceInfo, HIDDeviceEvents } from './hid-device.js'
 export type { OpenStreamDeckOptions } from './models/base.js'
-export { MXCreativeConsoleProxy as StreamDeckProxy } from './proxy.js'
+export { MXCreativeConsoleProxy } from './proxy.js'
 export type { PropertiesService } from './services/properties/interface.js'
 export { uint8ArrayToDataView } from './util.js'
 

@@ -1,12 +1,12 @@
 import type { KeyIndex, MXCreativeConsole, StreamDeckButtonControlDefinition } from '@logi-mx-creative-console/core'
-import { StreamDeckProxy } from '@logi-mx-creative-console/core'
+import { MXCreativeConsoleProxy } from '@logi-mx-creative-console/core'
 import type { WebHIDDevice } from './hid-device.js'
 
 /**
  * A StreamDeck instance.
  * This is an extended variant of the class, to provide some more web friendly helpers, such as accepting a canvas
  */
-export class StreamDeckWeb extends StreamDeckProxy {
+export class MXCreativeConsoleWeb extends MXCreativeConsoleProxy {
 	private readonly hid: WebHIDDevice
 
 	constructor(device: MXCreativeConsole, hid: WebHIDDevice) {
