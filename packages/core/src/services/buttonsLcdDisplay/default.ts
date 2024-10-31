@@ -97,24 +97,18 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 				if (control.type !== 'button') continue
 
 				switch (control.feedbackType) {
-					case 'rgb':
-						ps.push(this.sendKeyRgb(control.hidIndex, 0, 0, 0))
-						break
-					case 'lcd':
-						if (this.#deviceProperties.SUPPORTS_RGB_KEY_FILL) {
-							ps.push(this.sendKeyRgb(control.hidIndex, 0, 0, 0))
-						} else {
-							const pixels = new Uint8Array(control.pixelSize.width * control.pixelSize.height * 3)
-							ps.push(
-								this.fillImageRangeControl(control, pixels, {
-									format: 'rgb',
-									offset: 0,
-									stride: control.pixelSize.width * 3,
-								}),
-							)
-						}
+					case 'lcd': {
+						const pixels = new Uint8Array(control.pixelSize.width * control.pixelSize.height * 3)
+						ps.push(
+							this.fillImageRangeControl(control, pixels, {
+								format: 'rgb',
+								offset: 0,
+								stride: control.pixelSize.width * 3,
+							}),
+						)
 
 						break
+					}
 					case 'none':
 						// Do nothing
 						break
@@ -132,16 +126,12 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 		)
 		if (!control || control.feedbackType === 'none') throw new TypeError(`Expected a valid keyIndex`)
 
-		if (this.#deviceProperties.SUPPORTS_RGB_KEY_FILL || control.feedbackType === 'rgb') {
-			await this.sendKeyRgb(keyIndex, 0, 0, 0)
-		} else {
-			const pixels = new Uint8Array(control.pixelSize.width * control.pixelSize.height * 3)
-			await this.fillImageRangeControl(control, pixels, {
-				format: 'rgb',
-				offset: 0,
-				stride: control.pixelSize.width * 3,
-			})
-		}
+		const pixels = new Uint8Array(control.pixelSize.width * control.pixelSize.height * 3)
+		await this.fillImageRangeControl(control, pixels, {
+			format: 'rgb',
+			offset: 0,
+			stride: control.pixelSize.width * 3,
+		})
 	}
 
 	public async fillKeyColor(keyIndex: KeyIndex, r: number, g: number, b: number): Promise<void> {
@@ -155,33 +145,29 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 		)
 		if (!control || control.feedbackType === 'none') throw new TypeError(`Expected a valid keyIndex`)
 
-		if (this.#deviceProperties.SUPPORTS_RGB_KEY_FILL || control.feedbackType === 'rgb') {
-			await this.sendKeyRgb(keyIndex, r, g, b)
-		} else {
-			// rgba is excessive here, but it makes the fill easier as it can be done in a 32bit uint
-			const pixelCount = control.pixelSize.width * control.pixelSize.height
-			const pixels = new Uint8Array(pixelCount * 4)
-			const view = new DataView(pixels.buffer, pixels.byteOffset, pixels.byteLength)
+		// rgba is excessive here, but it makes the fill easier as it can be done in a 32bit uint
+		const pixelCount = control.pixelSize.width * control.pixelSize.height
+		const pixels = new Uint8Array(pixelCount * 4)
+		const view = new DataView(pixels.buffer, pixels.byteOffset, pixels.byteLength)
 
-			// write first pixel
-			view.setUint8(0, r)
-			view.setUint8(1, g)
-			view.setUint8(2, b)
-			view.setUint8(3, 255)
+		// write first pixel
+		view.setUint8(0, r)
+		view.setUint8(1, g)
+		view.setUint8(2, b)
+		view.setUint8(3, 255)
 
-			// read computed pixel
-			const sample = view.getUint32(0)
-			// fill with computed pixel
-			for (let i = 1; i < pixelCount; i++) {
-				view.setUint32(i * 4, sample)
-			}
-
-			await this.fillImageRangeControl(control, pixels, {
-				format: 'rgba',
-				offset: 0,
-				stride: control.pixelSize.width * 3,
-			})
+		// read computed pixel
+		const sample = view.getUint32(0)
+		// fill with computed pixel
+		for (let i = 1; i < pixelCount; i++) {
+			view.setUint32(i * 4, sample)
 		}
+
+		await this.fillImageRangeControl(control, pixels, {
+			format: 'rgba',
+			offset: 0,
+			stride: control.pixelSize.width * 4,
+		})
 	}
 
 	public async fillKeyBuffer(keyIndex: KeyIndex, imageBuffer: Uint8Array, options?: FillImageOptions): Promise<void> {
@@ -193,9 +179,6 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 				control.type === 'button' && control.index === keyIndex,
 		)
 		if (!control || control.feedbackType === 'none') throw new TypeError(`Expected a valid keyIndex`)
-
-		if (control.feedbackType !== 'lcd')
-			throw new TypeError(`keyIndex ${control.index} does not support lcd feedback`)
 
 		const imageSize = control.pixelSize.width * control.pixelSize.height * sourceFormat.length
 		if (imageBuffer.length !== imageSize) {
@@ -258,10 +241,6 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 		await Promise.all(ps)
 	}
 
-	private async sendKeyRgb(keyIndex: number, red: number, green: number, blue: number): Promise<void> {
-		await this.#device.sendFeatureReport(new Uint8Array([0x03, 0x06, keyIndex, red, green, blue]))
-	}
-
 	private async fillImageRangeControl(
 		buttonControl: StreamDeckButtonControlDefinitionLcdFeedback,
 		imageBuffer: Uint8Array,
@@ -276,7 +255,13 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 			buttonControl.pixelSize,
 		)
 
-		const packets = this.#imageWriter.generateFillImageWrites({ keyIndex: buttonControl.hidIndex }, byteBuffer)
+		const packets = this.#imageWriter.generateFillImageWrites(
+			{
+				pixelSize: buttonControl.pixelSize,
+				pixelPosition: buttonControl.pixelPosition,
+			},
+			byteBuffer,
+		)
 		await this.#device.sendReports(packets)
 	}
 

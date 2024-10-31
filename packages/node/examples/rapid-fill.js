@@ -1,11 +1,11 @@
 // @ts-check
-const { openStreamDeck, listStreamDecks } = require('../dist/index')
+import { openMxCreativeConsole, listMXCreativeConsoleDevices } from '../dist/index.js'
 
-listStreamDecks().then(async (devices) => {
+listMXCreativeConsoleDevices().then(async (devices) => {
 	if (!devices[0]) throw new Error('No device found')
 
-	openStreamDeck(devices[0].path).then((streamDeck) => {
-		streamDeck.on('error', (error) => {
+	openMxCreativeConsole(devices[0].path).then((keypad) => {
+		keypad.on('error', (error) => {
 			console.error(error)
 		})
 
@@ -21,23 +21,19 @@ listStreamDecks().then(async (devices) => {
 					const b = getRandomIntInclusive(0, 255)
 					console.log('Filling with rgb(%d, %d, %d)', r, g, b)
 
-					for (const control of streamDeck.CONTROLS) {
+					for (const control of keypad.CONTROLS) {
 						if (control.type === 'button' && control.feedbackType !== 'none') {
-							await streamDeck.fillKeyColor(control.index, r, g, b)
-						} else if (control.type === 'lcd-segment') {
-							const lcdBuffer = Buffer.alloc(control.pixelSize.width * control.pixelSize.height * 4).fill(
-								Buffer.from([r, g, b, 255]),
-							)
-							await streamDeck.fillLcd(control.id, lcdBuffer, { format: 'rgba' })
+							await keypad.fillKeyColor(control.index, r, g, b)
 						}
 					}
 				} catch (e) {
 					console.error('Fill failed:', e)
 				} finally {
+					await new Promise((resolve) => setTimeout(resolve, 100))
 					isFilling = false
 				}
 			})
-		}, 1000 / 5)
+		}, 1000 / 3)
 
 		function getRandomIntInclusive(min, max) {
 			min = Math.ceil(min)

@@ -1,4 +1,4 @@
-import type { Dimension } from './id.js'
+import type { Coordinate, Dimension } from './id.js'
 
 export interface StreamDeckControlDefinitionBase {
 	type: 'button' | 'encoder' | 'lcd-segment'
@@ -13,24 +13,21 @@ export interface StreamDeckButtonControlDefinitionBase extends StreamDeckControl
 	index: number
 	hidIndex: number
 
-	feedbackType: 'none' | 'rgb' | 'lcd'
+	feedbackType: 'none' | 'lcd'
 }
 export interface StreamDeckButtonControlDefinitionNoFeedback extends StreamDeckButtonControlDefinitionBase {
 	feedbackType: 'none'
-}
-export interface StreamDeckButtonControlDefinitionRgbFeedback extends StreamDeckButtonControlDefinitionBase {
-	feedbackType: 'rgb'
 }
 
 export interface StreamDeckButtonControlDefinitionLcdFeedback extends StreamDeckButtonControlDefinitionBase {
 	feedbackType: 'lcd'
 
 	pixelSize: Dimension
+	pixelPosition: Coordinate
 }
 
 export type StreamDeckButtonControlDefinition =
 	| StreamDeckButtonControlDefinitionNoFeedback
-	| StreamDeckButtonControlDefinitionRgbFeedback
 	| StreamDeckButtonControlDefinitionLcdFeedback
 
 export interface StreamDeckEncoderControlDefinition extends StreamDeckControlDefinitionBase {

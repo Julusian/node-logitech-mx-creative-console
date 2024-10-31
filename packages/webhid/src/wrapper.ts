@@ -33,9 +33,6 @@ export class MXCreativeConsoleWeb extends MXCreativeConsoleProxy {
 		)
 		if (!control || control.feedbackType === 'none') throw new TypeError(`Expected a valid keyIndex`)
 
-		if (control.feedbackType !== 'lcd')
-			throw new TypeError(`keyIndex ${control.index} does not support lcd feedback`)
-
 		const data = ctx.getImageData(0, 0, control.pixelSize.width, control.pixelSize.height)
 		return this.device.fillKeyBuffer(keyIndex, data.data, { format: 'rgba' })
 	}

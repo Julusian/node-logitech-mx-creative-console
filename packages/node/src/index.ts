@@ -3,6 +3,7 @@ import { DEVICE_MODELS, VENDOR_ID } from '@logi-mx-creative-console/core'
 import * as HID from 'node-hid'
 import { NodeHIDDevice, MXCreativeConsoleDeviceInfo } from './hid-device.js'
 import { MXCreativeConsoleNode } from './wrapper.js'
+import { encodeJPEG, JPEGEncodeOptions } from './jpeg.js'
 
 export {
 	VENDOR_ID,
@@ -14,17 +15,15 @@ export {
 	StreamDeckControlDefinitionBase,
 	StreamDeckButtonControlDefinition,
 	StreamDeckButtonControlDefinitionNoFeedback,
-	StreamDeckButtonControlDefinitionRgbFeedback,
-	StreamDeckButtonControlDefinitionLcdFeedback,
 	StreamDeckEncoderControlDefinition,
 	StreamDeckControlDefinition,
 	OpenStreamDeckOptions,
 } from '@logi-mx-creative-console/core'
 
-export { MXCreativeConsoleDeviceInfo as StreamDeckDeviceInfo }
+export { MXCreativeConsoleDeviceInfo, JPEGEncodeOptions }
 
 export interface OpenMXCreativeConsoleOptionsNode extends OpenStreamDeckOptions {
-	// jpegOptions?: JPEGEncodeOptions
+	jpegOptions?: JPEGEncodeOptions
 	resetToLogoOnClose?: boolean
 }
 
@@ -77,15 +76,13 @@ export async function openMxCreativeConsole(
 	userOptions?: OpenMXCreativeConsoleOptionsNode,
 ): Promise<MXCreativeConsole> {
 	// Clone the options, to ensure they dont get changed
-	// const jpegOptions: JPEGEncodeOptions | undefined = userOptions?.jpegOptions
-	// 	? { ...userOptions.jpegOptions }
-	// 	: undefined
+	const jpegOptions: JPEGEncodeOptions | undefined = userOptions?.jpegOptions
+		? { ...userOptions.jpegOptions }
+		: undefined
 
 	const options: Required<OpenStreamDeckOptions> = {
-		encodeJPEG: async (buffer: Uint8Array, width: number, height: number) => {
-			throw new Error('not implemented')
-			// encodeJPEG(buffer, width, height, jpegOptions),
-		},
+		encodeJPEG: async (buffer: Uint8Array, width: number, height: number) =>
+			encodeJPEG(buffer, width, height, jpegOptions),
 		...userOptions,
 	}
 

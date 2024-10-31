@@ -1,11 +1,12 @@
 import type { StreamDeckButtonControlDefinition, StreamDeckControlDefinition } from './controlDefinition.js'
-import type { Dimension } from './id.js'
+import type { Coordinate, Dimension } from './id.js'
 
 export function generateButtonsGrid(
 	width: number,
 	height: number,
 	pixelSize: Dimension,
-	rtl = false,
+	pixelOffset: Coordinate,
+	pixelPadding: Coordinate,
 	columnOffset = 0,
 ): StreamDeckButtonControlDefinition[] {
 	const controls: StreamDeckButtonControlDefinition[] = []
@@ -13,7 +14,7 @@ export function generateButtonsGrid(
 	for (let row = 0; row < height; row++) {
 		for (let column = 0; column < width; column++) {
 			const index = row * width + column
-			const hidIndex = rtl ? flipKeyIndex(width, index) : index
+			const hidIndex = index
 
 			controls.push({
 				type: 'button',
@@ -23,18 +24,16 @@ export function generateButtonsGrid(
 				hidIndex,
 				feedbackType: 'lcd',
 				pixelSize,
+				pixelPosition: {
+					// TODO - refine these?
+					x: pixelOffset.x + column * (pixelSize.width + pixelPadding.x),
+					y: pixelOffset.y + row * (pixelSize.height + pixelPadding.y),
+				},
 			})
 		}
 	}
 
 	return controls
-}
-
-function flipKeyIndex(columns: number, keyIndex: number): number {
-	// Horizontal flip
-	const half = (columns - 1) / 2
-	const diff = ((keyIndex % columns) - half) * -half
-	return keyIndex + diff
 }
 
 export function freezeDefinitions(controls: StreamDeckControlDefinition[]): Readonly<StreamDeckControlDefinition[]> {

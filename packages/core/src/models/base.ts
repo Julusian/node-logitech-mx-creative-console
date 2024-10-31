@@ -13,6 +13,7 @@ import type { StreamDeckButtonControlDefinition, StreamDeckControlDefinition } f
 import type { PropertiesService } from '../services/properties/interface.js'
 import type { CallbackHook } from '../services/callback-hook.js'
 import type { MXCreativeConsoleInputService } from '../services/input/interface.js'
+import { uint8ArrayToDataView } from '../util.js'
 
 export type EncodeJPEGHelper = (buffer: Uint8Array, width: number, height: number) => Promise<Uint8Array>
 
@@ -24,7 +25,6 @@ export type StreamDeckProperties = Readonly<{
 	MODEL: DeviceModelId
 	PRODUCT_NAME: string
 	KEY_DATA_OFFSET: number
-	SUPPORTS_RGB_KEY_FILL: boolean
 
 	CONTROLS: Readonly<StreamDeckControlDefinition[]>
 
@@ -126,6 +126,14 @@ export class StreamDeckBase extends EventEmitter<MXCreativeConsoleEvents> implem
 	}
 
 	public async getHidDeviceInfo(): Promise<HIDDeviceInfo> {
+		// await this.device.getFeatureReport(0x13, 32)
+		await this.device.sendFeatureReport(
+			new Uint8Array([
+				0x11, 0xff, 0x00, 0x1b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00,
+			]),
+		)
+
 		return this.device.getDeviceInfo()
 	}
 
@@ -135,6 +143,16 @@ export class StreamDeckBase extends EventEmitter<MXCreativeConsoleEvents> implem
 
 	public async resetToLogo(): Promise<void> {
 		return this.#propertiesService.resetToLogo()
+		// const finish = new Uint8Array(20)
+		// const finishView = uint8ArrayToDataView(finish)
+		// finishView.setUint8(0, 0x11)
+		// finishView.setUint8(1, 0xff)
+		// finishView.setUint8(2, 0x04)
+		// finishView.setUint8(3, 0x1b)
+		// finishView.setUint8(4, 0x0b)
+		// finishView.setUint8(5, 0xb8)
+
+		// await this.device.sendReports([finish])
 	}
 
 	// public async getFirmwareVersion(): Promise<string> {

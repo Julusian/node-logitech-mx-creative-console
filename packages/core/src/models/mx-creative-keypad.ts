@@ -7,7 +7,6 @@ import { CallbackHook } from '../services/callback-hook.js'
 import type { MXCreativeConsoleEvents } from '../types.js'
 import { DefaultButtonsLcdService } from '../services/buttonsLcdDisplay/default.js'
 import { JpegButtonLcdImagePacker } from '../services/imagePacker/jpeg.js'
-import { StreamdeckGen2ImageHeaderGenerator } from '../services/imageWriter/headerGenerator.js'
 import { StreamdeckDefaultImageWriter } from '../services/imageWriter/imageWriter.js'
 import { KeypadInputService } from '../services/input/mx-creative-keypad.js'
 import { Gen2PropertiesService } from '../services/properties/gen2.js'
@@ -15,9 +14,10 @@ import { Gen2PropertiesService } from '../services/properties/gen2.js'
 const keypadProperties: StreamDeckProperties = {
 	MODEL: DeviceModelId.MX_CREATIVE_KEYPAD,
 	PRODUCT_NAME: MODEL_NAMES[DeviceModelId.MX_CREATIVE_KEYPAD],
-	SUPPORTS_RGB_KEY_FILL: false, // rev2 doesn't support it, even though rev1 does
 
-	CONTROLS: freezeDefinitions(generateButtonsGrid(8, 4, { width: 96, height: 96 })),
+	CONTROLS: freezeDefinitions(
+		generateButtonsGrid(3, 3, { width: 118, height: 118 }, { x: 0x17, y: 0x06 }, { x: 40, y: 40 }),
+	),
 
 	KEY_SPACING_HORIZONTAL: 32,
 	KEY_SPACING_VERTICAL: 39,
@@ -35,7 +35,7 @@ export function mxCreativeKeypadFactory(device: HIDDevice, options: Required<Ope
 		events,
 		properties: new Gen2PropertiesService(device),
 		buttonsLcd: new DefaultButtonsLcdService(
-			new StreamdeckDefaultImageWriter(new StreamdeckGen2ImageHeaderGenerator()),
+			new StreamdeckDefaultImageWriter(),
 			new JpegButtonLcdImagePacker(options.encodeJPEG, true),
 			device,
 			keypadProperties,

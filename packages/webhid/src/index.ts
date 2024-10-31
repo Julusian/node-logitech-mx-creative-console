@@ -16,7 +16,6 @@ export {
 	StreamDeckControlDefinitionBase,
 	StreamDeckButtonControlDefinition,
 	StreamDeckButtonControlDefinitionNoFeedback,
-	StreamDeckButtonControlDefinitionRgbFeedback,
 	StreamDeckButtonControlDefinitionLcdFeedback,
 	StreamDeckEncoderControlDefinition,
 	StreamDeckControlDefinition,
