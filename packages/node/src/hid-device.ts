@@ -61,6 +61,7 @@ export class NodeHIDDevice extends EventEmitter<HIDDeviceEvents> implements HIDD
 			path: info.path,
 			productId: info.productId,
 			vendorId: info.vendorId,
+			serialNumber: info.serialNumber,
 		}
 	}
 }

@@ -24,4 +24,5 @@ export interface HIDDeviceInfo {
 	readonly path: string | undefined
 	readonly productId: number
 	readonly vendorId: number
+	readonly serialNumber: string | undefined
 }

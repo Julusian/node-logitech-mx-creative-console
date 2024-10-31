@@ -80,12 +80,12 @@ export class MXCreativeConsoleProxy implements MXCreativeConsole {
 	): ReturnType<MXCreativeConsole['resetToLogo']> {
 		return this.device.resetToLogo(...args)
 	}
-	public async getFirmwareVersion(): Promise<string> {
-		return this.device.getFirmwareVersion()
-	}
-	public async getSerialNumber(): Promise<string> {
-		return this.device.getSerialNumber()
-	}
+	// public async getFirmwareVersion(): Promise<string> {
+	// 	return this.device.getFirmwareVersion()
+	// }
+	// public async getSerialNumber(): Promise<string> {
+	// 	return this.device.getSerialNumber()
+	// }
 
 	/**
 	 * EventEmitter

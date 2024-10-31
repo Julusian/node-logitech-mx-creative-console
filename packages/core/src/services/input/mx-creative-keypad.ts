@@ -1,10 +1,10 @@
 import type { StreamDeckProperties } from '../../models/base.js'
-import type { StreamDeckInputService } from './interface.js'
+import type { MXCreativeConsoleInputService } from './interface.js'
 import type { MXCreativeConsoleEvents } from '../../types.js'
 import type { CallbackHook } from '../callback-hook.js'
 import type { StreamDeckButtonControlDefinition } from '../../controlDefinition.js'
 
-export class ButtonOnlyInputService implements StreamDeckInputService {
+export class KeypadInputService implements MXCreativeConsoleInputService {
 	protected readonly deviceProperties: Readonly<StreamDeckProperties>
 	readonly #keyState: boolean[]
 	readonly #eventSource: CallbackHook<MXCreativeConsoleEvents>
@@ -20,6 +20,7 @@ export class ButtonOnlyInputService implements StreamDeckInputService {
 	}
 
 	handleInput(data: Uint8Array): void {
+		console.log('got', data)
 		const dataOffset = this.deviceProperties.KEY_DATA_OFFSET || 0
 
 		for (const control of this.deviceProperties.CONTROLS) {

@@ -36,15 +36,15 @@ export class Gen2PropertiesService implements PropertiesService {
 		await this.#device.sendFeatureReport(resetCommandBuffer)
 	}
 
-	public async getFirmwareVersion(): Promise<string> {
-		const val = await this.#device.getFeatureReport(5, 32)
-		const end = val[1] + 2
-		return new TextDecoder('ascii').decode(val.subarray(6, end))
-	}
+	// public async getFirmwareVersion(): Promise<string> {
+	// 	const val = await this.#device.getFeatureReport(5, 32)
+	// 	const end = val[1] + 2
+	// 	return new TextDecoder('ascii').decode(val.subarray(6, end))
+	// }
 
-	public async getSerialNumber(): Promise<string> {
-		const val = await this.#device.getFeatureReport(6, 32)
-		const end = val[1] + 2
-		return new TextDecoder('ascii').decode(val.subarray(2, end))
-	}
+	// public async getSerialNumber(): Promise<string> {
+	// 	const val = await this.#device.getFeatureReport(6, 32)
+	// 	const end = val[1] + 2
+	// 	return new TextDecoder('ascii').decode(val.subarray(2, end))
+	// }
 }

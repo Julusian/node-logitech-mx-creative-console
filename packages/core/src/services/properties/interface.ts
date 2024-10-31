@@ -3,7 +3,7 @@ export interface PropertiesService {
 
 	resetToLogo(): Promise<void>
 
-	getFirmwareVersion(): Promise<string>
+	// getFirmwareVersion(): Promise<string>
 
-	getSerialNumber(): Promise<string>
+	// getSerialNumber(): Promise<string>
 }

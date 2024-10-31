@@ -53,6 +53,7 @@ export class WebHIDDevice extends EventEmitter<HIDDeviceEvents> implements CoreH
 			path: undefined,
 			productId: this.device.productId,
 			vendorId: this.device.vendorId,
+			serialNumber: undefined, // TODO - not supported?
 		}
 	}
 }

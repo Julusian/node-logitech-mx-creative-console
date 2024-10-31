@@ -12,7 +12,7 @@ import type { ButtonsLcdDisplayService } from '../services/buttonsLcdDisplay/int
 import type { StreamDeckButtonControlDefinition, StreamDeckControlDefinition } from '../controlDefinition.js'
 import type { PropertiesService } from '../services/properties/interface.js'
 import type { CallbackHook } from '../services/callback-hook.js'
-import type { StreamDeckInputService } from '../services/input/interface.js'
+import type { MXCreativeConsoleInputService } from '../services/input/interface.js'
 
 export type EncodeJPEGHelper = (buffer: Uint8Array, width: number, height: number) => Promise<Uint8Array>
 
@@ -46,7 +46,7 @@ export interface StreamDeckServicesDefinition {
 	events: CallbackHook<MXCreativeConsoleEvents>
 	properties: PropertiesService
 	buttonsLcd: ButtonsLcdDisplayService
-	inputService: StreamDeckInputService
+	inputService: MXCreativeConsoleInputService
 }
 
 export class StreamDeckBase extends EventEmitter<MXCreativeConsoleEvents> implements MXCreativeConsole {
@@ -73,7 +73,7 @@ export class StreamDeckBase extends EventEmitter<MXCreativeConsoleEvents> implem
 	// readonly #options: Readonly<Required<OpenStreamDeckOptions>>
 	readonly #propertiesService: PropertiesService
 	readonly #buttonsLcdService: ButtonsLcdDisplayService
-	readonly #inputService: StreamDeckInputService
+	readonly #inputService: MXCreativeConsoleInputService
 
 	constructor(
 		device: HIDDevice,
@@ -137,12 +137,12 @@ export class StreamDeckBase extends EventEmitter<MXCreativeConsoleEvents> implem
 		return this.#propertiesService.resetToLogo()
 	}
 
-	public async getFirmwareVersion(): Promise<string> {
-		return this.#propertiesService.getFirmwareVersion()
-	}
-	public async getSerialNumber(): Promise<string> {
-		return this.#propertiesService.getSerialNumber()
-	}
+	// public async getFirmwareVersion(): Promise<string> {
+	// 	return this.#propertiesService.getFirmwareVersion()
+	// }
+	// public async getSerialNumber(): Promise<string> {
+	// 	return this.#propertiesService.getSerialNumber()
+	// }
 
 	public async fillKeyColor(keyIndex: KeyIndex, r: number, g: number, b: number): Promise<void> {
 		this.checkValidKeyIndex(keyIndex, null)

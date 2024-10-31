@@ -1,35 +1,38 @@
-const { usb } = require('usb')
-const { listStreamDecks, openStreamDeck } = require('../dist/index')
-const streamDecks = {}
+import { usb } from 'usb'
+import { listMXCreativeConsoleDevices, openMxCreativeConsole } from '../dist/index.js'
+/** @type {Record<string, import('@logi-mx-creative-console/core').MXCreativeConsole>} */
+const devices = {}
 
 async function addDevice(info) {
 	const path = info.path
-	streamDecks[path] = await openStreamDeck(path)
+	devices[path] = await openMxCreativeConsole(path)
 
 	console.log(info)
-	console.log('Serial:', await streamDecks[path].getSerialNumber())
-	console.log('Firmware:', await streamDecks[path].getFirmwareVersion())
+	const newInfo = await devices[path].getHidDeviceInfo()
+	console.log('open info', newInfo)
+	// console.log('Serial:', await devices[path].getSerialNumber())
+	// console.log('Firmware:', await devices[path].getFirmwareVersion())
 
-	// Clear all keys
-	await streamDecks[path].clearPanel()
-	// Fill one key in red
-	await streamDecks[path].fillKeyColor(0, 255, 0, 0)
+	// // Clear all keys
+	// await devices[path].clearPanel()
+	// // Fill one key in red
+	// await devices[path].fillKeyColor(0, 255, 0, 0)
 
-	await streamDecks[path].resetToLogo()
+	// await devices[path].resetToLogo()
 
-	streamDecks[path].on('error', (e) => {
+	devices[path].on('error', (e) => {
 		console.log(e)
 		// assuming any error means we lost connection
-		streamDecks[path].removeAllListeners()
-		delete streamDecks[path]
+		devices[path].removeAllListeners()
+		delete devices[path]
 	})
 	//  add any other event listeners
 }
 
 async function refresh() {
-	const streamdecks = await listStreamDecks()
+	const streamdecks = await listMXCreativeConsoleDevices()
 	streamdecks.forEach((device) => {
-		if (!streamDecks[device.path]) {
+		if (!devices[device.path]) {
 			addDevice(device).catch((e) => console.error('Add failed:', e))
 		}
 	})

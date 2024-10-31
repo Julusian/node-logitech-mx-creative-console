@@ -121,13 +121,13 @@ export interface MXCreativeConsole extends EventEmitter<MXCreativeConsoleEvents>
 	 */
 	resetToLogo(): Promise<void>
 
-	/**
-	 * Get firmware version from Stream Deck
-	 */
-	getFirmwareVersion(): Promise<string>
+	// /**
+	//  * Get firmware version from Stream Deck
+	//  */
+	// getFirmwareVersion(): Promise<string>
 
-	/**
-	 * Get serial number from Stream Deck
-	 */
-	getSerialNumber(): Promise<string>
+	// /**
+	//  * Get serial number from Stream Deck
+	//  */
+	// getSerialNumber(): Promise<string>
 }

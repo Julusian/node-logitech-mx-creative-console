@@ -9,7 +9,7 @@ import { DefaultButtonsLcdService } from '../services/buttonsLcdDisplay/default.
 import { JpegButtonLcdImagePacker } from '../services/imagePacker/jpeg.js'
 import { StreamdeckGen2ImageHeaderGenerator } from '../services/imageWriter/headerGenerator.js'
 import { StreamdeckDefaultImageWriter } from '../services/imageWriter/imageWriter.js'
-import { Gen2InputService } from '../services/input/gen2.js'
+import { KeypadInputService } from '../services/input/mx-creative-keypad.js'
 import { Gen2PropertiesService } from '../services/properties/gen2.js'
 
 const keypadProperties: StreamDeckProperties = {
@@ -40,6 +40,6 @@ export function mxCreativeKeypadFactory(device: HIDDevice, options: Required<Ope
 			device,
 			keypadProperties,
 		),
-		inputService: new Gen2InputService(keypadProperties, events),
+		inputService: new KeypadInputService(keypadProperties, events),
 	})
 }
