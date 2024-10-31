@@ -1,0 +1,56 @@
+{
+	"name": "@logi-mx-creative-console/core",
+	"version": "0.1.0",
+	"description": "An npm module for interfacing with the Logi MX Creative Console",
+	"main": "dist/index.js",
+	"typings": "dist/index.d.ts",
+	"license": "MIT",
+	"homepage": "https://github.com/julusian/node-logi-mx-creative-console#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/julusian/node-logi-mx-creative-console.git"
+	},
+	"bugs": {
+		"url": "https://github.com/julusian/node-logi-mx-creative-console/issues"
+	},
+	"author": {
+		"name": "Julian Waller",
+		"email": "git@julusian.co.uk"
+	},
+	"contributors": [
+		{
+			"name": "Håkon Nessjøen",
+			"email": "haakon@bitfocus.io"
+		},
+		{
+			"name": "Richard Fox",
+			"twitter": "ProbablePrime"
+		},
+		{
+			"name": "Chris Hanel",
+			"twitter": "chrishanel",
+			"email": "chrishanel@gmail.com",
+			"url": "http://www.chrishanel.com/"
+		}
+	],
+	"keywords": [
+		"logi",
+		"mx",
+		"creative console",
+		"hid",
+		"usb",
+		"hardware",
+		"interface",
+		"controller"
+	],
+	"files": [
+		"dist"
+	],
+	"engines": {
+		"node": ">=18.18"
+	},
+	"dependencies": {
+		"eventemitter3": "^5.0.1",
+		"tslib": "^2.7.0"
+	}
+}

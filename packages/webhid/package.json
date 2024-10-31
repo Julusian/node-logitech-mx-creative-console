@@ -1,0 +1,44 @@
+{
+	"name": "@logi-mx-creative-console/webhid",
+	"version": "0.1.0",
+	"description": "An npm module for interfacing with the Logi MX Creative Console in the browser",
+	"main": "dist/index.js",
+	"typings": "dist/index.d.ts",
+	"license": "MIT",
+	"homepage": "https://github.com/julusian/node-logi-mx-creative-console#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/julusian/node-logi-mx-creative-console.git"
+	},
+	"bugs": {
+		"url": "https://github.com/julusian/node-logi-mx-creative-console/issues"
+	},
+	"author": {
+		"name": "Julian Waller",
+		"email": "git@julusian.co.uk"
+	},
+	"keywords": [
+		"logi",
+		"mx",
+		"creative console",
+		"hid",
+		"usb",
+		"hardware",
+		"interface",
+		"controller"
+	],
+	"files": [
+		"dist",
+		"udev"
+	],
+	"dependencies": {
+		"@logi-mx-creative-console/core": "0.1.0",
+		"@types/w3c-web-hid": "^1.0.6",
+		"eventemitter3": "^5.0.1",
+		"p-queue": "^6.6.2",
+		"tslib": "^2.7.0"
+	},
+	"engines": {
+		"node": ">=18.18"
+	}
+}

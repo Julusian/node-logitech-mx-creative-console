@@ -1,0 +1,119 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yasm libudev-dev libusb-1.0-0-dev
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+      - run: |
+          corepack enable
+          yarn install
+        env:
+          CI: true
+      - run: yarn build
+        env:
+          CI: true
+      - run: yarn lint
+        env:
+          CI: true
+  audit:
+    name: audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yasm libudev-dev libusb-1.0-0-dev
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+      - run: |
+          corepack enable
+          yarn install
+        env:
+          CI: true
+      - run: yarn validate:dependencies
+        env:
+          CI: true
+
+  test:
+    name: Test on node ${{ matrix.node-version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yasm libudev-dev libusb-1.0-0-dev
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: |
+          corepack enable
+          yarn install
+        env:
+          CI: true
+      - run: yarn unit
+        env:
+          CI: true
+      - name: Send coverage
+        if: matrix.node-version == '18.x'
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  publish-demo:
+    name: Publish demo to Github Pages
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 15
+
+    # only run for main
+    if: github.ref == 'refs/heads/main'
+
+    needs:
+      - test
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+      - name: Prepare build
+        run: |
+          corepack enable
+          yarn install
+          yarn build
+        env:
+          CI: true
+      - name: Publish
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./packages/webhid-demo/dist
