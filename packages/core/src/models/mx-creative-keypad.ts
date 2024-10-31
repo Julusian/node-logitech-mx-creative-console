@@ -16,15 +16,10 @@ const keypadProperties: StreamDeckProperties = {
 	PRODUCT_NAME: MODEL_NAMES[DeviceModelId.MX_CREATIVE_KEYPAD],
 
 	CONTROLS: freezeDefinitions(
-		generateButtonsGrid(3, 3, { width: 118, height: 118 }, { x: 0x17, y: 0x06 }, { x: 40, y: 40 }),
+		generateButtonsGrid(3, 3, { width: 118, height: 118 }, { x: 23, y: 6 }, { x: 40, y: 40 }),
 	),
 
-	KEY_SPACING_HORIZONTAL: 32,
-	KEY_SPACING_VERTICAL: 39,
-
-	FULLSCREEN_PANELS: 0,
-
-	KEY_DATA_OFFSET: 3,
+	PANEL_SIZE: { width: 480, height: 480 },
 }
 
 export function mxCreativeKeypadFactory(device: HIDDevice, options: Required<OpenStreamDeckOptions>): StreamDeckBase {

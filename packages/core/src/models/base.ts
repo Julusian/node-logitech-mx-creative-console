@@ -13,7 +13,6 @@ import type { StreamDeckButtonControlDefinition, StreamDeckControlDefinition } f
 import type { PropertiesService } from '../services/properties/interface.js'
 import type { CallbackHook } from '../services/callback-hook.js'
 import type { MXCreativeConsoleInputService } from '../services/input/interface.js'
-import { uint8ArrayToDataView } from '../util.js'
 
 export type EncodeJPEGHelper = (buffer: Uint8Array, width: number, height: number) => Promise<Uint8Array>
 
@@ -24,21 +23,10 @@ export interface OpenStreamDeckOptions {
 export type StreamDeckProperties = Readonly<{
 	MODEL: DeviceModelId
 	PRODUCT_NAME: string
-	KEY_DATA_OFFSET: number
 
 	CONTROLS: Readonly<StreamDeckControlDefinition[]>
 
-	/**
-	 * TODO - rework this
-	 * @deprecated
-	 */
-	KEY_SPACING_HORIZONTAL: number
-	/**
-	 * TODO - rework this
-	 * @deprecated
-	 */
-	KEY_SPACING_VERTICAL: number
-	FULLSCREEN_PANELS: number
+	PANEL_SIZE: Dimension
 }>
 
 export interface StreamDeckServicesDefinition {
@@ -53,13 +41,6 @@ export class StreamDeckBase extends EventEmitter<MXCreativeConsoleEvents> implem
 	get CONTROLS(): Readonly<StreamDeckControlDefinition[]> {
 		return this.deviceProperties.CONTROLS
 	}
-
-	// get KEY_SPACING_HORIZONTAL(): number {
-	// 	return this.deviceProperties.KEY_SPACING_HORIZONTAL
-	// }
-	// get KEY_SPACING_VERTICAL(): number {
-	// 	return this.deviceProperties.KEY_SPACING_VERTICAL
-	// }
 
 	get MODEL(): DeviceModelId {
 		return this.deviceProperties.MODEL

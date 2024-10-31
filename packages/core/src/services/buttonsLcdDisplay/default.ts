@@ -82,30 +82,34 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 	public async clearPanel(): Promise<void> {
 		const ps: Promise<void>[] = []
 
-		if (this.#deviceProperties.FULLSCREEN_PANELS > 0) {
-			// TODO - should this be a separate property?
-			for (let screenIndex = 0; screenIndex < this.#deviceProperties.FULLSCREEN_PANELS; screenIndex++) {
-				const buffer = new Uint8Array(1024)
-				buffer[0] = 0x03
-				buffer[1] = 0x05
-				buffer[2] = screenIndex // TODO - index
-				ps.push(this.#device.sendReports([buffer]))
-			}
-			// TODO - clear rgb?
-		} else {
+		const blackBuffer = new Uint8Array(
+			this.#deviceProperties.PANEL_SIZE.width * this.#deviceProperties.PANEL_SIZE.height * 4,
+		)
+
+		// TODO - cache this?
+		const byteBuffer = await this.#imagePacker.convertPixelBuffer(
+			blackBuffer,
+			{ format: 'rgba', offset: 0, stride: this.#deviceProperties.PANEL_SIZE.width * 4 },
+			this.#deviceProperties.PANEL_SIZE,
+		)
+
+		const packets = this.#imageWriter.generateFillImageWrites(
+			{
+				pixelSize: this.#deviceProperties.PANEL_SIZE,
+				pixelPosition: { x: 0, y: 0 },
+			},
+			byteBuffer,
+		)
+		ps.push(this.#device.sendReports(packets))
+
+		/*
 			for (const control of this.#deviceProperties.CONTROLS) {
 				if (control.type !== 'button') continue
 
 				switch (control.feedbackType) {
 					case 'lcd': {
-						const pixels = new Uint8Array(control.pixelSize.width * control.pixelSize.height * 3)
-						ps.push(
-							this.fillImageRangeControl(control, pixels, {
-								format: 'rgb',
-								offset: 0,
-								stride: control.pixelSize.width * 3,
-							}),
-						)
+						// Handled by PANEL_SIZE
+						
 
 						break
 					}
@@ -114,7 +118,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 						break
 				}
 			}
-		}
+			*/
 
 		await Promise.all(ps)
 	}

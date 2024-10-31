@@ -20,8 +20,10 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 	}
 
 	handleInput(data: Uint8Array): void {
+		if (data[2] === 0x2b) return // Ignore acks to drawing
+
 		console.log('got', data)
-		const dataOffset = this.deviceProperties.KEY_DATA_OFFSET || 0
+		const dataOffset = 0
 
 		for (const control of this.deviceProperties.CONTROLS) {
 			if (control.type !== 'button') continue
