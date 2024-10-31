@@ -30,9 +30,6 @@ export class StreamDeckProxy implements StreamDeck {
 	public get PRODUCT_NAME(): string {
 		return this.device.PRODUCT_NAME
 	}
-	public get HAS_NFC_READER(): boolean {
-		return this.device.HAS_NFC_READER
-	}
 
 	public calculateFillPanelDimensions(
 		...args: Parameters<StreamDeck['calculateFillPanelDimensions']>
@@ -80,40 +77,6 @@ export class StreamDeckProxy implements StreamDeck {
 	}
 	public async getSerialNumber(): Promise<string> {
 		return this.device.getSerialNumber()
-	}
-
-	public async fillLcd(...args: Parameters<StreamDeck['fillLcd']>): ReturnType<StreamDeck['fillLcd']> {
-		return this.device.fillLcd(...args)
-	}
-
-	public async setEncoderColor(
-		...args: Parameters<StreamDeck['setEncoderColor']>
-	): ReturnType<StreamDeck['setEncoderColor']> {
-		return this.device.setEncoderColor(...args)
-	}
-
-	public async setEncoderRingSingleColor(
-		...args: Parameters<StreamDeck['setEncoderRingSingleColor']>
-	): ReturnType<StreamDeck['setEncoderRingSingleColor']> {
-		return this.device.setEncoderRingSingleColor(...args)
-	}
-
-	public async setEncoderRingColors(
-		...args: Parameters<StreamDeck['setEncoderRingColors']>
-	): ReturnType<StreamDeck['setEncoderRingColors']> {
-		return this.device.setEncoderRingColors(...args)
-	}
-
-	public async fillLcdRegion(
-		...args: Parameters<StreamDeck['fillLcdRegion']>
-	): ReturnType<StreamDeck['fillLcdRegion']> {
-		return this.device.fillLcdRegion(...args)
-	}
-
-	public async clearLcdSegment(
-		...args: Parameters<StreamDeck['clearLcdSegment']>
-	): ReturnType<StreamDeck['clearLcdSegment']> {
-		return this.device.clearLcdSegment(...args)
 	}
 
 	/**

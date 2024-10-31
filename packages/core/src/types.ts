@@ -1,11 +1,10 @@
 import type { EventEmitter } from 'eventemitter3'
-import type { DeviceModelId, Dimension, EncoderIndex, KeyIndex } from './id.js'
+import type { DeviceModelId, Dimension, KeyIndex } from './id.js'
 import type { HIDDeviceInfo } from './hid-device.js'
 import type {
 	StreamDeckButtonControlDefinition,
 	StreamDeckControlDefinition,
 	StreamDeckEncoderControlDefinition,
-	StreamDeckLcdSegmentControlDefinition,
 } from './controlDefinition.js'
 
 export interface FillImageOptions {
@@ -32,11 +31,6 @@ export type StreamDeckEvents = {
 	up: [control: StreamDeckButtonControlDefinition | StreamDeckEncoderControlDefinition]
 	error: [err: unknown]
 	rotate: [control: StreamDeckEncoderControlDefinition, amount: number]
-	lcdShortPress: [control: StreamDeckLcdSegmentControlDefinition, position: LcdPosition]
-	lcdLongPress: [control: StreamDeckLcdSegmentControlDefinition, position: LcdPosition]
-	lcdSwipe: [control: StreamDeckLcdSegmentControlDefinition, from: LcdPosition, to: LcdPosition]
-
-	nfcRead: [id: string]
 }
 
 export interface StreamDeck extends EventEmitter<StreamDeckEvents> {
@@ -54,9 +48,6 @@ export interface StreamDeck extends EventEmitter<StreamDeckEvents> {
 	readonly MODEL: DeviceModelId
 	/** The name of the product/model */
 	readonly PRODUCT_NAME: string
-
-	/** Whether this device has a nfc reader */
-	readonly HAS_NFC_READER: boolean
 
 	/**
 	 * Calculate the dimensions to use for `fillPanelBuffer`, to fill the whole button lcd panel with a single image.
@@ -105,65 +96,6 @@ export interface StreamDeck extends EventEmitter<StreamDeckEvents> {
 	 * @param {Object} options Options to control the write
 	 */
 	fillPanelBuffer(imageBuffer: Uint8Array | Uint8ClampedArray, options?: FillPanelOptions): Promise<void>
-
-	/**
-	 * Fill the whole lcd segment
-	 * @param {number} lcdIndex The id of the lcd segment to draw to
-	 * @param {Buffer} imageBuffer The image to write
-	 * @param {Object} sourceOptions Options to control the write
-	 */
-	fillLcd(
-		lcdIndex: number,
-		imageBuffer: Uint8Array | Uint8ClampedArray,
-		sourceOptions: FillImageOptions,
-	): Promise<void>
-
-	/**
-	 * Fills the primary led of an encoder
-	 * @param {number} index The encoder to fill
-	 * @param {number} r The color's red value. 0 - 255
-	 * @param {number} g The color's green value. 0 - 255
-	 * @param {number} b The color's blue value. 0 -255
-	 */
-	setEncoderColor(index: EncoderIndex, r: number, g: number, b: number): Promise<void>
-
-	/**
-	 * Fills the led ring of an encoder with a single color
-	 * @param {number} index The encoder to fill
-	 * @param {number} r The color's red value. 0 - 255
-	 * @param {number} g The color's green value. 0 - 255
-	 * @param {number} b The color's blue value. 0 -255
-	 */
-	setEncoderRingSingleColor(index: EncoderIndex, r: number, g: number, b: number): Promise<void>
-
-	/**
-	 * Fill the led ring of an encoder
-	 * @param index The encoder to fill
-	 * @param colors rgb packed pixel values for the encoder ring
-	 */
-	setEncoderRingColors(index: EncoderIndex, colors: number[] | Uint8Array): Promise<void>
-
-	/**
-	 * Fill a region of the lcd segment, ignoring the boundaries of the encoders
-	 * @param {number} lcdIndex The id of the lcd segment to draw to
-	 * @param {number} x The x position to draw to
-	 * @param {number} y The y position to draw to
-	 * @param {Buffer} imageBuffer The image to write
-	 * @param {Object} sourceOptions Options to control the write
-	 */
-	fillLcdRegion(
-		lcdIndex: number,
-		x: number,
-		y: number,
-		imageBuffer: Uint8Array,
-		sourceOptions: FillLcdImageOptions,
-	): Promise<void>
-
-	/**
-	 * Clear the lcd segment to black
-	 * @param {number} lcdIndex The id of the lcd segment to clear
-	 */
-	clearLcdSegment(lcdIndex: number): Promise<void>
 
 	/**
 	 * Clears the given key.

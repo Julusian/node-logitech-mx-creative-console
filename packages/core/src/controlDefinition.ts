@@ -46,22 +46,4 @@ export interface StreamDeckEncoderControlDefinition extends StreamDeckControlDef
 	ledRingSteps: number
 }
 
-export interface StreamDeckLcdSegmentControlDefinition extends StreamDeckControlDefinitionBase {
-	type: 'lcd-segment'
-	id: 0 // Future: Maybe there will be more than one LCD segment
-
-	columnSpan: number
-	rowSpan: number
-
-	pixelSize: Dimension
-
-	/**
-	 * Whether the LCD segment supports drawing regions
-	 */
-	drawRegions: boolean
-}
-
-export type StreamDeckControlDefinition =
-	| StreamDeckButtonControlDefinition
-	| StreamDeckEncoderControlDefinition
-	| StreamDeckLcdSegmentControlDefinition
+export type StreamDeckControlDefinition = StreamDeckButtonControlDefinition | StreamDeckEncoderControlDefinition

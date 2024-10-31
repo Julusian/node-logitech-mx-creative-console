@@ -7,8 +7,8 @@ import { DeviceModelId, MODEL_NAMES } from '../id.js'
 import { freezeDefinitions, generateButtonsGrid } from '../controlsGenerator.js'
 
 const xlProperties: StreamDeckGen2Properties = {
-	MODEL: DeviceModelId.XL,
-	PRODUCT_NAME: MODEL_NAMES[DeviceModelId.XL],
+	MODEL: DeviceModelId.MX_CREATIVE_KEYPAD,
+	PRODUCT_NAME: MODEL_NAMES[DeviceModelId.MX_CREATIVE_KEYPAD],
 	SUPPORTS_RGB_KEY_FILL: false, // rev2 doesn't support it, even though rev1 does
 
 	CONTROLS: freezeDefinitions(generateButtonsGrid(8, 4, { width: 96, height: 96 })),
@@ -17,7 +17,6 @@ const xlProperties: StreamDeckGen2Properties = {
 	KEY_SPACING_VERTICAL: 39,
 
 	FULLSCREEN_PANELS: 0,
-	HAS_NFC_READER: false,
 }
 
 export function StreamDeckXLFactory(device: HIDDevice, options: Required<OpenStreamDeckOptions>): StreamDeckBase {

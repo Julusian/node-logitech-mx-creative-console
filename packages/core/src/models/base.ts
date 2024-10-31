@@ -10,11 +10,9 @@ import type {
 } from '../types.js'
 import type { ButtonsLcdDisplayService } from '../services/buttonsLcdDisplay/interface.js'
 import type { StreamDeckButtonControlDefinition, StreamDeckControlDefinition } from '../controlDefinition.js'
-import type { LcdSegmentDisplayService } from '../services/lcdSegmentDisplay/interface.js'
 import type { PropertiesService } from '../services/properties/interface.js'
 import type { CallbackHook } from '../services/callback-hook.js'
 import type { StreamDeckInputService } from '../services/input/interface.js'
-import type { EncoderLedService } from '../services/encoderLed.js'
 
 export type EncodeJPEGHelper = (buffer: Uint8Array, width: number, height: number) => Promise<Uint8Array>
 
@@ -41,8 +39,6 @@ export type StreamDeckProperties = Readonly<{
 	 */
 	KEY_SPACING_VERTICAL: number
 	FULLSCREEN_PANELS: number
-
-	HAS_NFC_READER: boolean
 }>
 
 export interface StreamDeckServicesDefinition {
@@ -51,8 +47,6 @@ export interface StreamDeckServicesDefinition {
 	properties: PropertiesService
 	buttonsLcd: ButtonsLcdDisplayService
 	inputService: StreamDeckInputService
-	lcdSegmentDisplay: LcdSegmentDisplayService | null
-	encoderLed: EncoderLedService | null
 }
 
 export class StreamDeckBase extends EventEmitter<StreamDeckEvents> implements StreamDeck {
@@ -74,18 +68,12 @@ export class StreamDeckBase extends EventEmitter<StreamDeckEvents> implements St
 		return this.deviceProperties.PRODUCT_NAME
 	}
 
-	get HAS_NFC_READER(): boolean {
-		return this.deviceProperties.HAS_NFC_READER
-	}
-
 	protected readonly device: HIDDevice
 	protected readonly deviceProperties: Readonly<StreamDeckProperties>
 	// readonly #options: Readonly<Required<OpenStreamDeckOptions>>
 	readonly #propertiesService: PropertiesService
 	readonly #buttonsLcdService: ButtonsLcdDisplayService
-	readonly #lcdSegmentDisplayService: LcdSegmentDisplayService | null
 	readonly #inputService: StreamDeckInputService
-	readonly #encoderLedService: EncoderLedService | null
 
 	constructor(
 		device: HIDDevice,
@@ -99,9 +87,7 @@ export class StreamDeckBase extends EventEmitter<StreamDeckEvents> implements St
 		// this.#options = options
 		this.#propertiesService = services.properties
 		this.#buttonsLcdService = services.buttonsLcd
-		this.#lcdSegmentDisplayService = services.lcdSegmentDisplay
 		this.#inputService = services.inputService
-		this.#encoderLedService = services.encoderLed
 
 		// propogate events
 		services.events?.listen((key, ...args) => this.emit(key, ...args))
@@ -185,52 +171,6 @@ export class StreamDeckBase extends EventEmitter<StreamDeckEvents> implements St
 
 		ps.push(this.#buttonsLcdService.clearPanel())
 
-		if (this.#lcdSegmentDisplayService) ps.push(this.#lcdSegmentDisplayService.clearAllLcdSegments())
-
 		await Promise.all(ps)
-	}
-
-	public async fillLcd(...args: Parameters<StreamDeck['fillLcd']>): ReturnType<StreamDeck['fillLcd']> {
-		if (!this.#lcdSegmentDisplayService) throw new Error('Not supported for this model')
-
-		return this.#lcdSegmentDisplayService.fillLcd(...args)
-	}
-
-	public async fillLcdRegion(
-		...args: Parameters<StreamDeck['fillLcdRegion']>
-	): ReturnType<StreamDeck['fillLcdRegion']> {
-		if (!this.#lcdSegmentDisplayService) throw new Error('Not supported for this model')
-
-		return this.#lcdSegmentDisplayService.fillLcdRegion(...args)
-	}
-
-	public async clearLcdSegment(
-		...args: Parameters<StreamDeck['clearLcdSegment']>
-	): ReturnType<StreamDeck['clearLcdSegment']> {
-		if (!this.#lcdSegmentDisplayService) throw new Error('Not supported for this model')
-
-		return this.#lcdSegmentDisplayService.clearLcdSegment(...args)
-	}
-
-	public async setEncoderColor(
-		...args: Parameters<StreamDeck['setEncoderColor']>
-	): ReturnType<StreamDeck['setEncoderColor']> {
-		if (!this.#encoderLedService) throw new Error('Not supported for this model')
-
-		return this.#encoderLedService.setEncoderColor(...args)
-	}
-	public async setEncoderRingSingleColor(
-		...args: Parameters<StreamDeck['setEncoderRingSingleColor']>
-	): ReturnType<StreamDeck['setEncoderRingSingleColor']> {
-		if (!this.#encoderLedService) throw new Error('Not supported for this model')
-
-		return this.#encoderLedService.setEncoderRingSingleColor(...args)
-	}
-	public async setEncoderRingColors(
-		...args: Parameters<StreamDeck['setEncoderRingColors']>
-	): ReturnType<StreamDeck['setEncoderRingColors']> {
-		if (!this.#encoderLedService) throw new Error('Not supported for this model')
-
-		return this.#encoderLedService.setEncoderRingColors(...args)
 	}
 }

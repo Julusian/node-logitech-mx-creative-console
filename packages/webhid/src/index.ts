@@ -19,7 +19,6 @@ export {
 	StreamDeckButtonControlDefinitionRgbFeedback,
 	StreamDeckButtonControlDefinitionLcdFeedback,
 	StreamDeckEncoderControlDefinition,
-	StreamDeckLcdSegmentControlDefinition,
 	StreamDeckControlDefinition,
 	OpenStreamDeckOptions,
 } from '@logi-mx-creative-console/core'

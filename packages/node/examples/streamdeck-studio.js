@@ -48,10 +48,6 @@ function generateEncoderColor(value, max) {
 		.raw()
 		.toBuffer()
 
-	streamDeck.on('nfcRead', (id) => {
-		console.log('nfc read', id, id.length)
-	})
-
 	streamDeck.on('down', (control) => {
 		if (control.type === 'button') {
 			// Fill the pressed key with an image of the GitHub logo.

@@ -1,4 +1,4 @@
-import type { StreamDeckWeb, LcdPosition } from '@logi-mx-creative-console/webhid'
+import type { StreamDeckWeb } from '@logi-mx-creative-console/webhid'
 import { requestStreamDecks, getStreamDecks } from '@logi-mx-creative-console/webhid'
 import type { Demo } from './demo/demo.js'
 import { DomImageDemo } from './demo/dom.js'
@@ -76,17 +76,6 @@ async function openDevice(device: StreamDeckWeb): Promise<void> {
 	})
 	device.on('rotate', (control, amount) => {
 		appendLog(`Encoder ${control.index} rotate (${amount})`)
-	})
-	device.on('lcdShortPress', (control, position: LcdPosition) => {
-		appendLog(`LCD (${control.id}) short press (${position.x},${position.y})`)
-	})
-	device.on('lcdLongPress', (control, position: LcdPosition) => {
-		appendLog(`LCD (${control.id}) long press (${position.x},${position.y})`)
-	})
-	device.on('lcdSwipe', (control, fromPosition: LcdPosition, toPosition: LcdPosition) => {
-		appendLog(
-			`LCD (${control.id}) swipe (${fromPosition.x},${fromPosition.y}) -> (${toPosition.x},${toPosition.y})`,
-		)
 	})
 
 	await currentDemo.start(device)

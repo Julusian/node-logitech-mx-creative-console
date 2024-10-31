@@ -1,18 +1,13 @@
 import type { StreamDeckProperties } from '../../models/base.js'
-import type { LcdPosition, StreamDeckEvents } from '../../types.js'
+import type { StreamDeckEvents } from '../../types.js'
 import type { CallbackHook } from '../callback-hook.js'
-import type {
-	StreamDeckEncoderControlDefinition,
-	StreamDeckLcdSegmentControlDefinition,
-} from '../../controlDefinition.js'
+import type { StreamDeckEncoderControlDefinition } from '../../controlDefinition.js'
 import { ButtonOnlyInputService } from './gen1.js'
-import { uint8ArrayToDataView } from '../../util.js'
 
 export class Gen2InputService extends ButtonOnlyInputService {
 	readonly #eventSource: CallbackHook<StreamDeckEvents>
 	readonly #encoderControls: Readonly<StreamDeckEncoderControlDefinition[]>
 	readonly #encoderState: boolean[]
-	readonly #lcdSegmentControls: Readonly<StreamDeckLcdSegmentControlDefinition[]>
 
 	constructor(deviceProperties: Readonly<StreamDeckProperties>, eventSource: CallbackHook<StreamDeckEvents>) {
 		super(deviceProperties, eventSource)
@@ -23,10 +18,6 @@ export class Gen2InputService extends ButtonOnlyInputService {
 		)
 		const maxIndex = Math.max(-1, ...this.#encoderControls.map((control) => control.index))
 		this.#encoderState = new Array<boolean>(maxIndex + 1).fill(false)
-
-		this.#lcdSegmentControls = deviceProperties.CONTROLS.filter(
-			(control): control is StreamDeckLcdSegmentControlDefinition => control.type === 'lcd-segment',
-		)
 	}
 
 	handleInput(data: Uint8Array): void {
@@ -35,45 +26,9 @@ export class Gen2InputService extends ButtonOnlyInputService {
 			case 0x00: // Button
 				super.handleInput(data)
 				break
-			case 0x02: // LCD
-				this.#handleLcdSegmentInput(data)
-				break
 			case 0x03: // Encoder
 				this.#handleEncoderInput(data)
 				break
-			case 0x04: // NFC
-				this.#handleNfcRead(data)
-				break
-		}
-	}
-
-	#handleLcdSegmentInput(data: Uint8Array): void {
-		// Future: This will need to handle selecting the correct control
-		const lcdSegmentControl = this.#lcdSegmentControls.find((control) => control.id === 0)
-		if (!lcdSegmentControl) return
-
-		const bufferView = uint8ArrayToDataView(data)
-		const position: LcdPosition = {
-			x: bufferView.getUint16(5, true),
-			y: bufferView.getUint16(7, true),
-		}
-
-		switch (data[3]) {
-			case 1: // short press
-				this.#eventSource.emit('lcdShortPress', lcdSegmentControl, position)
-				break
-			case 2: // long press
-				this.#eventSource.emit('lcdLongPress', lcdSegmentControl, position)
-				break
-			case 3: {
-				// swipe
-				const positionTo: LcdPosition = {
-					x: bufferView.getUint16(9, true),
-					y: bufferView.getUint16(11, true),
-				}
-				this.#eventSource.emit('lcdSwipe', lcdSegmentControl, position, positionTo)
-				break
-			}
 		}
 	}
 
@@ -103,14 +58,5 @@ export class Gen2InputService extends ButtonOnlyInputService {
 				}
 				break
 		}
-	}
-
-	#handleNfcRead(data: Uint8Array): void {
-		if (!this.deviceProperties.HAS_NFC_READER) return
-
-		const length = data[1] + data[2] * 256
-		const id = new TextDecoder('ascii').decode(data.subarray(3, 3 + length))
-
-		this.#eventSource.emit('nfcRead', id)
 	}
 }
