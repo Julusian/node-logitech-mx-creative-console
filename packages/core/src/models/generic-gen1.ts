@@ -15,14 +15,10 @@ function extendDevicePropertiesForGen1(rawProps: StreamDeckGen1Properties): Stre
 		...rawProps,
 		KEY_DATA_OFFSET: 0,
 		HAS_NFC_READER: false,
-		SUPPORTS_CHILD_DEVICES: false,
 	}
 }
 
-export type StreamDeckGen1Properties = Omit<
-	StreamDeckProperties,
-	'KEY_DATA_OFFSET' | 'HAS_NFC_READER' | 'SUPPORTS_CHILD_DEVICES'
->
+export type StreamDeckGen1Properties = Omit<StreamDeckProperties, 'KEY_DATA_OFFSET' | 'HAS_NFC_READER'>
 
 export function StreamDeckGen1Factory(
 	device: HIDDevice,

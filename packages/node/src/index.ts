@@ -3,7 +3,6 @@ import { DEVICE_MODELS, VENDOR_ID } from '@logi-mx-creative-console/core'
 import * as HID from 'node-hid'
 import { NodeHIDDevice, StreamDeckDeviceInfo } from './hid-device.js'
 import { StreamDeckNode } from './wrapper.js'
-import { encodeJPEG, JPEGEncodeOptions } from '@logi-mx-creative-console/node-lib'
 
 export {
 	VENDOR_ID,
@@ -23,10 +22,10 @@ export {
 	OpenStreamDeckOptions,
 } from '@logi-mx-creative-console/core'
 
-export { StreamDeckDeviceInfo, JPEGEncodeOptions }
+export { StreamDeckDeviceInfo }
 
 export interface OpenStreamDeckOptionsNode extends OpenStreamDeckOptions {
-	jpegOptions?: JPEGEncodeOptions
+	// jpegOptions?: JPEGEncodeOptions
 	resetToLogoOnClose?: boolean
 }
 
@@ -76,13 +75,15 @@ export async function getStreamDeckInfo(path: string): Promise<StreamDeckDeviceI
  */
 export async function openStreamDeck(devicePath: string, userOptions?: OpenStreamDeckOptionsNode): Promise<StreamDeck> {
 	// Clone the options, to ensure they dont get changed
-	const jpegOptions: JPEGEncodeOptions | undefined = userOptions?.jpegOptions
-		? { ...userOptions.jpegOptions }
-		: undefined
+	// const jpegOptions: JPEGEncodeOptions | undefined = userOptions?.jpegOptions
+	// 	? { ...userOptions.jpegOptions }
+	// 	: undefined
 
 	const options: Required<OpenStreamDeckOptions> = {
-		encodeJPEG: async (buffer: Uint8Array, width: number, height: number) =>
-			encodeJPEG(buffer, width, height, jpegOptions),
+		encodeJPEG: async (buffer: Uint8Array, width: number, height: number) => {
+			throw new Error('not implemented')
+			// encodeJPEG(buffer, width, height, jpegOptions),
+		},
 		...userOptions,
 	}
 

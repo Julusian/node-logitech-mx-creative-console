@@ -2,6 +2,7 @@
 	"name": "@logi-mx-creative-console/webhid-demo",
 	"version": "0.1.0",
 	"private": true,
+	"type": "module",
 	"license": "MIT",
 	"homepage": "https://github.com/julusian/node-logi-mx-creative-console#readme",
 	"repository": {

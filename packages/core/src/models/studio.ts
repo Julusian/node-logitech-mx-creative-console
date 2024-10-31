@@ -43,7 +43,6 @@ export const studioProperties: StreamDeckGen2Properties = {
 	FULLSCREEN_PANELS: 2,
 
 	HAS_NFC_READER: true,
-	SUPPORTS_CHILD_DEVICES: true,
 }
 
 export function StreamDeckStudioFactory(

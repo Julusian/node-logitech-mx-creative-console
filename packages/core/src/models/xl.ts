@@ -18,7 +18,6 @@ const xlProperties: StreamDeckGen2Properties = {
 
 	FULLSCREEN_PANELS: 0,
 	HAS_NFC_READER: false,
-	SUPPORTS_CHILD_DEVICES: false,
 }
 
 export function StreamDeckXLFactory(device: HIDDevice, options: Required<OpenStreamDeckOptions>): StreamDeckBase {

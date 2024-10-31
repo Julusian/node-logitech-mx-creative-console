@@ -18,17 +18,10 @@ export interface HIDDevice extends EventEmitter<HIDDeviceEvents> {
 	sendReports(buffers: Uint8Array[]): Promise<void>
 
 	getDeviceInfo(): Promise<HIDDeviceInfo>
-
-	getChildDeviceInfo(): Promise<ChildHIDDeviceInfo | null>
 }
 
 export interface HIDDeviceInfo {
 	readonly path: string | undefined
 	readonly productId: number
 	readonly vendorId: number
-}
-
-export interface ChildHIDDeviceInfo extends HIDDeviceInfo {
-	readonly serialNumber: string
-	readonly tcpPort: number
 }

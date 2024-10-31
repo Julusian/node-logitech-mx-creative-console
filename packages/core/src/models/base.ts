@@ -7,7 +7,6 @@ import type {
 	FillPanelOptions,
 	StreamDeck,
 	StreamDeckEvents,
-	StreamDeckTcpChildDeviceInfo,
 } from '../types.js'
 import type { ButtonsLcdDisplayService } from '../services/buttonsLcdDisplay/interface.js'
 import type { StreamDeckButtonControlDefinition, StreamDeckControlDefinition } from '../controlDefinition.js'
@@ -15,7 +14,6 @@ import type { LcdSegmentDisplayService } from '../services/lcdSegmentDisplay/int
 import type { PropertiesService } from '../services/properties/interface.js'
 import type { CallbackHook } from '../services/callback-hook.js'
 import type { StreamDeckInputService } from '../services/input/interface.js'
-import { DEVICE_MODELS, VENDOR_ID } from '../index.js'
 import type { EncoderLedService } from '../services/encoderLed.js'
 
 export type EncodeJPEGHelper = (buffer: Uint8Array, width: number, height: number) => Promise<Uint8Array>
@@ -45,9 +43,6 @@ export type StreamDeckProperties = Readonly<{
 	FULLSCREEN_PANELS: number
 
 	HAS_NFC_READER: boolean
-
-	/** Whether this device supports child devices */
-	SUPPORTS_CHILD_DEVICES: boolean
 }>
 
 export interface StreamDeckServicesDefinition {
@@ -237,18 +232,5 @@ export class StreamDeckBase extends EventEmitter<StreamDeckEvents> implements St
 		if (!this.#encoderLedService) throw new Error('Not supported for this model')
 
 		return this.#encoderLedService.setEncoderRingColors(...args)
-	}
-
-	public async getChildDeviceInfo(): Promise<StreamDeckTcpChildDeviceInfo | null> {
-		const info = await this.device.getChildDeviceInfo()
-		if (!info || info.vendorId !== VENDOR_ID) return null
-
-		const model = DEVICE_MODELS.find((m) => m.productIds.includes(info.productId))
-		if (!model) return null
-
-		return {
-			...info,
-			model: model.id,
-		}
 	}
 }

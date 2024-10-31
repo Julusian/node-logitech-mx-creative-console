@@ -80,7 +80,6 @@ const plusProperties: StreamDeckGen2Properties = {
 
 	FULLSCREEN_PANELS: 0,
 	HAS_NFC_READER: false,
-	SUPPORTS_CHILD_DEVICES: false,
 }
 const lcdSegmentControls = plusProperties.CONTROLS.filter(
 	(control): control is StreamDeckLcdSegmentControlDefinition => control.type === 'lcd-segment',

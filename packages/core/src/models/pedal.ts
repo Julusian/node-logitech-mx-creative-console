@@ -50,7 +50,6 @@ const pedalProperties: StreamDeckProperties = {
 
 	FULLSCREEN_PANELS: 0,
 	HAS_NFC_READER: false,
-	SUPPORTS_CHILD_DEVICES: false,
 }
 
 export function StreamDeckPedalFactory(device: HIDDevice, options: Required<OpenStreamDeckOptions>): StreamDeckBase {

@@ -18,7 +18,6 @@ const origMK2Properties: StreamDeckGen2Properties = {
 
 	FULLSCREEN_PANELS: 0,
 	HAS_NFC_READER: false,
-	SUPPORTS_CHILD_DEVICES: false,
 }
 
 export function StreamDeckOriginalMK2Factory(

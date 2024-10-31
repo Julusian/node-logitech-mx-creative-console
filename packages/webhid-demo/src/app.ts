@@ -1,10 +1,10 @@
 import type { StreamDeckWeb, LcdPosition } from '@logi-mx-creative-console/webhid'
 import { requestStreamDecks, getStreamDecks } from '@logi-mx-creative-console/webhid'
-import type { Demo } from './demo/demo'
-import { DomImageDemo } from './demo/dom'
-import { FillWhenPressedDemo } from './demo/fill-when-pressed'
-import { RapidFillDemo } from './demo/rapid-fill'
-import { ChaseDemo } from './demo/chase'
+import type { Demo } from './demo/demo.js'
+import { DomImageDemo } from './demo/dom.js'
+import { FillWhenPressedDemo } from './demo/fill-when-pressed.js'
+import { RapidFillDemo } from './demo/rapid-fill.js'
+import { ChaseDemo } from './demo/chase.js'
 
 declare const LIB_VERSION: any
 if (LIB_VERSION) {

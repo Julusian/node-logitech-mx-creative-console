@@ -116,12 +116,6 @@ export class StreamDeckProxy implements StreamDeck {
 		return this.device.clearLcdSegment(...args)
 	}
 
-	public async getChildDeviceInfo(
-		...args: Parameters<StreamDeck['getChildDeviceInfo']>
-	): ReturnType<StreamDeck['getChildDeviceInfo']> {
-		return this.device.getChildDeviceInfo(...args)
-	}
-
 	/**
 	 * EventEmitter
 	 */

@@ -1,5 +1,4 @@
 import type { HIDDevice as CoreHIDDevice, HIDDeviceEvents, HIDDeviceInfo } from '@logi-mx-creative-console/core'
-import type { ChildHIDDeviceInfo } from '@logi-mx-creative-console/core/dist/hid-device'
 import { EventEmitter } from 'eventemitter3'
 import Queue from 'p-queue'
 
@@ -55,10 +54,5 @@ export class WebHIDDevice extends EventEmitter<HIDDeviceEvents> implements CoreH
 			productId: this.device.productId,
 			vendorId: this.device.vendorId,
 		}
-	}
-
-	public async getChildDeviceInfo(): Promise<ChildHIDDeviceInfo | null> {
-		// Not supported
-		return null
 	}
 }

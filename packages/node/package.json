@@ -4,6 +4,7 @@
 	"description": "An npm module for interfacing with the Logi MX Creative Console in node",
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
+	"type": "module",
 	"license": "MIT",
 	"homepage": "https://github.com/julusian/node-logi-mx-creative-console#readme",
 	"repository": {

@@ -1,9 +1,9 @@
 {
-	"extends": "@tsconfig/node18/tsconfig.json",
+	"extends": "@tsconfig/node20/tsconfig.json",
 	"include": ["src/**/*"],
 	"compilerOptions": {
-		"module": "commonjs",
-		"moduleResolution": "node",
+		"module": "Node16",
+		"moduleResolution": "Node16",
 		"importHelpers": true,
 		"noEmitOnError": false,
 		"esModuleInterop": false,

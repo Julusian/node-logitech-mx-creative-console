@@ -8,12 +8,6 @@ import type {
 	StreamDeckLcdSegmentControlDefinition,
 } from './controlDefinition.js'
 
-export interface StreamDeckTcpChildDeviceInfo extends HIDDeviceInfo {
-	readonly model: DeviceModelId
-	readonly serialNumber: string
-	readonly tcpPort: number
-}
-
 export interface FillImageOptions {
 	format: 'rgb' | 'rgba' | 'bgr' | 'bgra'
 }
@@ -204,6 +198,4 @@ export interface StreamDeck extends EventEmitter<StreamDeckEvents> {
 	 * Get serial number from Stream Deck
 	 */
 	getSerialNumber(): Promise<string>
-
-	getChildDeviceInfo(): Promise<StreamDeckTcpChildDeviceInfo | null>
 }
