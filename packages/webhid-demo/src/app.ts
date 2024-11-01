@@ -1,5 +1,5 @@
-import type { StreamDeckWeb } from '@logi-mx-creative-console/webhid'
-import { requestStreamDecks, getStreamDecks } from '@logi-mx-creative-console/webhid'
+import type { StreamDeckWeb } from '@logitech-mx-creative-console/webhid'
+import { requestStreamDecks, getStreamDecks } from '@logitech-mx-creative-console/webhid'
 import type { Demo } from './demo/demo.js'
 import { DomImageDemo } from './demo/dom.js'
 import { FillWhenPressedDemo } from './demo/fill-when-pressed.js'

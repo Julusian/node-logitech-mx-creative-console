@@ -1,4 +1,4 @@
-import type { StreamDeckWeb } from '@logi-mx-creative-console/webhid'
+import type { StreamDeckWeb } from '@logitech-mx-creative-console/webhid'
 import { toCanvas } from 'html-to-image'
 import type { Demo } from './demo.js'
 

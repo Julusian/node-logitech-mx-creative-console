@@ -1,5 +1,5 @@
-import type { MXCreativeConsole } from '@logi-mx-creative-console/core'
-import { MXCreativeConsoleProxy } from '@logi-mx-creative-console/core'
+import type { MXCreativeConsole } from '@logitech-mx-creative-console/core'
+import { MXCreativeConsoleProxy } from '@logitech-mx-creative-console/core'
 
 export class MXCreativeConsoleNode extends MXCreativeConsoleProxy {
 	constructor(

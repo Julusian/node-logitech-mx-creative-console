@@ -11,7 +11,7 @@ HIDAsync.open = hidOpenMock as any
 
 // Must be required after we register a mock for `node-hid`.
 import { getMXCreativeConsoleInfo, listMXCreativeConsoleDevices, openMxCreativeConsole } from '../index.js'
-import { VENDOR_ID } from '@logi-mx-creative-console/core'
+import { VENDOR_ID } from '@logitech-mx-creative-console/core'
 
 describe('StreamDeck Devices', () => {
 	test('no devices', async () => {

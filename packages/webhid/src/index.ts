@@ -1,7 +1,7 @@
 /* eslint-disable n/no-unsupported-features/node-builtins */
 
-import type { OpenStreamDeckOptions, MXCreativeConsole } from '@logi-mx-creative-console/core'
-import { DEVICE_MODELS, VENDOR_ID } from '@logi-mx-creative-console/core'
+import type { OpenStreamDeckOptions, MXCreativeConsole } from '@logitech-mx-creative-console/core'
+import { DEVICE_MODELS, VENDOR_ID } from '@logitech-mx-creative-console/core'
 import { WebHIDDevice } from './hid-device.js'
 import { encodeJPEG } from './jpeg.js'
 import { MXCreativeConsoleWeb } from './wrapper.js'
@@ -20,7 +20,7 @@ export {
 	StreamDeckEncoderControlDefinition,
 	StreamDeckControlDefinition,
 	OpenStreamDeckOptions,
-} from '@logi-mx-creative-console/core'
+} from '@logitech-mx-creative-console/core'
 export { MXCreativeConsoleWeb as StreamDeckWeb } from './wrapper.js'
 
 /**

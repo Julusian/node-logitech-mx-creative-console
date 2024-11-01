@@ -41,7 +41,7 @@ for (const dirname of await fs.readdir(new URL('../packages', import.meta.url)))
 
 const allowPackages = []
 for (const [name, versions] of allDepVersions) {
-	if (name.startsWith('@img/sharp') || name === '@logi-mx-creative-console/webhid-demo') {
+	if (name.startsWith('@img/sharp') || name === '@logitech-mx-creative-console/webhid-demo') {
 		for (const version of versions) {
 			allowPackages.push(`${name}@${version}`)
 		}

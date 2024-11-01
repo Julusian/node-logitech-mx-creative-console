@@ -7,7 +7,7 @@
 		"baseUrl": "./",
 		"paths": {
 			"*": ["./node_modules/*"],
-			"@logi-mx-creative-console/webhid-demo": ["./src/index.ts"]
+			"@logitech-mx-creative-console/webhid-demo": ["./src/index.ts"]
 		},
 		"lib": ["es6", "dom"],
 		"types": ["w3c-web-hid"],

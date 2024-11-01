@@ -29,7 +29,7 @@ function generateEncoderColor(value, max) {
 	console.log('firmware', await streamDeck.getFirmwareVersion())
 	console.log('serial number', await streamDeck.getSerialNumber())
 
-	/** @type {import('@logi-mx-creative-console/core').StreamDeckEncoderControlDefinition[]} */
+	/** @type {import('@logitech-mx-creative-console/core').StreamDeckEncoderControlDefinition[]} */
 	const encoders = streamDeck.CONTROLS.filter((control) => control.type === 'encoder')
 
 	const encoderValues = encoders.map((encoder) => Math.round(encoder.ledRingSteps / 2))

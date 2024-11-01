@@ -1,16 +1,16 @@
 {
-	"name": "@logi-mx-creative-console/webhid-demo",
+	"name": "@logitech-mx-creative-console/webhid-demo",
 	"version": "0.1.0",
 	"private": true,
 	"type": "module",
 	"license": "MIT",
-	"homepage": "https://github.com/julusian/node-logi-mx-creative-console#readme",
+	"homepage": "https://github.com/julusian/node-logitech-mx-creative-console#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/julusian/node-logi-mx-creative-console.git"
+		"url": "git+https://github.com/julusian/node-logitech-mx-creative-console.git"
 	},
 	"bugs": {
-		"url": "https://github.com/julusian/node-logi-mx-creative-console/issues"
+		"url": "https://github.com/julusian/node-logitech-mx-creative-console/issues"
 	},
 	"author": {
 		"name": "Julian Waller",
@@ -21,7 +21,7 @@
 		"build": "run -B -T rimraf dist && cross-env NODE_ENV=production vite build"
 	},
 	"dependencies": {
-		"@logi-mx-creative-console/webhid": "0.1.0",
+		"@logitech-mx-creative-console/webhid": "0.1.0",
 		"html-to-image": "^1.11.11"
 	},
 	"devDependencies": {

@@ -1,18 +1,18 @@
 {
-	"name": "@logi-mx-creative-console/node",
+	"name": "@logitech-mx-creative-console/node",
 	"version": "0.1.0",
-	"description": "An npm module for interfacing with the Logi MX Creative Console in node",
+	"description": "An npm module for interfacing with the Logitech MX Creative Console in node",
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
 	"type": "module",
 	"license": "MIT",
-	"homepage": "https://github.com/julusian/node-logi-mx-creative-console#readme",
+	"homepage": "https://github.com/julusian/node-logitech-mx-creative-console#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/julusian/node-logi-mx-creative-console.git"
+		"url": "git+https://github.com/julusian/node-logitech-mx-creative-console.git"
 	},
 	"bugs": {
-		"url": "https://github.com/julusian/node-logi-mx-creative-console/issues"
+		"url": "https://github.com/julusian/node-logitech-mx-creative-console/issues"
 	},
 	"author": {
 		"name": "Julian Waller",
@@ -52,7 +52,7 @@
 		"node": ">=20.18"
 	},
 	"dependencies": {
-		"@logi-mx-creative-console/core": "0.1.0",
+		"@logitech-mx-creative-console/core": "0.1.0",
 		"eventemitter3": "^5.0.1",
 		"jpeg-js": "^0.4.4",
 		"node-hid": "^3.1.0",

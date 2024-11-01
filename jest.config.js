@@ -34,7 +34,7 @@ module.exports = {
 	preset: 'ts-jest',
 
 	moduleNameMapper: {
-		'@logi-mx-creative-console/(.+)': '<rootDir>/packages/$1/src',
+		'@logitech-mx-creative-console/(.+)': '<rootDir>/packages/$1/src',
 		'^(..?/.+).js?$': '$1',
 	},
 }

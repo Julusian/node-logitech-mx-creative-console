@@ -1,4 +1,4 @@
-import type { StreamDeck } from '@logi-mx-creative-console/webhid'
+import type { StreamDeck } from '@logitech-mx-creative-console/webhid'
 import type { Demo } from './demo.js'
 
 export class FillWhenPressedDemo implements Demo {

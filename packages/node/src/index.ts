@@ -1,5 +1,5 @@
-import type { OpenStreamDeckOptions, MXCreativeConsole } from '@logi-mx-creative-console/core'
-import { DEVICE_MODELS, VENDOR_ID } from '@logi-mx-creative-console/core'
+import type { OpenStreamDeckOptions, MXCreativeConsole } from '@logitech-mx-creative-console/core'
+import { DEVICE_MODELS, VENDOR_ID } from '@logitech-mx-creative-console/core'
 import * as HID from 'node-hid'
 import { NodeHIDDevice, MXCreativeConsoleDeviceInfo } from './hid-device.js'
 import { MXCreativeConsoleNode } from './wrapper.js'
@@ -18,7 +18,7 @@ export {
 	StreamDeckEncoderControlDefinition,
 	StreamDeckControlDefinition,
 	OpenStreamDeckOptions,
-} from '@logi-mx-creative-console/core'
+} from '@logitech-mx-creative-console/core'
 
 export { MXCreativeConsoleDeviceInfo, JPEGEncodeOptions }
 

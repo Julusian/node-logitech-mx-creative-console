@@ -1,4 +1,4 @@
-import type { StreamDeck, StreamDeckButtonControlDefinitionLcdFeedback } from '@logi-mx-creative-console/webhid'
+import type { StreamDeck, StreamDeckButtonControlDefinitionLcdFeedback } from '@logitech-mx-creative-console/webhid'
 import type { Demo } from './demo.js'
 
 interface ControlAndCanvas {

@@ -1,4 +1,4 @@
-import type { KeyIndex, StreamDeckWeb } from '@logi-mx-creative-console/webhid'
+import type { KeyIndex, StreamDeckWeb } from '@logitech-mx-creative-console/webhid'
 
 export interface Demo {
 	start(device: StreamDeckWeb): Promise<void>

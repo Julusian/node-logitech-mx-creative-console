@@ -25,8 +25,8 @@ const { listStreamDecks, openStreamDeck } = require('../dist/index')
 	})
 
 	const lcdPress = (
-		/** @type {import('@logi-mx-creative-console/core').StreamDeckLcdSegmentControlDefinition} */ control,
-		/** @type {import('@logi-mx-creative-console/core').LcdPosition} */ position,
+		/** @type {import('@logitech-mx-creative-console/core').StreamDeckLcdSegmentControlDefinition} */ control,
+		/** @type {import('@logitech-mx-creative-console/core').LcdPosition} */ position,
 	) => {
 		if (control.type !== 'lcd-segment') return
 

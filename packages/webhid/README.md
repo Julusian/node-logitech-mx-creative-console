@@ -1,12 +1,12 @@
-# @logi-mx-creative-console/webhid
+# @logitech-mx-creative-console/webhid
 
-![Node CI](https://github.com/Julusian/node-logi-mx-creative-console/workflows/Node%20CI/badge.svg)
-[![codecov](https://codecov.io/gh/Julusian/node-logi-mx-creative-console/branch/master/graph/badge.svg?token=Hl4QXGZJMF)](https://codecov.io/gh/Julusian/node-logi-mx-creative-console)
+![Node CI](https://github.com/Julusian/node-logitech-mx-creative-console/workflows/Node%20CI/badge.svg)
+[![codecov](https://codecov.io/gh/Julusian/node-logitech-mx-creative-console/branch/master/graph/badge.svg?token=Hl4QXGZJMF)](https://codecov.io/gh/Julusian/node-logitech-mx-creative-console)
 
-[![npm version](https://img.shields.io/npm/v/@logi-mx-creative-console/webhid.svg)](https://npm.im/@logi-mx-creative-console/webhid)
-[![license](https://img.shields.io/npm/l/@logi-mx-creative-console/webhid.svg)](https://npm.im/@logi-mx-creative-console/webhid)
+[![npm version](https://img.shields.io/npm/v/@logitech-mx-creative-console/webhid.svg)](https://npm.im/@logitech-mx-creative-console/webhid)
+[![license](https://img.shields.io/npm/l/@logitech-mx-creative-console/webhid.svg)](https://npm.im/@logitech-mx-creative-console/webhid)
 
-[@logi-mx-creative-console/webhid](https://www.npmjs.com/org/logi-mx-creative-console) is a library for interfacing with the various models of the [Logi MX Creative Console](https://www.logitech.com/en-gb/products/keyboards/mx-creative-console.html).
+[@logitech-mx-creative-console/webhid](https://www.npmjs.com/org/logitech-mx-creative-console) is a library for interfacing with the various models of the [Logitech MX Creative Console](https://www.logitech.com/en-gb/products/keyboards/mx-creative-console.html).
 
 ## Intended use
 
@@ -14,7 +14,7 @@ This library has nothing to do with the official software produced by Logi. Ther
 
 ## Install
 
-`$ npm install --save @logi-mx-creative-console/webhid`
+`$ npm install --save @logitech-mx-creative-console/webhid`
 
 ### Important
 
@@ -23,7 +23,7 @@ Since v7.0.0, the `buffer` polyfill is no longer been necessary. If you find tha
 ## Linux
 
 On linux, the udev subsystem blocks access to the device without some special configuration.
-Copy the [rules file](./udev/50-logi-mx-creative-console-user.rules) into `/etc/udev/rules.d/` and reload the rules with `sudo udevadm control --reload-rules`
+Copy the [rules file](./udev/50-logitech-mx-creative-console-user.rules) into `/etc/udev/rules.d/` and reload the rules with `sudo udevadm control --reload-rules`
 
 Unplug and replug the device and it should be usable
 
@@ -73,7 +73,7 @@ The StreamDeck type can be found [here](/packages/core/src/models/types.ts#L15)
 ## Example
 
 ```typescript
-import { requestStreamDecks } from '@logi-mx-creative-console/webhid'
+import { requestStreamDecks } from '@logitech-mx-creative-console/webhid'
 
 // Prompts the user to select a streamdeck to use
 const myStreamDecks = await requestStreamDecks()
@@ -97,10 +97,10 @@ await myStreamDecks[0].fillKeyColor(4, 255, 0, 0)
 console.log('Successfully wrote a red square to key 4.')
 ```
 
-Some the [demo site](https://julusian.github.io/node-logi-mx-creative-console/) for some more complete examples and its corresponding [source](/packages/webhid-demo).
+Some the [demo site](https://julusian.github.io/node-logitech-mx-creative-console/) for some more complete examples and its corresponding [source](/packages/webhid-demo).
 
 ## Contributing
 
-The logi-mx-creative-console team enthusiastically welcomes contributions and project participation! There's a bunch of things you can do if you want to contribute! Please don't hesitate to jump in if you'd like to, or even ask us questions if something isn't clear.
+The logitech-mx-creative-console team enthusiastically welcomes contributions and project participation! There's a bunch of things you can do if you want to contribute! Please don't hesitate to jump in if you'd like to, or even ask us questions if something isn't clear.
 
 Please refer to the [Changelog](CHANGELOG.md) for project history details, too.

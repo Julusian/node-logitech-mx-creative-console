@@ -1,4 +1,4 @@
-import type { DeviceModelId, HIDDevice, HIDDeviceEvents, HIDDeviceInfo } from '@logi-mx-creative-console/core'
+import type { DeviceModelId, HIDDevice, HIDDeviceEvents, HIDDeviceInfo } from '@logitech-mx-creative-console/core'
 import { EventEmitter } from 'eventemitter3'
 import type { HIDAsync, Device as NodeHIDDeviceInfo } from 'node-hid'
 
@@ -16,7 +16,7 @@ export interface MXCreativeConsoleDeviceInfo {
 
 /**
  * The wrapped node-hid HIDDevice.
- * This translates it into the common format expected by @logi-mx-creative-console/core
+ * This translates it into the common format expected by @logitech-mx-creative-console/core
  */
 export class NodeHIDDevice extends EventEmitter<HIDDeviceEvents> implements HIDDevice {
 	private device: HIDAsync

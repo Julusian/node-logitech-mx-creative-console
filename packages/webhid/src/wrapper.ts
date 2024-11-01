@@ -1,5 +1,5 @@
-import type { KeyIndex, MXCreativeConsole, StreamDeckButtonControlDefinition } from '@logi-mx-creative-console/core'
-import { MXCreativeConsoleProxy } from '@logi-mx-creative-console/core'
+import type { KeyIndex, MXCreativeConsole, StreamDeckButtonControlDefinition } from '@logitech-mx-creative-console/core'
+import { MXCreativeConsoleProxy } from '@logitech-mx-creative-console/core'
 import type { WebHIDDevice } from './hid-device.js'
 
 /**

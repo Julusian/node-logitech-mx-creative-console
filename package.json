@@ -1,12 +1,12 @@
 {
-  "name": "logi-mx-creative-console-packages",
+  "name": "logitech-mx-creative-console-packages",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "postinstall": "husky",
     "dev": "run build:root --watch",
-    "dev:demo": "yarn workspace @logi-mx-creative-console/webhid-demo start",
-    "build": "run build:root && yarn workspace @logi-mx-creative-console/webhid-demo build",
+    "dev:demo": "yarn workspace @logitech-mx-creative-console/webhid-demo start",
+    "build": "run build:root && yarn workspace @logitech-mx-creative-console/webhid-demo build",
     "build:root": "(run -B rimraf packages/*/dist || true) && run -B tsc --build tsconfig.build.json",
     "test": "run lint && run unit",
     "unit": "jest",

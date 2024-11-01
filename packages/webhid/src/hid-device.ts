@@ -1,10 +1,10 @@
-import type { HIDDevice as CoreHIDDevice, HIDDeviceEvents, HIDDeviceInfo } from '@logi-mx-creative-console/core'
+import type { HIDDevice as CoreHIDDevice, HIDDeviceEvents, HIDDeviceInfo } from '@logitech-mx-creative-console/core'
 import { EventEmitter } from 'eventemitter3'
 import Queue from 'p-queue'
 
 /**
  * The wrapped browser HIDDevice.
- * This translates it into the common format expected by @logi-mx-creative-console/core
+ * This translates it into the common format expected by @logitech-mx-creative-console/core
  */
 export class WebHIDDevice extends EventEmitter<HIDDeviceEvents> implements CoreHIDDevice {
 	private readonly device: HIDDevice

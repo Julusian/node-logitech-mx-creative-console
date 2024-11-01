@@ -7,7 +7,7 @@
 		"baseUrl": "./",
 		"paths": {
 			"*": ["./node_modules/*"],
-			"@logi-mx-creative-console/node": ["./src/index.ts"]
+			"@logitech-mx-creative-console/node": ["./src/index.ts"]
 		},
 		"types": ["node"]
 	}

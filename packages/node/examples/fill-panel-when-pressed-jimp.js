@@ -21,7 +21,7 @@ console.log('Press keys 0-7 to show the first image, and keys 8-15 to show the s
 		return img.resize(panelDimensions.width, panelDimensions.height)
 	})
 
-	/** @type {import('@logi-mx-creative-console/core').StreamDeckLcdSegmentControlDefinition} */
+	/** @type {import('@logitech-mx-creative-console/core').StreamDeckLcdSegmentControlDefinition} */
 	// @ts-expect-error  to ignore the | undefined
 	const lcdSegmentControl = streamDeck.CONTROLS.find((control) => control.type === 'lcd-segment' && control.id === 0)
 

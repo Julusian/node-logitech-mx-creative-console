@@ -1,6 +1,6 @@
 import { usb } from 'usb'
 import { listMXCreativeConsoleDevices, openMxCreativeConsole } from '../dist/index.js'
-/** @type {Record<string, import('@logi-mx-creative-console/core').MXCreativeConsole>} */
+/** @type {Record<string, import('@logitech-mx-creative-console/core').MXCreativeConsole>} */
 const devices = {}
 
 async function addDevice(info) {
