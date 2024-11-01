@@ -1,5 +1,6 @@
 import * as jpegJS from 'jpeg-js'
 import type { EncodeOptions } from '@julusian/jpeg-turbo'
+import type * as tJpegTurbo from '@julusian/jpeg-turbo'
 
 export interface JPEGEncodeOptions {
 	quality: number
@@ -22,7 +23,9 @@ export async function encodeJPEG(
 	options: JPEGEncodeOptions | undefined,
 ): Promise<Uint8Array> {
 	try {
-		const jpegTurbo = await import('@julusian/jpeg-turbo')
+		const jpegTurbo2 = await import('@julusian/jpeg-turbo')
+		// @ts-expect-error - bad export
+		const jpegTurbo = jpegTurbo2.default as typeof tJpegTurbo
 
 		// Try using jpeg-turbo if it is available
 		if (jpegTurbo.bufferSize && !!jpegTurbo.compress) {
