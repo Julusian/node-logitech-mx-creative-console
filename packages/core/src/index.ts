@@ -2,7 +2,7 @@ import type { HIDDevice } from './hid-device.js'
 import { DeviceModelId, MODEL_NAMES } from './id.js'
 import type { MXCreativeConsole } from './types.js'
 import type { OpenStreamDeckOptions } from './models/base.js'
-import { mxCreativeKeypadFactory } from './models/mx-creative-keypad.js'
+import { mxCreativeKeypadFactory, mxCreativeKeypadInitWrites } from './models/mx-creative-keypad.js'
 import type { PropertiesService } from './services/properties/interface.js'
 
 export * from './types.js'
@@ -33,6 +33,11 @@ export interface DeviceModelSpec {
 		options: Required<OpenStreamDeckOptions>,
 		propertiesService?: PropertiesService,
 	) => MXCreativeConsole
+
+	/**
+	 * Some extra writes to do after the device is opened, to initialise it
+	 */
+	initWrites?: Uint8Array[]
 }
 
 /** List of all the known models, and the classes to use them */
@@ -41,6 +46,7 @@ export const DEVICE_MODELS2: { [key in DeviceModelId]: Omit<DeviceModelSpec, 'id
 		// type: DeviceModelType.STREAMDECK,
 		productIds: [0xc354],
 		factory: mxCreativeKeypadFactory,
+		initWrites: mxCreativeKeypadInitWrites,
 	},
 }
 

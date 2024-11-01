@@ -14,6 +14,8 @@ console.log('Press different keys to show each image.')
 	const panelDimensions = device.calculateFillPanelDimensions()
 	if (!panelDimensions) throw new Error("Streamdeck doesn't support fillPanel")
 
+	// await device.resetToLogo()
+
 	// streamDeck.getSerialNumber().then((ser) => {
 	// 	console.log('serial', ser)
 	// })

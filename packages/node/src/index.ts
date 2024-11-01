@@ -100,6 +100,8 @@ export async function openMxCreativeConsole(
 			throw new Error('MX Creative Console is of unexpected type.')
 		}
 
+		if (model.initWrites) await device.sendReports(model.initWrites)
+
 		const rawDevice = model.factory(device, options)
 		return new MXCreativeConsoleNode(rawDevice, userOptions?.resetToLogoOnClose ?? false)
 	} catch (e) {

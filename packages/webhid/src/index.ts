@@ -81,6 +81,9 @@ export async function openDevice(
 		}
 
 		const browserHid = new WebHIDDevice(browserDevice)
+
+		if (model.initWrites) await browserHid.sendReports(model.initWrites)
+
 		const device: MXCreativeConsole = model.factory(browserHid, options || {})
 		return new MXCreativeConsoleWeb(device, browserHid)
 	} catch (e) {
