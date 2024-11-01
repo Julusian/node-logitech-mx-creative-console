@@ -1,5 +1,4 @@
 // @ts-check
-import path from 'path'
 import { Jimp } from 'jimp'
 import { listMXCreativeConsoleDevices, openMxCreativeConsole } from '../dist/index.js'
 import { fileURLToPath } from 'url'

@@ -1,4 +1,9 @@
-import type { KeyIndex, MXCreativeConsole, StreamDeckButtonControlDefinition } from '@logitech-mx-creative-console/core'
+import type {
+	FillPanelDimensionsOptions,
+	KeyIndex,
+	MXCreativeConsole,
+	StreamDeckButtonControlDefinition,
+} from '@logitech-mx-creative-console/core'
 import { MXCreativeConsoleProxy } from '@logitech-mx-creative-console/core'
 import type { WebHIDDevice } from './hid-device.js'
 
@@ -7,18 +12,18 @@ import type { WebHIDDevice } from './hid-device.js'
  * This is an extended variant of the class, to provide some more web friendly helpers, such as accepting a canvas
  */
 export class MXCreativeConsoleWeb extends MXCreativeConsoleProxy {
-	private readonly hid: WebHIDDevice
+	readonly #hid: WebHIDDevice
 
 	constructor(device: MXCreativeConsole, hid: WebHIDDevice) {
 		super(device)
-		this.hid = hid
+		this.#hid = hid
 	}
 
 	/**
 	 * Instruct the browser to close and forget the device. This will revoke the website's permissions to access the device.
 	 */
 	public async forget(): Promise<void> {
-		await this.hid.forget()
+		await this.#hid.forget()
 	}
 
 	public async fillKeyCanvas(keyIndex: KeyIndex, canvas: HTMLCanvasElement): Promise<void> {
@@ -37,11 +42,11 @@ export class MXCreativeConsoleWeb extends MXCreativeConsoleProxy {
 		return this.device.fillKeyBuffer(keyIndex, data.data, { format: 'rgba' })
 	}
 
-	public async fillPanelCanvas(canvas: HTMLCanvasElement): Promise<void> {
+	public async fillPanelCanvas(canvas: HTMLCanvasElement, options?: FillPanelDimensionsOptions): Promise<void> {
 		const ctx = canvas.getContext('2d', { willReadFrequently: true })
 		if (!ctx) throw new Error('Failed to get canvas context')
 
-		const dimensions = this.device.calculateFillPanelDimensions()
+		const dimensions = this.device.calculateFillPanelDimensions(options)
 		if (!dimensions) throw new Error('Panel does not support filling')
 
 		const data = ctx.getImageData(0, 0, dimensions.width, dimensions.height)

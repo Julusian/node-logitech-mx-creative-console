@@ -61,39 +61,6 @@ export function transformImageBuffer(
 	return byteBuffer
 }
 
-export const BMP_HEADER_LENGTH = 54
-export function writeBMPHeader(
-	buf: Uint8Array,
-	imageWidth: number,
-	imageHeight: number,
-	imageBytes: number,
-	imagePPM: number,
-): void {
-	const bufView = uint8ArrayToDataView(buf)
-	// Uses header format BITMAPINFOHEADER https://en.wikipedia.org/wiki/BMP_file_format
-
-	// Bitmap file header
-	bufView.setUint8(0, 0x42) // B
-	bufView.setUint8(1, 0x4d) // M
-	bufView.setUint32(2, imageBytes + 54, true)
-	bufView.setInt16(6, 0, true)
-	bufView.setInt16(8, 0, true)
-	bufView.setUint32(10, 54, true) // Full header size
-
-	// DIB header (BITMAPINFOHEADER)
-	bufView.setUint32(14, 40, true) // DIB header size
-	bufView.setInt32(18, imageWidth, true)
-	bufView.setInt32(22, imageHeight, true)
-	bufView.setInt16(26, 1, true) // Color planes
-	bufView.setInt16(28, 24, true) // Bit depth
-	bufView.setInt32(30, 0, true) // Compression
-	bufView.setInt32(34, imageBytes, true) // Image size
-	bufView.setInt32(38, imagePPM, true) // Horizontal resolution ppm
-	bufView.setInt32(42, imagePPM, true) // Vertical resolution ppm
-	bufView.setInt32(46, 0, true) // Colour pallette size
-	bufView.setInt32(50, 0, true) // 'Important' Colour count
-}
-
 export function uint8ArrayToDataView(buffer: Uint8Array | Uint8ClampedArray): DataView {
 	return new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength)
 }

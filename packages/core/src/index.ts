@@ -48,6 +48,11 @@ export const DEVICE_MODELS2: { [key in DeviceModelId]: Omit<DeviceModelSpec, 'id
 		factory: mxCreativeKeypadFactory,
 		initWrites: mxCreativeKeypadInitWrites,
 	},
+	[DeviceModelId.MX_CREATIVE_DIALPAD]: {
+		// type: DeviceModelType.STREAMDECK,
+		productIds: [0xbc00],
+		factory: mxCreativeKeypadFactory,
+	},
 }
 
 /** @deprecated maybe? */
