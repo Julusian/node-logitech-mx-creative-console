@@ -78,7 +78,7 @@ jobs:
           yarn install
         env:
           CI: true
-      - run: yarn unit
+      - run: yarn unit --coverage
         env:
           CI: true
       - name: Send coverage

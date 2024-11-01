@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { transformImageBuffer } from '../util.js'
 
 function getSimpleBuffer(width: number, height: number, components: 3 | 4): Buffer {

@@ -2,6 +2,6 @@
 	"extends": "./tsconfig.build.json",
 	"exclude": ["node_modules/**"],
 	"compilerOptions": {
-		"types": ["jest", "node", "w3c-web-hid"]
+		"types": ["node", "w3c-web-hid"]
 	}
 }

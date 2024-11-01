@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`imageToByteArray basic bgra -> bgr 1`] = `
+exports[`imageToByteArray > basic bgra -> bgr 1`] = `
 Uint8Array [
   0,
   0,
@@ -21,7 +21,7 @@ Uint8Array [
 ]
 `;
 
-exports[`imageToByteArray basic bgra -> rgba 1`] = `
+exports[`imageToByteArray > basic bgra -> rgba 1`] = `
 Uint8Array [
   0,
   0,
@@ -46,7 +46,7 @@ Uint8Array [
 ]
 `;
 
-exports[`imageToByteArray basic rgb -> bgr 1`] = `
+exports[`imageToByteArray > basic rgb -> bgr 1`] = `
 Uint8Array [
   0,
   0,
@@ -67,7 +67,7 @@ Uint8Array [
 ]
 `;
 
-exports[`imageToByteArray basic rgb -> rgba 1`] = `
+exports[`imageToByteArray > basic rgb -> rgba 1`] = `
 Uint8Array [
   0,
   0,
@@ -93,7 +93,7 @@ Uint8Array [
 ]
 `;
 
-exports[`imageToByteArray basic vflip 1`] = `
+exports[`imageToByteArray > basic vflip 1`] = `
 Uint8Array [
   0,
   0,
@@ -129,7 +129,7 @@ Uint8Array [
 ]
 `;
 
-exports[`imageToByteArray basic xflip 1`] = `
+exports[`imageToByteArray > basic xflip 1`] = `
 Uint8Array [
   0,
   0,
