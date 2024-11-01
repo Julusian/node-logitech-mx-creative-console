@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<script type="module" crossorigin src="/assets/index-DJJ4BBdI.js"></script>
+		<link rel="stylesheet" crossorigin href="/assets/index-CAwL2vkZ.css">
+	</head>
+
+	<body>
+		<h1>Logitech MX Creative Console demo <span id="version_str"></span></h1>
+		<h3>
+			Based on
+			<a href="https://github.com/Julusian/node-logitech-mx-creative-console/">@logitech-mx-creative-console</a>
+			<a href="https://www.npmjs.com/package/@logitech-mx-creative-console/webhid">npm</a>
+		</h3>
+		<p>Requires Chrome</p>
+		<h3>
+			Note: For linux, you need to ensure udev is setup with the correct device permissions for the hidraw driver.
+		</h3>
+
+		<p>
+			<a href="#" id="consent-button">Select device</a>
+		</p>
+
+		<p>
+			<select id="demo-select">
+				<option value="chase">chase</option>
+				<option value="fill-when-pressed">fill when pressed</option>
+				<option value="rapid-fill">rapid fill</option>
+				<option value="dom">dom</option>
+			</select>
+		</p>
+
+		<p>
+			<input type="range" min="1" max="100" value="60" id="brightness-range" />
+		</p>
+
+		<div id="image-source" style="display: none; background: #ab00ff; width: 360px; height: 216px">
+			<div class="lds-spinner">
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+			</div>
+		</div>
+
+		<div id="log" style="white-space: pre; background: #ffffff"></div>
+
+	</body>
+</html>
