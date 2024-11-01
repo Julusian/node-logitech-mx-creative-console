@@ -1,42 +1,40 @@
 // @ts-check
-const path = require('path')
-const sharp = require('sharp')
-const { listStreamDecks, openStreamDeck } = require('../dist/index')
+import sharp from 'sharp'
+import { listMXCreativeConsoleDevices, openMxCreativeConsole } from '../dist/index.js'
+import { fileURLToPath } from 'url'
 
-;(async () => {
-	const devices = await listStreamDecks()
-	if (!devices[0]) throw new Error('No device found')
+const devices = await listMXCreativeConsoleDevices()
+if (!devices[0]) throw new Error('No device found')
 
-	const streamDeck = await openStreamDeck(devices[0].path)
-	await streamDeck.clearPanel()
+const device = await openMxCreativeConsole(devices[0].path)
+await device.clearPanel()
 
-	const img = await sharp(path.resolve(__dirname, 'fixtures/github_logo.png'))
-		.flatten()
-		.resize(streamDeck.BUTTON_WIDTH_PX, streamDeck.BUTTON_HEIGHT_PX)
-		.raw()
-		.toBuffer()
+const img = await sharp(fileURLToPath(new URL('fixtures/github_logo.png', import.meta.url)))
+	.flatten()
+	.resize(118, 118) // TODO - dynamic
+	.raw()
+	.toBuffer()
 
-	streamDeck.on('down', (control) => {
-		if (control.type !== 'button') return
+device.on('down', (control) => {
+	if (control.type !== 'button') return
 
-		// Fill the pressed key with an image of the GitHub logo.
-		console.log('Filling button #%d', control.index)
-		if (control.feedbackType === 'lcd') {
-			streamDeck.fillKeyBuffer(control.index, img).catch((e) => console.error('Fill failed:', e))
-		} else {
-			streamDeck.fillKeyColor(control.index, 255, 255, 255).catch((e) => console.error('Fill failed:', e))
-		}
-	})
+	// Fill the pressed key with an image of the GitHub logo.
+	console.log('Filling button #%d', control.index)
+	if (control.feedbackType === 'lcd') {
+		device.fillKeyBuffer(control.index, img).catch((e) => console.error('Fill failed:', e))
+	}
+})
 
-	streamDeck.on('up', (control) => {
-		if (control.type !== 'button') return
+device.on('up', (control) => {
+	if (control.type !== 'button') return
 
-		// Clear the key when it is released.
-		console.log('Clearing button #%d', control.index)
-		streamDeck.clearKey(control.index).catch((e) => console.error('Clear failed:', e))
-	})
+	// Clear the key when it is released.
+	console.log('Clearing button #%d', control.index)
+	if (control.feedbackType === 'lcd') {
+		device.clearKey(control.index).catch((e) => console.error('Clear failed:', e))
+	}
+})
 
-	streamDeck.on('error', (error) => {
-		console.error(error)
-	})
-})()
+device.on('error', (error) => {
+	console.error(error)
+})

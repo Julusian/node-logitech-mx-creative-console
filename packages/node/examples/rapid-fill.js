@@ -33,7 +33,7 @@ listMXCreativeConsoleDevices().then(async (devices) => {
 					isFilling = false
 				}
 			})
-		}, 1000 / 3)
+		}, 1000 / 5)
 
 		function getRandomIntInclusive(min, max) {
 			min = Math.ceil(min)
