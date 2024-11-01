@@ -23,9 +23,14 @@ export class DomImageDemo implements Demo {
 	private running: Promise<void> | undefined
 
 	public async start(device: StreamDeckWeb): Promise<void> {
+		const fillSize = device.calculateFillPanelDimensions()
 		this.element = document.querySelector<HTMLElement>('#image-source') || undefined
 		if (this.element) {
 			this.element.style.display = 'block'
+			if (fillSize) {
+				this.element.style.width = `${fillSize.width}px`
+				this.element.style.height = `${fillSize.height}px`
+			}
 		}
 
 		if (!this.run) {

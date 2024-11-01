@@ -22,7 +22,7 @@ export class RapidFillDemo implements Demo {
 
 					const ps: Array<Promise<void>> = []
 					for (const control of device.CONTROLS) {
-						if (control.type === 'button') {
+						if (control.type === 'button' && control.feedbackType !== 'none') {
 							ps.push(device.fillKeyColor(control.index, r, g, b))
 						}
 					}

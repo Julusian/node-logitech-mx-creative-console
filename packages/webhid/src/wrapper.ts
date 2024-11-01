@@ -24,7 +24,7 @@ export class MXCreativeConsoleWeb extends MXCreativeConsoleProxy {
 	public async fillKeyCanvas(keyIndex: KeyIndex, canvas: HTMLCanvasElement): Promise<void> {
 		// this.checkValidKeyIndex(keyIndex)
 
-		const ctx = canvas.getContext('2d')
+		const ctx = canvas.getContext('2d', { willReadFrequently: true })
 		if (!ctx) throw new Error('Failed to get canvas context')
 
 		const control = this.CONTROLS.find(
@@ -38,7 +38,7 @@ export class MXCreativeConsoleWeb extends MXCreativeConsoleProxy {
 	}
 
 	public async fillPanelCanvas(canvas: HTMLCanvasElement): Promise<void> {
-		const ctx = canvas.getContext('2d')
+		const ctx = canvas.getContext('2d', { willReadFrequently: true })
 		if (!ctx) throw new Error('Failed to get canvas context')
 
 		const dimensions = this.device.calculateFillPanelDimensions()

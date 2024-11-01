@@ -56,7 +56,8 @@ async function demoChange() {
 }
 
 async function openDevice(device: StreamDeckWeb): Promise<void> {
-	appendLog(`Device opened. Serial: ${await device.getSerialNumber()} Firmware: ${await device.getFirmwareVersion()}`)
+	const info = await device.getHidDeviceInfo()
+	appendLog(`Device opened. Serial: ${info.serialNumber}`)
 
 	device.on('down', (control) => {
 		if (control.type === 'button') {

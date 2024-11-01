@@ -10,7 +10,7 @@ export async function encodeJPEG(buffer: Uint8Array, width: number, height: numb
 		const canvas = document.createElement('canvas')
 		canvas.width = width
 		canvas.height = height
-		const ctx = canvas.getContext('2d')
+		const ctx = canvas.getContext('2d', { willReadFrequently: true })
 		if (ctx) {
 			const imageData = ctx.createImageData(width, height)
 			imageData.data.set(buffer)

@@ -17,7 +17,7 @@ export class ChaseDemo implements Demo {
 
 		for (const { control, canvas } of controls) {
 			// We probably should reuse this instead of creating it each time.
-			const ctx = canvas.getContext('2d')
+			const ctx = canvas.getContext('2d', { willReadFrequently: true })
 
 			if (ctx) {
 				const n = c + control.index
