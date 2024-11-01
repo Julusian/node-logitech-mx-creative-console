@@ -73,7 +73,7 @@ export class StreamDeckBase extends EventEmitter<MXCreativeConsoleEvents> implem
 		// propogate events
 		services.events?.listen((key, ...args) => this.emit(key, ...args))
 
-		this.device.on('input', (data: Uint8Array) => this.#inputService.handleInput(data))
+		this.device.on('input', (reportId, data: Uint8Array) => this.#inputService.handleInput(reportId, data))
 
 		this.device.on('error', (err) => {
 			this.emit('error', err)

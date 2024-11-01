@@ -1,3 +1,3 @@
 export interface MXCreativeConsoleInputService {
-	handleInput(data: Uint8Array): void
+	handleInput(reportId: number, data: Uint8Array): void
 }

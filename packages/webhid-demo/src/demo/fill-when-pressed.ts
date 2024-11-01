@@ -11,7 +11,6 @@ export class FillWhenPressedDemo implements Demo {
 		await device.clearPanel()
 	}
 	public async keyDown(device: StreamDeck, keyIndex: number): Promise<void> {
-		console.log('keyDown', keyIndex, this.pressed)
 		if (this.pressed.indexOf(keyIndex) === -1) {
 			this.pressed.push(keyIndex)
 

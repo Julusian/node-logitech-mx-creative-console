@@ -7,7 +7,7 @@
     "dev": "run build:root --watch",
     "dev:demo": "yarn workspace @logi-mx-creative-console/webhid-demo start",
     "build": "run build:root && yarn workspace @logi-mx-creative-console/webhid-demo build",
-    "build:root": "(run g:rimraf packages/*/dist || true) && run g:tsc --build tsconfig.build.json",
+    "build:root": "(run -B rimraf packages/*/dist || true) && run -B tsc --build tsconfig.build.json",
     "test": "run lint && run unit",
     "unit": "jest",
     "lint:raw": "eslint",
@@ -17,9 +17,7 @@
     "graduate": "run bump --conventional-graduate",
     "publish2": "run build && lerna publish from-package --pre-dist-tag next",
     "validate:dependencies": "yarn npm audit && run license-validate",
-    "license-validate": "node ./scripts/license-check.mjs",
-    "g:tsc": "cd $INIT_CWD && tsc",
-    "g:rimraf": "cd $INIT_CWD && rimraf"
+    "license-validate": "node ./scripts/license-check.mjs"
   },
   "lint-staged": {
     "*.{css,json,md,scss}": [

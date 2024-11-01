@@ -2,7 +2,7 @@ import type { EventEmitter } from 'eventemitter3'
 
 export interface HIDDeviceEvents {
 	error: [data: any]
-	input: [keys: Uint8Array]
+	input: [reportId: number, payload: Uint8Array]
 }
 
 /**

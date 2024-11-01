@@ -24,14 +24,14 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 		}
 	}
 
-	handleInput(data: Uint8Array): void {
-		if (data[3] === 0x2b) return // Ignore acks to drawing
+	handleInput(reportId: number, data: Uint8Array): void {
+		if (data[2] === 0x2b) return // Ignore acks to drawing
 
-		const dataView = uint8ArrayToDataView(data.slice(1))
+		const dataView = uint8ArrayToDataView(data)
 
-		if (data[0] === 0x13) {
+		if (reportId === 0x13) {
 			this.#handleButtonInput(dataView)
-		} else if (data[0] === 0x11) {
+		} else if (reportId === 0x11) {
 			this.#handlePageButtonInput(dataView)
 		}
 	}
