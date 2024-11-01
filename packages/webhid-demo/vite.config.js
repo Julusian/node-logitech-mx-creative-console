@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+	base: './',
 	publicDir: 'public',
 	// This changes the out put dir from dist to build
 	// comment this out if that isn't relevant for your project
