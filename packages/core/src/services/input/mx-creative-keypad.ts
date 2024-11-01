@@ -11,6 +11,7 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 
 	readonly #buttonControlsByEncoded = new Map<number, StreamDeckButtonControlDefinition>()
 	readonly #pushedButtons = new Set<number>()
+	readonly #pushedArrowButtons = new Set<number>()
 
 	constructor(deviceProperties: Readonly<StreamDeckProperties>, eventSource: CallbackHook<MXCreativeConsoleEvents>) {
 		this.deviceProperties = deviceProperties
@@ -24,13 +25,15 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 	}
 
 	handleInput(data: Uint8Array): void {
-		if (data[2] === 0x2b) return // Ignore acks to drawing
+		if (data[3] === 0x2b) return // Ignore acks to drawing
 
-		console.log('got', data)
+		const dataView = uint8ArrayToDataView(data.slice(1))
 
-		const dataView = uint8ArrayToDataView(data)
-
-		this.#handleButtonInput(dataView)
+		if (data[0] === 0x13) {
+			this.#handleButtonInput(dataView)
+		} else if (data[0] === 0x11) {
+			this.#handlePageButtonInput(dataView)
+		}
 	}
 
 	#handleButtonInput(view: DataView): void {
@@ -46,7 +49,7 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 		const pushedControlIds = new Set<number>()
 
 		for (let i = 5; i < view.byteLength; i += 1) {
-			const value = view.getUint16(i, true)
+			const value = view.getInt8(i)
 			if (value === 0) break
 
 			const control = this.#buttonControlsByEncoded.get(value)
@@ -72,6 +75,43 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 			if (this.#pushedButtons.has(control.hidId)) continue
 
 			this.#pushedButtons.add(control.hidId)
+			this.#eventSource.emit('down', control)
+		}
+	}
+
+	#handlePageButtonInput(view: DataView): void {
+		if (view.getUint8(0) !== 0xff || view.getUint8(1) !== 0x0b || view.getUint8(2) !== 0x00) return
+
+		const pushedControls: StreamDeckButtonControlDefinition[] = []
+		const pushedControlIds = new Set<number>()
+
+		for (let i = 3; i < view.byteLength; i += 2) {
+			const value = view.getUint16(i, false)
+			if (value === 0) break
+
+			const control = this.#buttonControlsByEncoded.get(value)
+			if (!control) continue
+
+			pushedControlIds.add(control.hidId)
+			pushedControls.push(control)
+		}
+
+		// Check for key ups
+		for (const keyId of this.#pushedArrowButtons) {
+			// Check if still pressed
+			if (pushedControlIds.has(keyId)) continue
+
+			const control = this.#buttonControlsByEncoded.get(keyId)
+			if (control) this.#eventSource.emit('up', control)
+
+			this.#pushedArrowButtons.delete(keyId)
+		}
+
+		for (const control of pushedControls) {
+			// Check if already pressed
+			if (this.#pushedArrowButtons.has(control.hidId)) continue
+
+			this.#pushedArrowButtons.add(control.hidId)
 			this.#eventSource.emit('down', control)
 		}
 	}

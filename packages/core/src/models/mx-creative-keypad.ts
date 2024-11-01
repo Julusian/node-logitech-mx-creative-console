@@ -15,9 +15,25 @@ const keypadProperties: StreamDeckProperties = {
 	MODEL: DeviceModelId.MX_CREATIVE_KEYPAD,
 	PRODUCT_NAME: MODEL_NAMES[DeviceModelId.MX_CREATIVE_KEYPAD],
 
-	CONTROLS: freezeDefinitions(
-		generateButtonsGrid(3, 3, { width: 118, height: 118 }, { x: 23, y: 6 }, { x: 40, y: 40 }),
-	),
+	CONTROLS: freezeDefinitions([
+		...generateButtonsGrid(3, 3, { width: 118, height: 118 }, { x: 23, y: 6 }, { x: 40, y: 40 }),
+		{
+			type: 'button',
+			row: 3,
+			column: 0,
+			index: 9,
+			hidId: 0x01a1,
+			feedbackType: 'none',
+		},
+		{
+			type: 'button',
+			row: 3,
+			column: 1,
+			index: 10,
+			hidId: 0x01a2,
+			feedbackType: 'none',
+		},
+	]),
 
 	PANEL_SIZE: { width: 480, height: 480 },
 }
