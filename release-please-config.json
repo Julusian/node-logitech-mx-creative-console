@@ -1,14 +1,4 @@
 {
-	// "packages": {
-	// 	".": { "component": "root" },
-	// 	"packages/core": { "component": "core" },
-	// 	"packages/node": { "component": "node" },
-	// 	"packages/webhid": { "component": "webhid" }
-	// },
-	// "plugins": [
-	// 	{ "type": "node-workspace", "merge": false },
-	// 	{ "type": "linked-versions", "groupName": "lib", "components": ["root", "core", "node", "webhid"] }
-	// ],
 	"extra-files": [
 		{ "type": "json", "path": "packages/core/package.json", "jsonpath": "$.version" },
 		{ "type": "json", "path": "packages/node/package.json", "jsonpath": "$.version" },
