@@ -1,12 +1,13 @@
 {
 	"packages": {
+		".": { "component": "root" },
 		"packages/core": { "component": "core" },
 		"packages/node": { "component": "node" },
 		"packages/webhid": { "component": "webhid" }
 	},
 	"plugins": [
 		{ "type": "node-workspace", "merge": false },
-		{ "type": "linked-versions", "groupName": "lib", "components": ["core", "node", "webhid"] }
+		{ "type": "linked-versions", "groupName": "lib", "components": ["root", "core", "node", "webhid"] }
 	],
 	"bootstrap-sha": "26b2648f4dbfad47f080fc744a110a0d2e660200",
 	"release-as": "0.2.0"
