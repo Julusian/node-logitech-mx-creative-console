@@ -9,7 +9,7 @@ import { DefaultButtonsLcdService } from '../services/buttonsLcdDisplay/default.
 import { JpegButtonLcdImagePacker } from '../services/imagePacker/jpeg.js'
 import { MXConsoleDefaultImageWriter } from '../services/imageWriter/imageWriter.js'
 import { KeypadInputService } from '../services/input/mx-creative-keypad.js'
-import { Gen2PropertiesService } from '../services/properties/gen2.js'
+import { DefaultPropertiesService } from '../services/properties/default.js'
 
 const keypadProperties: MXConsoleProperties = {
 	MODEL: DeviceModelId.MX_CREATIVE_KEYPAD,
@@ -30,7 +30,7 @@ export function mxCreativeKeypadFactory(device: HIDDevice, options: Required<Ope
 	return new MXConsoleBase(device, options, {
 		deviceProperties: keypadProperties,
 		events,
-		properties: new Gen2PropertiesService(device),
+		properties: new DefaultPropertiesService(device),
 		buttonsLcd: new DefaultButtonsLcdService(
 			new MXConsoleDefaultImageWriter(),
 			new JpegButtonLcdImagePacker(options.encodeJPEG),

@@ -39,7 +39,7 @@ export async function requestMXCreateConsoleDevices(options?: OpenMXConsoleOptio
  * The browser remembers what the user previously allowed your site to access, and this will open those without the request dialog
  * @param options Options to customise the device behvaiour
  */
-export async function reopenMXCreativeCosnoleDevices(options?: OpenMXConsoleOptions): Promise<MXCreativeConsoleWeb[]> {
+export async function reopenMXCreativeConsoleDevices(options?: OpenMXConsoleOptions): Promise<MXCreativeConsoleWeb[]> {
 	const browserDevices = await navigator.hid.getDevices()
 	const validDevices = browserDevices.filter((d) => d.vendorId === VENDOR_ID)
 

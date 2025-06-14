@@ -42,53 +42,54 @@ The root methods exposed by the library are as follows. For more information it 
 /**
  * Scan for and list detected devices
  */
-export function listStreamDecks(): Promise<StreamDeckDeviceInfo[]>
+export function listMXCreativeConsoleDevices(): Promise<MXCreativeConsoleDeviceInfo[]>
 
 /**
- * Get the info of a device if the given path is a streamdeck
+ * Get the info of a device if the given path is a MXConsole
  */
-export function getStreamDeckInfo(path: string): Promise<StreamDeckDeviceInfo | undefined>
+export function getMXCreativeConsoleInfo(path: string): Promise<MXCreativeConsoleDeviceInfo | undefined>
 
 /**
- * Open a streamdeck
+ * Open a device
  * @param devicePath The path of the device to open.
  * @param userOptions Options to customise the device behvaiour
  */
-export function openStreamDeck(devicePath: string, userOptions?: OpenStreamDeckOptionsNode): Promise<StreamDeck>
+export function openMxCreativeConsole(
+	devicePath: string,
+	userOptions?: OpenMXCreativeConsoleOptionsNode,
+): Promise<MXCreativeConsole>
 ```
 
-The StreamDeck type can be found [here](/packages/core/src/models/types.ts#L15)
+The MXCreativeConsole type can be found [here](/packages/core/src/models/types.ts#L15)
 
 ## Example
 
 ```typescript
-import { openStreamDeck, listStreamDecks } from '@logitech-mx-creative-console/node'
+import { openMxCreativeConsole, listMXCreativeConsoleDevices } from '@logitech-mx-creative-console/node'
 
-// List the connected streamdecks
-const devices = await listStreamDecks()
-if (devices.length === 0) throw new Error('No streamdecks connected!')
+// List the connected devices
+const devices = await listMXCreativeConsoleDevices()
+if (devices.length === 0) throw new Error('No MX Creative Console connected!')
 
 // You must provide the devicePath yourself as the first argument to the constructor.
-// For example: const myStreamDeck = new StreamDeck('\\\\?\\hid#vid_05f3&pid_0405&mi_00#7&56cf813&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}')
-// On linux the equivalent would be: const myStreamDeck = new StreamDeck('0001:0021:00')
-const myStreamDeck = await openStreamDeck(devices[0].path)
+const myDevice = await openMxCreativeConsole(devices[0].path)
 
-myStreamDeck.on('down', (keyIndex) => {
+myDevice.on('down', (keyIndex) => {
 	console.log('key %d down', keyIndex)
 })
 
-myStreamDeck.on('up', (keyIndex) => {
+myDevice.on('up', (keyIndex) => {
 	console.log('key %d up', keyIndex)
 })
 
 // Fired whenever an error is detected by the `node-hid` library.
-// Always add a listener for this event! If you don't, errors will be silently dropped.
-myStreamDeck.on('error', (error) => {
+// Always add a listener for this event! If you don't, errors will cause a crash.
+myDevice.on('error', (error) => {
 	console.error(error)
 })
 
 // Fill the first button form the left in the first row with a solid red color. This is asynchronous.
-await myStreamDeck.fillKeyColor(4, 255, 0, 0)
+await myDevice.fillKeyColor(4, 255, 0, 0)
 console.log('Successfully wrote a red square to key 4.')
 ```
 

@@ -1,7 +1,7 @@
 import type { HIDDevice } from '../../hid-device.js'
 import type { PropertiesService } from './interface.js'
 
-export class Gen2PropertiesService implements PropertiesService {
+export class DefaultPropertiesService implements PropertiesService {
 	readonly #device: HIDDevice
 
 	constructor(device: HIDDevice) {
@@ -19,7 +19,7 @@ export class Gen2PropertiesService implements PropertiesService {
 		const brightnessCommandBuffer = new Uint8Array([
 			0x11, 0xff, 0x0f, 0x2b, 0x00, percentage, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-			0x00, 0x00, 0x00, 0x00, 
+			0x00, 0x00, 0x00, 0x00,
 		]);
 		await this.#device.sendReports([brightnessCommandBuffer])
 	}
