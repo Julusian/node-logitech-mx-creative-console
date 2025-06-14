@@ -1,4 +1,4 @@
-import type { EventEmitter } from 'eventemitter3'
+import type { EventEmitter } from 'node:events'
 
 export interface HIDDeviceEvents {
 	error: [data: any]

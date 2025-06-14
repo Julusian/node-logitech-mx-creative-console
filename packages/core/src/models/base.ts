@@ -1,4 +1,4 @@
-import { EventEmitter } from 'eventemitter3'
+import { EventEmitter } from 'node:events'
 import type { HIDDevice, HIDDeviceInfo } from '../hid-device.js'
 import type { DeviceModelId, Dimension, KeyIndex } from '../id.js'
 import type {

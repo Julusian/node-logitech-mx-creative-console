@@ -7,8 +7,13 @@
 		"baseUrl": "./",
 		"paths": {
 			"*": ["./node_modules/*"],
-			"@logitech-mx-creative-console/node": ["./src/index.ts"]
+			"@logitech-mx-creative-console/node": ["./src/index.ts"],
 		},
 		"types": ["node"]
-	}
+	},
+	"references": [
+		{
+			"path": "../core"
+		},
+	]
 }

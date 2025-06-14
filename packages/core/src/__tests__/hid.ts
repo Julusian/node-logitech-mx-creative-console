@@ -1,10 +1,12 @@
-import { EventEmitter } from 'eventemitter3'
+import { EventEmitter } from 'node:events'
 import type { EncodeJPEGHelper } from '../models/base.js'
 import type { HIDDevice, HIDDeviceEvents, HIDDeviceInfo } from '../hid-device.js'
+import { expect, type MockedFunction } from 'vitest'
+
 export class DummyHID extends EventEmitter<HIDDeviceEvents> implements HIDDevice {
 	constructor(
 		public readonly path: string,
-		public readonly encodeJPEG: jest.MockedFunction<EncodeJPEGHelper>,
+		public readonly encodeJPEG: MockedFunction<EncodeJPEGHelper>,
 	) {
 		super()
 		expect(typeof path).toEqual('string')
