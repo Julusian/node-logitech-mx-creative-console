@@ -1,8 +1,11 @@
-import type { StreamDeck, StreamDeckButtonControlDefinitionLcdFeedback } from '@logitech-mx-creative-console/webhid'
+import type {
+	MXCreativeConsoleWeb,
+	MXConsoleButtonControlDefinitionLcdFeedback,
+} from '@logitech-mx-creative-console/webhid'
 import type { Demo } from './demo.js'
 
 interface ControlAndCanvas {
-	control: StreamDeckButtonControlDefinitionLcdFeedback
+	control: MXConsoleButtonControlDefinitionLcdFeedback
 	canvas: HTMLCanvasElement
 }
 
@@ -12,7 +15,7 @@ export class ChaseDemo implements Demo {
 	private interval: number | undefined
 	private running: Promise<void> | undefined
 
-	private async drawButtons(device: StreamDeck, controls: ControlAndCanvas[], c: number): Promise<void> {
+	private async drawButtons(device: MXCreativeConsoleWeb, controls: ControlAndCanvas[], c: number): Promise<void> {
 		const ps: Array<Promise<void>> = []
 
 		for (const { control, canvas } of controls) {
@@ -41,13 +44,13 @@ export class ChaseDemo implements Demo {
 		await Promise.all(ps)
 	}
 
-	public async start(device: StreamDeck): Promise<void> {
+	public async start(device: MXCreativeConsoleWeb): Promise<void> {
 		await device.clearPanel()
 
 		this.counter = 0
 
 		const controls = device.CONTROLS.filter(
-			(control): control is StreamDeckButtonControlDefinitionLcdFeedback =>
+			(control): control is MXConsoleButtonControlDefinitionLcdFeedback =>
 				control.type === 'button' && control.feedbackType === 'lcd',
 		).sort((a, b) => b.index - a.index)
 
@@ -74,7 +77,7 @@ export class ChaseDemo implements Demo {
 			}, 1000 / 5)
 		}
 	}
-	public async stop(device: StreamDeck): Promise<void> {
+	public async stop(device: MXCreativeConsoleWeb): Promise<void> {
 		if (this.interval) {
 			window.clearInterval(this.interval)
 			this.interval = undefined
@@ -82,14 +85,14 @@ export class ChaseDemo implements Demo {
 		await this.running
 		await device.clearPanel()
 	}
-	public async keyDown(device: StreamDeck, keyIndex: number): Promise<void> {
+	public async keyDown(device: MXCreativeConsoleWeb, keyIndex: number): Promise<void> {
 		if (this.pressed.indexOf(keyIndex) === -1) {
 			this.pressed.push(keyIndex)
 
 			await device.fillKeyColor(keyIndex, 255, 0, 0)
 		}
 	}
-	public async keyUp(device: StreamDeck, keyIndex: number): Promise<void> {
+	public async keyUp(device: MXCreativeConsoleWeb, keyIndex: number): Promise<void> {
 		const index = this.pressed.indexOf(keyIndex)
 		if (index !== -1) {
 			this.pressed.splice(index, 1)

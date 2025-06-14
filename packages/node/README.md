@@ -24,37 +24,13 @@ It is recommended to install `@julusian/jpeg-turbo` to greatly improve performan
 
 All of this library's native dependencies ship with prebuilt binaries, so having a full compiler toolchain should not be necessary to install `@logitech-mx-creative-console/node`.
 
-However, in the event that installation _does_ fail (**or if you are on a platform that our dependencies don't provide prebuilt binaries for, such as a Raspberry Pi**), you will need to install a compiler toolchain to enable npm to build some of `@logitech-mx-creative-console/node`'s dependencies from source. Expand the details block below for full instructions on how to do so.
-
-<details>
-	<summary>Compiling dependencies from source</summary>
-	
-* Windows
-  * Install [`windows-build-tools`](https://github.com/felixrieseberg/windows-build-tools):
-  ```bash
-  npm install --global windows-build-tools
-  ```
-* MacOS
-  * Install the Xcode Command Line Tools:
-  ```bash
-  xcode-select --install
-  ```
-* Linux (**including Raspberry Pi**)
-  * Follow the instructions for Linux in the ["Compiling from source"](https://github.com/node-hid/node-hid#compiling-from-source) steps for 
-  * Try installing `@logitech-mx-creative-console/node`
-  * If you still have issues, ensure everything is updated and try again:
-	```bash
-	sudo apt-get update && sudo apt-get upgrade
-	```
-</details>
-
 ## Linux
 
 On linux, the udev subsystem blocks access to the MXConsole without some special configuration.
 Copy one of the following files into `/etc/udev/rules.d/` and reload the rules with `sudo udevadm control --reload-rules`
 
-- Use the [headless server](./udev/50-logitech-mx-creative-console-headless.rules) version when your software will be running as a system service, and is not related to a logged in user
-- Use the [desktop user](./udev/50-logitech-mx-creative-console-user.rules) version when your software is run by a user session on a distribution using systemd
+- Use the [headless server](./udev/50-logi-mx-creative-console-headless.rules) version when your software will be running as a system service, and is not related to a logged in user
+- Use the [desktop user](./udev/50-logi-mx-creative-console-user.rules) version when your software is run by a user session on a distribution using systemd
 
 Unplug and replug the device and it should be usable
 

@@ -11,14 +11,14 @@ const device = await openMxCreativeConsole(devices[0].path)
 await device.clearPanel()
 
 const panelDimensions = device.calculateFillPanelDimensions()
-if (!panelDimensions) throw new Error("Streamdeck doesn't support fillPanel")
+if (!panelDimensions) throw new Error("MXCreativeConsole doesn't support fillPanel")
 
 // await device.resetToLogo()
 
-// streamDeck.getSerialNumber().then((ser) => {
+// device.getSerialNumber().then((ser) => {
 // 	console.log('serial', ser)
 // })
-// streamDeck.getFirmwareVersion().then((ser) => {
+// device.getFirmwareVersion().then((ser) => {
 // 	console.log('firmware', ser)
 // })
 

@@ -23,7 +23,7 @@ Since v7.0.0, the `buffer` polyfill is no longer been necessary. If you find tha
 ## Linux
 
 On linux, the udev subsystem blocks access to the device without some special configuration.
-Copy the [rules file](./udev/50-logitech-mx-creative-console-user.rules) into `/etc/udev/rules.d/` and reload the rules with `sudo udevadm control --reload-rules`
+Copy the [rules file](./udev/50-logi-mx-creative-console-user.rules) into `/etc/udev/rules.d/` and reload the rules with `sudo udevadm control --reload-rules`
 
 Unplug and replug the device and it should be usable
 

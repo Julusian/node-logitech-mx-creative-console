@@ -1,5 +1,5 @@
 import type { MXCreativeConsoleWeb } from '@logitech-mx-creative-console/webhid'
-import { requestStreamDecks, getStreamDecks } from '@logitech-mx-creative-console/webhid'
+import { requestMXCreateConsoleDevices, reopenMXCreativeCosnoleDevices } from '@logitech-mx-creative-console/webhid'
 import type { Demo } from './demo/demo.js'
 import { DomImageDemo } from './demo/dom.js'
 import { FillWhenPressedDemo } from './demo/fill-when-pressed.js'
@@ -91,7 +91,7 @@ async function openDevice(device: MXCreativeConsoleWeb): Promise<void> {
 if (consentButton) {
 	const doLoad = async () => {
 		// attempt to open a previously selected device.
-		const devices = await getStreamDecks()
+		const devices = await reopenMXCreativeCosnoleDevices()
 		if (devices.length > 0) {
 			device = devices[0]
 			openDevice(device).catch(console.error)
@@ -128,7 +128,7 @@ if (consentButton) {
 		}
 		// Prompt for a device
 		try {
-			const devices = await requestStreamDecks()
+			const devices = await requestMXCreateConsoleDevices()
 			device = devices[0]
 			if (devices.length === 0) {
 				appendLog('No device was selected')

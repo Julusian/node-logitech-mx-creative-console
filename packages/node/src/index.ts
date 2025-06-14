@@ -1,4 +1,4 @@
-import type { OpenStreamDeckOptions, MXCreativeConsole } from '@logitech-mx-creative-console/core'
+import type { OpenMXConsoleOptions, MXCreativeConsole } from '@logitech-mx-creative-console/core'
 import { DEVICE_MODELS, VENDOR_ID } from '@logitech-mx-creative-console/core'
 import * as HID from 'node-hid'
 import { NodeHIDDevice, MXCreativeConsoleDeviceInfo } from './hid-device.js'
@@ -9,20 +9,20 @@ export {
 	VENDOR_ID,
 	DeviceModelId,
 	KeyIndex,
-	MXCreativeConsole as StreamDeck,
+	MXCreativeConsole,
 	LcdPosition,
 	Dimension,
-	StreamDeckControlDefinitionBase,
-	StreamDeckButtonControlDefinition,
-	StreamDeckButtonControlDefinitionNoFeedback,
-	StreamDeckEncoderControlDefinition,
-	StreamDeckControlDefinition,
-	OpenStreamDeckOptions,
+	MXConsoleControlDefinitionBase,
+	MXConsoleButtonControlDefinition,
+	MXConsoleButtonControlDefinitionNoFeedback,
+	MXConsoleEncoderControlDefinition,
+	MXConsoleControlDefinition,
+	OpenMXConsoleOptions,
 } from '@logitech-mx-creative-console/core'
 
 export { MXCreativeConsoleDeviceInfo, JPEGEncodeOptions }
 
-export interface OpenMXCreativeConsoleOptionsNode extends OpenStreamDeckOptions {
+export interface OpenMXCreativeConsoleOptionsNode extends OpenMXConsoleOptions {
 	jpegOptions?: JPEGEncodeOptions
 	resetToLogoOnClose?: boolean
 }
@@ -48,11 +48,7 @@ export function getMXCreativeConsoleDeviceInfo(dev: HID.Device): MXCreativeConso
 	const model = DEVICE_MODELS.find((m) => m.productIds.includes(dev.productId))
 
 	if (model && dev.vendorId === VENDOR_ID && dev.path) {
-		return {
-			model: model.id,
-			path: dev.path,
-			serialNumber: dev.serialNumber,
-		}
+		return { model: model.id, path: dev.path, serialNumber: dev.serialNumber }
 	} else {
 		return null
 	}
@@ -80,7 +76,7 @@ export async function openMxCreativeConsole(
 		? { ...userOptions.jpegOptions }
 		: undefined
 
-	const options: Required<OpenStreamDeckOptions> = {
+	const options: Required<OpenMXConsoleOptions> = {
 		encodeJPEG: async (buffer: Uint8Array, width: number, height: number) =>
 			encodeJPEG(buffer, width, height, jpegOptions),
 		...userOptions,

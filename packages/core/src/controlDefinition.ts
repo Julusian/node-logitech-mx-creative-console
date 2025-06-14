@@ -1,7 +1,7 @@
 import type { Coordinate, Dimension } from './id.js'
 
 export interface MXConsoleControlDefinitionBase {
-	type: 'button'
+	type: 'button' | 'encoder'
 
 	row: number
 	column: number
@@ -30,4 +30,17 @@ export type MXConsoleButtonControlDefinition =
 	| MXConsoleButtonControlDefinitionNoFeedback
 	| MXConsoleButtonControlDefinitionLcdFeedback
 
-export type MXConsoleControlDefinition = MXConsoleButtonControlDefinition
+export interface MXConsoleEncoderControlDefinition extends MXConsoleControlDefinitionBase {
+	type: 'encoder'
+
+	index: number
+	hidIndex: number
+
+	/** Whether the encoder has an led */
+	hasLed: boolean
+
+	/** The number of steps in encoder led rings (if any) */
+	ledRingSteps: number
+}
+
+export type MXConsoleControlDefinition = MXConsoleButtonControlDefinition | MXConsoleEncoderControlDefinition

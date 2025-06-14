@@ -12,7 +12,7 @@ function getRandomColor() {
 }
 
 /**
- * This demo is using html-to-image to render a div to the streamdeck.
+ * This demo is using html-to-image to render a div to the MXCreativeConsole.
  * Performance is not great, and the conversion library has many issues with rendering in
  * various cases, but if the source material is very controlled it could be useful.
  * It would be better to render natively on a canvas.

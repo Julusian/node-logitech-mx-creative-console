@@ -46,13 +46,6 @@ export async function encodeJPEG(
 	}
 
 	// If jpeg-turbo is unavailable or fails, then fallback to jpeg-js
-	const jpegBuffer2 = jpegJS.encode(
-		{
-			width,
-			height,
-			data: buffer,
-		},
-		options ? options.quality : DEFAULT_QUALITY,
-	)
+	const jpegBuffer2 = jpegJS.encode({ width, height, data: buffer }, options ? options.quality : DEFAULT_QUALITY)
 	return jpegBuffer2.data
 }

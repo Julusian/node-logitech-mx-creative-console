@@ -1,4 +1,4 @@
-import type { StreamDeck } from '@logitech-mx-creative-console/webhid'
+import type { MXCreativeConsoleWeb } from '@logitech-mx-creative-console/webhid'
 import type { Demo } from './demo.js'
 
 function getRandomIntInclusive(min: number, max: number) {
@@ -11,7 +11,7 @@ export class RapidFillDemo implements Demo {
 	private interval: number | undefined
 	private running: Promise<void[]> | undefined
 
-	public async start(device: StreamDeck): Promise<void> {
+	public async start(device: MXCreativeConsoleWeb): Promise<void> {
 		if (!this.interval) {
 			const doThing = async () => {
 				if (!this.running) {
@@ -37,7 +37,7 @@ export class RapidFillDemo implements Demo {
 			}, 1000 / 5)
 		}
 	}
-	public async stop(device: StreamDeck): Promise<void> {
+	public async stop(device: MXCreativeConsoleWeb): Promise<void> {
 		if (this.interval) {
 			window.clearInterval(this.interval)
 			this.interval = undefined
@@ -45,10 +45,10 @@ export class RapidFillDemo implements Demo {
 		await this.running
 		await device.clearPanel()
 	}
-	public async keyDown(_device: StreamDeck, _keyIndex: number): Promise<void> {
+	public async keyDown(_device: MXCreativeConsoleWeb, _keyIndex: number): Promise<void> {
 		// Nothing to do
 	}
-	public async keyUp(_device: StreamDeck, _keyIndex: number): Promise<void> {
+	public async keyUp(_device: MXCreativeConsoleWeb, _keyIndex: number): Promise<void> {
 		// Nothing to do
 	}
 }

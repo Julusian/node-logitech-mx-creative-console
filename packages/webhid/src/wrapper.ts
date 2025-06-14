@@ -2,13 +2,13 @@ import type {
 	FillPanelDimensionsOptions,
 	KeyIndex,
 	MXCreativeConsole,
-	StreamDeckButtonControlDefinition,
+	MXConsoleButtonControlDefinition,
 } from '@logitech-mx-creative-console/core'
 import { MXCreativeConsoleProxy } from '@logitech-mx-creative-console/core'
 import type { WebHIDDevice } from './hid-device.js'
 
 /**
- * A StreamDeck instance.
+ * A MXCreativeConsole instance.
  * This is an extended variant of the class, to provide some more web friendly helpers, such as accepting a canvas
  */
 export class MXCreativeConsoleWeb extends MXCreativeConsoleProxy {
@@ -33,7 +33,7 @@ export class MXCreativeConsoleWeb extends MXCreativeConsoleProxy {
 		if (!ctx) throw new Error('Failed to get canvas context')
 
 		const control = this.CONTROLS.find(
-			(control): control is StreamDeckButtonControlDefinition =>
+			(control): control is MXConsoleButtonControlDefinition =>
 				control.type === 'button' && control.index === keyIndex,
 		)
 		if (!control || control.feedbackType === 'none') throw new TypeError(`Expected a valid keyIndex`)

@@ -3,7 +3,7 @@ import { EventEmitter } from 'eventemitter3'
 import type { HIDAsync, Device as NodeHIDDeviceInfo } from 'node-hid'
 
 /**
- * Information about a found streamdeck
+ * Information about a found MXCreativeConsole
  */
 export interface MXCreativeConsoleDeviceInfo {
 	/** The model of the device */
@@ -53,11 +53,6 @@ export class NodeHIDDevice extends EventEmitter<HIDDeviceEvents> implements HIDD
 	public async getDeviceInfo(): Promise<HIDDeviceInfo> {
 		const info: NodeHIDDeviceInfo = await this.device.getDeviceInfo()
 
-		return {
-			path: info.path,
-			productId: info.productId,
-			vendorId: info.vendorId,
-			serialNumber: info.serialNumber,
-		}
+		return { path: info.path, productId: info.productId, vendorId: info.vendorId, serialNumber: info.serialNumber }
 	}
 }

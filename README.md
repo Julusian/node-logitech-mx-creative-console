@@ -14,8 +14,8 @@ This library has nothing to do with the official software produced by Logi. Ther
 
 Check one of the installable packages for installation and usage instructions:
 
--   [`@logitech-mx-creative-console/node`](https://npm.im/@logitech-mx-creative-console/node)
--   [`@logitech-mx-creative-console/webhid`](https://npm.im/@logitech-mx-creative-console/webhid)
+- [`@logitech-mx-creative-console/node`](https://npm.im/@logitech-mx-creative-console/node)
+- [`@logitech-mx-creative-console/webhid`](https://npm.im/@logitech-mx-creative-console/webhid)
 
 ### Have another hid target you wish to use?
 
@@ -30,8 +30,8 @@ If you are using a Chromium v89+ based browser, you can try out the [webhid demo
 On linux, the udev subsystem blocks access to the device without some special configuration.
 Copy one of the following files into `/etc/udev/rules.d/` and reload the rules with `sudo udevadm control --reload-rules`
 
--   Use the [headless server](./packages/node/udev/50-logitech-mx-creative-console-headless.rules) version when your software will be running as a system service, and is not related to a logged in user
--   Use the [desktop user](./packages/node/udev/50-logitech-mx-creative-console-user.rules) version when your software is run by a user session on a distribution using systemd
+- Use the [headless server](./packages/node/udev/50-logi-mx-creative-console-headless.rules) version when your software will be running as a system service, and is not related to a logged in user
+- Use the [desktop user](./packages/node/udev/50-logi-mx-creative-console-user.rules) version when your software is run by a user session on a distribution using systemd
 
 Unplug and replug the device and it should be usable
 
