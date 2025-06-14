@@ -1,6 +1,6 @@
 {
 	"name": "@logitech-mx-creative-console/core",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "An npm module for interfacing with the Logitech MX Creative Console",
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
