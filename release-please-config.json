@@ -1,4 +1,7 @@
 {
+	"pull-request-title-pattern": "chore: release ${version}",
+	"include-v-in-tag": true,
+	"include-component-in-tag": false,
 	"packages": {
 		".": {
 			"release-type": "node",
