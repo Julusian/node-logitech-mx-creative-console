@@ -1,25 +1,31 @@
 {
-	"extra-files": [
-		{ "type": "json", "path": "packages/core/package.json", "jsonpath": "$.version" },
-		{ "type": "json", "path": "packages/node/package.json", "jsonpath": "$.version" },
-		{
-			"type": "json",
-			"path": "packages/node/package.json",
-			"jsonpath": "$.dependencies['@logitech-mx-creative-console/core']"
-		},
-		{ "type": "json", "path": "packages/webhid/package.json", "jsonpath": "$.version" },
-		{
-			"type": "json",
-			"path": "packages/webhid/package.json",
-			"jsonpath": "$.dependencies['@logitech-mx-creative-console/core']"
-		},
-		{ "type": "json", "path": "packages/webhid-demo/package.json", "jsonpath": "$.version" },
-		{
-			"type": "json",
-			"path": "packages/webhid-demo/package.json",
-			"jsonpath": "$.dependencies['@logitech-mx-creative-console/webhid']"
+	"packages": {
+		".": {
+			"release-type": "node",
+
+			"extra-files": [
+				{ "type": "json", "path": "packages/core/package.json", "jsonpath": "$.version" },
+				{ "type": "json", "path": "packages/node/package.json", "jsonpath": "$.version" },
+				{
+					"type": "json",
+					"path": "packages/node/package.json",
+					"jsonpath": "$.dependencies['@logitech-mx-creative-console/core']"
+				},
+				{ "type": "json", "path": "packages/webhid/package.json", "jsonpath": "$.version" },
+				{
+					"type": "json",
+					"path": "packages/webhid/package.json",
+					"jsonpath": "$.dependencies['@logitech-mx-creative-console/core']"
+				},
+				{ "type": "json", "path": "packages/webhid-demo/package.json", "jsonpath": "$.version" },
+				{
+					"type": "json",
+					"path": "packages/webhid-demo/package.json",
+					"jsonpath": "$.dependencies['@logitech-mx-creative-console/webhid']"
+				}
+			]
 		}
-	],
+	},
 	"bootstrap-sha": "26b2648f4dbfad47f080fc744a110a0d2e660200",
 	"release-as": "0.2.0",
 	"$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
