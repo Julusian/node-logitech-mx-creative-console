@@ -8,5 +8,6 @@
 		{ "type": "node-workspace", "merge": false },
 		{ "type": "linked-versions", "groupName": "lib", "components": ["core", "node", "webhid"] }
 	],
-	"bootstrap-sha": "26b2648f4dbfad47f080fc744a110a0d2e660200"
+	"bootstrap-sha": "26b2648f4dbfad47f080fc744a110a0d2e660200",
+	"release-as": "0.2.0"
 }
