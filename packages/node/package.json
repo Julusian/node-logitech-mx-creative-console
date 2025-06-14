@@ -55,7 +55,7 @@
 		"@logitech-mx-creative-console/core": "0.1.0",
 		"eventemitter3": "^5.0.1",
 		"jpeg-js": "^0.4.4",
-		"node-hid": "^3.1.2",
+		"node-hid": "^3.2.0",
 		"tslib": "^2.8.1"
 	},
 	"peerDependencies": {

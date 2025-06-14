@@ -28,24 +28,24 @@
     ]
   },
   "devDependencies": {
-    "@companion-module/tools": "^2.1.0",
+    "@companion-module/tools": "^2.3.0",
     "@julusian/jpeg-turbo": "^2.2.0",
-    "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^20.17.5",
-    "@vitest/coverage-v8": "^2.1.4",
-    "eslint": "^9.14.0",
-    "husky": "^9.1.6",
+    "@tsconfig/node20": "^20.1.6",
+    "@types/node": "^20.19.0",
+    "@vitest/coverage-v8": "^2.1.9",
+    "eslint": "^9.29.0",
+    "husky": "^9.1.7",
     "jimp": "^1.6.0",
-    "lerna": "^8.1.9",
-    "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3",
+    "lerna": "^8.2.2",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
     "sharp": "^0.33.5",
-    "snyk-nodejs-lockfile-parser": "^1.58.13",
+    "snyk-nodejs-lockfile-parser": "^1.60.1",
     "typescript": "~5.5.4",
-    "typescript-eslint": "^8.12.2",
-    "usb": "^2.14.0",
-    "vitest": "^2.1.4"
+    "typescript-eslint": "^8.34.0",
+    "usb": "^2.15.0",
+    "vitest": "^2.1.9"
   },
   "workspaces": [
     "packages/core",
@@ -53,5 +53,5 @@
     "packages/webhid",
     "packages/webhid-demo"
   ],
-  "packageManager": "yarn@4.5.1"
+  "packageManager": "yarn@4.9.2"
 }
