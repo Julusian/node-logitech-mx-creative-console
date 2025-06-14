@@ -1,3 +1,4 @@
+import type { EventEmitter } from 'eventemitter3'
 import type { DeviceModelId } from './id.js'
 import type { MXCreativeConsole, MXCreativeConsoleEvents } from './types.js'
 import type { MXConsoleControlDefinition } from './controlDefinition.js'
@@ -84,53 +85,83 @@ export class MXCreativeConsoleProxy implements MXCreativeConsole {
 	 * EventEmitter
 	 */
 
-	public eventNames(
-		...args: Parameters<MXCreativeConsole['eventNames']>
-	): ReturnType<MXCreativeConsole['eventNames']> {
-		return this.device.eventNames(...args)
+	public eventNames(): Array<EventEmitter.EventNames<MXCreativeConsoleEvents>> {
+		return this.device.eventNames()
 	}
-	public listeners(...args: Parameters<MXCreativeConsole['listeners']>): ReturnType<MXCreativeConsole['listeners']> {
-		return this.device.listeners(...args)
+
+	public listeners<T extends EventEmitter.EventNames<MXCreativeConsoleEvents>>(
+		event: T,
+	): Array<EventEmitter.EventListener<MXCreativeConsoleEvents, T>> {
+		return this.device.listeners(event)
 	}
-	public listenerCount(
-		...args: Parameters<MXCreativeConsole['listenerCount']>
-	): ReturnType<MXCreativeConsole['listenerCount']> {
-		return this.device.listenerCount(...args)
+
+	public listenerCount(event: EventEmitter.EventNames<MXCreativeConsoleEvents>): number {
+		return this.device.listenerCount(event)
 	}
-	public emit<K extends keyof MXCreativeConsoleEvents>(eventName: K, ...args: MXCreativeConsoleEvents[K]): boolean {
-		return this.device.emit(eventName, ...(args as any))
+
+	public emit<T extends EventEmitter.EventNames<MXCreativeConsoleEvents>>(
+		event: T,
+		...args: EventEmitter.EventArgs<MXCreativeConsoleEvents, T>
+	): boolean {
+		return this.device.emit(event, ...args)
 	}
-	public on<K extends keyof MXCreativeConsoleEvents>(
-		eventName: K,
-		listener: (...args: MXCreativeConsoleEvents[K]) => void,
+
+	/**
+	 * Add a listener for a given event.
+	 */
+	public on<T extends EventEmitter.EventNames<MXCreativeConsoleEvents>>(
+		event: T,
+		fn: EventEmitter.EventListener<MXCreativeConsoleEvents, T>,
+		context?: unknown,
 	): this {
-		this.device.on(eventName, listener)
+		this.device.on(event, fn, context)
 		return this
 	}
-	public addListener<K extends keyof MXCreativeConsoleEvents>(
-		eventName: K,
-		listener: (...args: MXCreativeConsoleEvents[K]) => void,
+	public addListener<T extends EventEmitter.EventNames<MXCreativeConsoleEvents>>(
+		event: T,
+		fn: EventEmitter.EventListener<MXCreativeConsoleEvents, T>,
+		context?: unknown,
 	): this {
-		this.device.addListener(eventName, listener)
+		this.device.addListener(event, fn, context)
 		return this
 	}
-	public once<K extends keyof MXCreativeConsoleEvents>(
-		eventName: K,
-		listener: (...args: MXCreativeConsoleEvents[K]) => void,
+
+	/**
+	 * Add a one-time listener for a given event.
+	 */
+	public once<T extends EventEmitter.EventNames<MXCreativeConsoleEvents>>(
+		event: T,
+		fn: EventEmitter.EventListener<MXCreativeConsoleEvents, T>,
+		context?: unknown,
 	): this {
-		this.device.once(eventName, listener)
+		this.device.once(event, fn, context)
 		return this
 	}
-	public removeListener(...args: Parameters<MXCreativeConsole['removeListener']>): this {
-		this.device.removeListener(...args)
+
+	/**
+	 * Remove the listeners of a given event.
+	 */
+	public removeListener<T extends EventEmitter.EventNames<MXCreativeConsoleEvents>>(
+		event: T,
+		fn?: EventEmitter.EventListener<MXCreativeConsoleEvents, T>,
+		context?: unknown,
+		once?: boolean,
+	): this {
+		this.device.removeListener(event, fn, context, once)
 		return this
 	}
-	public off(...args: Parameters<MXCreativeConsole['off']>): this {
-		this.device.off(...args)
+	public off<T extends EventEmitter.EventNames<MXCreativeConsoleEvents>>(
+		event: T,
+		fn?: EventEmitter.EventListener<MXCreativeConsoleEvents, T>,
+		context?: unknown,
+		once?: boolean,
+	): this {
+		this.device.off(event, fn, context, once)
 		return this
 	}
-	public removeAllListeners(...args: Parameters<MXCreativeConsole['removeAllListeners']>): this {
-		this.device.removeAllListeners(...args)
+
+	public removeAllListeners(event?: EventEmitter.EventNames<MXCreativeConsoleEvents>): this {
+		this.device.removeAllListeners(event)
 		return this
 	}
 }

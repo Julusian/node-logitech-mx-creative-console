@@ -1154,6 +1154,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@logitech-mx-creative-console/core@workspace:packages/core"
   dependencies:
+    eventemitter3: "npm:^5.0.1"
     tslib: "npm:^2.8.1"
   languageName: unknown
   linkType: soft
@@ -1163,6 +1164,7 @@ __metadata:
   resolution: "@logitech-mx-creative-console/node@workspace:packages/node"
   dependencies:
     "@logitech-mx-creative-console/core": "npm:0.1.0"
+    eventemitter3: "npm:^5.0.1"
     jpeg-js: "npm:^0.4.4"
     node-hid: "npm:^3.2.0"
     tslib: "npm:^2.8.1"
@@ -1188,6 +1190,7 @@ __metadata:
   dependencies:
     "@logitech-mx-creative-console/core": "npm:0.1.0"
     "@types/w3c-web-hid": "npm:^1.0.6"
+    eventemitter3: "npm:^5.0.1"
     p-queue: "npm:^8.1.0"
     tslib: "npm:^2.8.1"
   languageName: unknown

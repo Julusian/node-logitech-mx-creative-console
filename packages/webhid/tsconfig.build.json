@@ -11,10 +11,5 @@
 		},
 		"lib": ["ES2023", "dom"],
 		"types": ["w3c-web-hid"]
-	},
-	"references": [
-		{
-			"path": "../core"
-		},
-	]
+	}
 }

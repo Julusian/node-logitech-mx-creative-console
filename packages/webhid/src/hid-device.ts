@@ -1,5 +1,5 @@
 import type { HIDDevice as CoreHIDDevice, HIDDeviceEvents, HIDDeviceInfo } from '@logitech-mx-creative-console/core'
-import { EventEmitter } from 'node:events'
+import { EventEmitter } from 'eventemitter3'
 import Queue from 'p-queue'
 
 /**
