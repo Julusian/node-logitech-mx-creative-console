@@ -30,7 +30,8 @@
 	],
 	"files": [
 		"dist",
-		"udev"
+		"udev",
+		"udev-generator-rules.json"
 	],
 	"dependencies": {
 		"@logitech-mx-creative-console/core": "0.1.0",

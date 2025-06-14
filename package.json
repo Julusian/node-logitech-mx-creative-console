@@ -8,6 +8,7 @@
     "dev:demo": "yarn workspace @logitech-mx-creative-console/webhid-demo start",
     "build": "run build:root && yarn workspace @logitech-mx-creative-console/webhid-demo build",
     "build:root": "(run -B rimraf packages/*/dist || true) && run -B tsc --build tsconfig.build.json",
+    "build:udev": "node ./scripts/regenerate-udev.mjs",
     "test": "run lint && run unit",
     "unit": "vitest",
     "lint:raw": "eslint",
@@ -40,6 +41,7 @@
     "snyk-nodejs-lockfile-parser": "^1.60.1",
     "typescript": "~5.5.4",
     "typescript-eslint": "^8.34.0",
+    "udev-generator": "^1.0.1",
     "usb": "^2.15.0",
     "vitest": "^2.1.9"
   },

@@ -46,6 +46,9 @@ jobs:
         run: |
           yarn config set npmAuthToken $NPM_AUTH_TOKEN
 
+          # Remove any TypeScript build info files to polluting the npm packages
+          rm packages/*/dist/*.tsbuildinfo || true
+
           yarn workspaces foreach --all -pt --exclude logitech-mx-creative-console-packages --exclude @logitech-mx-creative-console/webhid-demo npm publish --access=public --provenance
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
