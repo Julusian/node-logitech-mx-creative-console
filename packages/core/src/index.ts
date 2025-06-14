@@ -42,7 +42,7 @@ export const DEVICE_MODELS2: { [key in DeviceModelId]: Omit<DeviceModelSpec, 'id
 		factory: mxCreativeKeypadFactory,
 		initWrites: mxCreativeKeypadInitWrites,
 	},
-	[DeviceModelId.MX_CREATIVE_DIALPAD]: { productIds: [0xbc00], factory: mxCreativeKeypadFactory },
+	// [DeviceModelId.MX_CREATIVE_DIALPAD]: { productIds: [0xbc00], factory: mxCreativeKeypadFactory },
 }
 
 /** @deprecated maybe? */
