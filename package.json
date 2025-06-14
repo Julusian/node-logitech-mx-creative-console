@@ -1,7 +1,12 @@
 {
   "name": "logitech-mx-creative-console-packages",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "private": true,
+	"homepage": "https://github.com/julusian/node-logitech-mx-creative-console#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/julusian/node-logitech-mx-creative-console.git"
+	},
   "scripts": {
     "postinstall": "husky",
     "dev": "run build:root --watch",
@@ -15,7 +20,8 @@
     "lint": "run lint:raw packages",
     "lint-fix": "run lint --fix",
     "validate:dependencies": "yarn npm audit && run license-validate",
-    "license-validate": "node ./scripts/license-check.mjs"
+    "license-validate": "node ./scripts/license-check.mjs",
+    "release": "sofie-version"
   },
   "lint-staged": {
     "*.{css,json,md,scss}": [
@@ -26,8 +32,8 @@
     ]
   },
   "devDependencies": {
-    "@companion-module/tools": "^2.3.0",
     "@julusian/jpeg-turbo": "^2.2.0",
+    "@sofie-automation/code-standard-preset": "https://github.com/Sofie-Automation/sofie-code-standard-preset#wip/kairos",
     "@tsconfig/node20": "^20.1.6",
     "@types/node": "^20.19.0",
     "@vitest/coverage-v8": "^3.2.3",
