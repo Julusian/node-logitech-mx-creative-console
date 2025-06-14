@@ -1,12 +1,12 @@
 {
   "name": "logitech-mx-creative-console-packages",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
-	"homepage": "https://github.com/julusian/node-logitech-mx-creative-console#readme",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/julusian/node-logitech-mx-creative-console.git"
-	},
+  "homepage": "https://github.com/julusian/node-logitech-mx-creative-console#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julusian/node-logitech-mx-creative-console.git"
+  },
   "scripts": {
     "postinstall": "husky",
     "dev": "run build:root --watch",
