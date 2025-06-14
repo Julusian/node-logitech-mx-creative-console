@@ -1,6 +1,6 @@
 {
 	"name": "@logitech-mx-creative-console/webhid",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "An npm module for interfacing with the Logitech MX Creative Console in the browser",
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
@@ -34,7 +34,7 @@
 		"udev-generator-rules.json"
 	],
 	"dependencies": {
-		"@logitech-mx-creative-console/core": "0.2.2",
+		"@logitech-mx-creative-console/core": "0.2.3",
 		"@types/w3c-web-hid": "^1.0.6",
 		"eventemitter3": "^5.0.1",
 		"p-queue": "^8.1.0",

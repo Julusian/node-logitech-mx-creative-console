@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Convential Commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) for commit guidelines.
 
+## [0.2.3](https://github.com/julusian/node-logitech-mx-creative-console/compare/v0.2.2...v0.2.3) (Sun Jun 15 2025)
+
+
+### Fixes
+
+* publish [c9b3c46](https://github.com/julusian/node-logitech-mx-creative-console/commit/c9b3c46cf523b529b528e7b488e1e438d2f8fad5)
+
 ## [0.2.2](https://github.com/julusian/node-logitech-mx-creative-console/compare/v0.2.1...v0.2.2) (Sun Jun 15 2025)
 
 
