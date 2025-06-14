@@ -1,52 +1,38 @@
 import type { HIDDevice } from '../hid-device.js'
-import type { OpenStreamDeckOptions, StreamDeckProperties } from './base.js'
-import { StreamDeckBase } from './base.js'
+import type { OpenMXConsoleOptions, MXConsoleProperties } from './base.js'
+import { MXConsoleBase } from './base.js'
 import { DeviceModelId, MODEL_NAMES } from '../id.js'
 import { freezeDefinitions, generateButtonsGrid } from '../controlsGenerator.js'
 import { CallbackHook } from '../services/callback-hook.js'
 import type { MXCreativeConsoleEvents } from '../types.js'
 import { DefaultButtonsLcdService } from '../services/buttonsLcdDisplay/default.js'
 import { JpegButtonLcdImagePacker } from '../services/imagePacker/jpeg.js'
-import { StreamdeckDefaultImageWriter } from '../services/imageWriter/imageWriter.js'
+import { MXConsoleDefaultImageWriter } from '../services/imageWriter/imageWriter.js'
 import { KeypadInputService } from '../services/input/mx-creative-keypad.js'
 import { Gen2PropertiesService } from '../services/properties/gen2.js'
 
-const keypadProperties: StreamDeckProperties = {
+const keypadProperties: MXConsoleProperties = {
 	MODEL: DeviceModelId.MX_CREATIVE_KEYPAD,
 	PRODUCT_NAME: MODEL_NAMES[DeviceModelId.MX_CREATIVE_KEYPAD],
 
 	CONTROLS: freezeDefinitions([
 		...generateButtonsGrid(3, 3, { width: 118, height: 118 }, { x: 23, y: 6 }, { x: 40, y: 40 }),
-		{
-			type: 'button',
-			row: 3,
-			column: 0,
-			index: 9,
-			hidId: 0x01a1,
-			feedbackType: 'none',
-		},
-		{
-			type: 'button',
-			row: 3,
-			column: 1,
-			index: 10,
-			hidId: 0x01a2,
-			feedbackType: 'none',
-		},
+		{ type: 'button', row: 3, column: 0, index: 9, hidId: 0x01a1, feedbackType: 'none' },
+		{ type: 'button', row: 3, column: 1, index: 10, hidId: 0x01a2, feedbackType: 'none' },
 	]),
 
 	PANEL_SIZE: { width: 480, height: 480 },
 }
 
-export function mxCreativeKeypadFactory(device: HIDDevice, options: Required<OpenStreamDeckOptions>): StreamDeckBase {
+export function mxCreativeKeypadFactory(device: HIDDevice, options: Required<OpenMXConsoleOptions>): MXConsoleBase {
 	const events = new CallbackHook<MXCreativeConsoleEvents>()
 
-	return new StreamDeckBase(device, options, {
+	return new MXConsoleBase(device, options, {
 		deviceProperties: keypadProperties,
 		events,
 		properties: new Gen2PropertiesService(device),
 		buttonsLcd: new DefaultButtonsLcdService(
-			new StreamdeckDefaultImageWriter(),
+			new MXConsoleDefaultImageWriter(),
 			new JpegButtonLcdImagePacker(options.encodeJPEG),
 			device,
 			keypadProperties,

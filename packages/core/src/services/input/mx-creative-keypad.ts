@@ -1,19 +1,19 @@
-import type { StreamDeckProperties } from '../../models/base.js'
+import type { MXConsoleProperties } from '../../models/base.js'
 import type { MXCreativeConsoleInputService } from './interface.js'
 import type { MXCreativeConsoleEvents } from '../../types.js'
 import type { CallbackHook } from '../callback-hook.js'
-import type { StreamDeckButtonControlDefinition } from '../../controlDefinition.js'
+import type { MXConsoleButtonControlDefinition } from '../../controlDefinition.js'
 import { uint8ArrayToDataView } from '../../util.js'
 
 export class KeypadInputService implements MXCreativeConsoleInputService {
-	protected readonly deviceProperties: Readonly<StreamDeckProperties>
+	protected readonly deviceProperties: Readonly<MXConsoleProperties>
 	readonly #eventSource: CallbackHook<MXCreativeConsoleEvents>
 
-	readonly #buttonControlsByEncoded = new Map<number, StreamDeckButtonControlDefinition>()
+	readonly #buttonControlsByEncoded = new Map<number, MXConsoleButtonControlDefinition>()
 	readonly #pushedButtons = new Set<number>()
 	readonly #pushedArrowButtons = new Set<number>()
 
-	constructor(deviceProperties: Readonly<StreamDeckProperties>, eventSource: CallbackHook<MXCreativeConsoleEvents>) {
+	constructor(deviceProperties: Readonly<MXConsoleProperties>, eventSource: CallbackHook<MXCreativeConsoleEvents>) {
 		this.deviceProperties = deviceProperties
 		this.#eventSource = eventSource
 
@@ -45,7 +45,7 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 		)
 			return
 
-		const pushedControls: StreamDeckButtonControlDefinition[] = []
+		const pushedControls: MXConsoleButtonControlDefinition[] = []
 		const pushedControlIds = new Set<number>()
 
 		for (let i = 5; i < view.byteLength; i += 1) {
@@ -82,7 +82,7 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 	#handlePageButtonInput(view: DataView): void {
 		if (view.getUint8(0) !== 0xff || view.getUint8(1) !== 0x0b || view.getUint8(2) !== 0x00) return
 
-		const pushedControls: StreamDeckButtonControlDefinition[] = []
+		const pushedControls: MXConsoleButtonControlDefinition[] = []
 		const pushedControlIds = new Set<number>()
 
 		for (let i = 3; i < view.byteLength; i += 2) {

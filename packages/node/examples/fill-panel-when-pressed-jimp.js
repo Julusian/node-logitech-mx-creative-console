@@ -11,7 +11,7 @@ const device = await openMxCreativeConsole(devices[0].path)
 await device.clearPanel()
 
 const panelDimensions = device.calculateFillPanelDimensions()
-if (!panelDimensions) throw new Error("Streamdeck doesn't support fillPanel")
+if (!panelDimensions) throw new Error("MXConsole doesn't support fillPanel")
 
 const bmpImgField = await Jimp.read(fileURLToPath(new URL('fixtures/sunny_field.png', import.meta.url))).then((img) => {
 	return img.resize({ w: panelDimensions.width, h: panelDimensions.height })

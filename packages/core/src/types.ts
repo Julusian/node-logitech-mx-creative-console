@@ -2,9 +2,9 @@ import type { EventEmitter } from 'eventemitter3'
 import type { DeviceModelId, Dimension, KeyIndex } from './id.js'
 import type { HIDDeviceInfo } from './hid-device.js'
 import type {
-	StreamDeckButtonControlDefinition,
-	StreamDeckControlDefinition,
-	StreamDeckEncoderControlDefinition,
+	MXConsoleButtonControlDefinition,
+	MXConsoleControlDefinition,
+	MXConsoleEncoderControlDefinition,
 } from './controlDefinition.js'
 
 export interface FillImageOptions {
@@ -27,15 +27,15 @@ export interface LcdPosition {
 }
 
 export type MXCreativeConsoleEvents = {
-	down: [control: StreamDeckButtonControlDefinition | StreamDeckEncoderControlDefinition]
-	up: [control: StreamDeckButtonControlDefinition | StreamDeckEncoderControlDefinition]
+	down: [control: MXConsoleButtonControlDefinition | MXConsoleEncoderControlDefinition]
+	up: [control: MXConsoleButtonControlDefinition | MXConsoleEncoderControlDefinition]
 	error: [err: unknown]
-	rotate: [control: StreamDeckEncoderControlDefinition, amount: number]
+	rotate: [control: MXConsoleEncoderControlDefinition, amount: number]
 }
 
 export interface MXCreativeConsole extends EventEmitter<MXCreativeConsoleEvents> {
-	/** List of the controls on this streamdeck */
-	readonly CONTROLS: Readonly<StreamDeckControlDefinition[]>
+	/** List of the controls on this surface */
+	readonly CONTROLS: Readonly<MXConsoleControlDefinition[]>
 
 	/** The model of this device */
 	readonly MODEL: DeviceModelId

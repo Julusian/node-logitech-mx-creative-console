@@ -29,18 +29,18 @@ Unplug and replug the device and it should be usable
 
 ## Features
 
--   Support for every StreamDeck model (Original, Mini & XL)
--   Key `down` and key `up` events
--   Fill keys with canvas, images or solid RGB colors
--   Fill the entire panel with a single image, spread across all keys
--   Set the Stream Deck brightness
--   TypeScript support
+- Support for every StreamDeck model (Original, Mini & XL)
+- Key `down` and key `up` events
+- Fill keys with canvas, images or solid RGB colors
+- Fill the entire panel with a single image, spread across all keys
+- Set the Stream Deck brightness
+- TypeScript support
 
 ### Known limitations
 
--   Only works with Chromium v89+ based browsers
--   The original model of the 15key is not supported on linux
--   When having a hid device open, you will still be subject to background tab throttling which affects the draw rate
+- Only works with Chromium v89+ based browsers
+- The original model of the 15key is not supported on linux
+- When having a hid device open, you will still be subject to background tab throttling which affects the draw rate
 
 ## API
 
@@ -51,21 +51,24 @@ The root methods exposed by the library are as follows. For more information it 
  * Request the user to select some streamdecks to open
  * @param userOptions Options to customise the device behvaiour
  */
-export async function requestStreamDecks(options?: OpenStreamDeckOptions): Promise<StreamDeckWeb[]>
+export async function requestStreamDecks(options?: OpenStreamDeckOptions): Promise<MXCreativeConsoleWeb[]>
 
 /**
  * Reopen previously selected streamdecks.
  * The browser remembers what the user previously allowed your site to access, and this will open those without the request dialog
  * @param options Options to customise the device behvaiour
  */
-export async function getStreamDecks(options?: OpenStreamDeckOptions): Promise<StreamDeckWeb[]>
+export async function getStreamDecks(options?: OpenStreamDeckOptions): Promise<MXCreativeConsoleWeb[]>
 
 /**
  * Open a StreamDeck from a manually selected HIDDevice handle
  * @param browserDevice The unopened browser HIDDevice
  * @param userOptions Options to customise the device behvaiour
  */
-export async function openDevice(browserDevice: HIDDevice, userOptions?: OpenStreamDeckOptions): Promise<StreamDeckWeb>
+export async function openDevice(
+	browserDevice: HIDDevice,
+	userOptions?: OpenStreamDeckOptions,
+): Promise<MXCreativeConsoleWeb>
 ```
 
 The StreamDeck type can be found [here](/packages/core/src/models/types.ts#L15)

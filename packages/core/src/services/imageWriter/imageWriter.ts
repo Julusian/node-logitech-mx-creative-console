@@ -1,8 +1,8 @@
 import { uint8ArrayToDataView } from '../../util.js'
-import type { StreamdeckImageWriter, StreamdeckImageWriterProps } from './types.js'
+import type { MXConsoleImageWriter, MXConsoleImageWriterProps } from './types.js'
 
-export class StreamdeckDefaultImageWriter implements StreamdeckImageWriter<StreamdeckImageWriterProps> {
-	public generateFillImageWrites(props: StreamdeckImageWriterProps, byteBuffer: Uint8Array): Uint8Array[] {
+export class MXConsoleDefaultImageWriter implements MXConsoleImageWriter<MXConsoleImageWriterProps> {
+	public generateFillImageWrites(props: MXConsoleImageWriterProps, byteBuffer: Uint8Array): Uint8Array[] {
 		const MAX_PACKET_SIZE = 4095
 
 		const result: Uint8Array[] = []

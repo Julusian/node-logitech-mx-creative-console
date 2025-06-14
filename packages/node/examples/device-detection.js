@@ -30,8 +30,8 @@ async function addDevice(info) {
 }
 
 async function refresh() {
-	const streamdecks = await listMXCreativeConsoleDevices()
-	streamdecks.forEach((device) => {
+	const devices = await listMXCreativeConsoleDevices()
+	devices.forEach((device) => {
 		if (!devices[device.path]) {
 			addDevice(device).catch((e) => console.error('Add failed:', e))
 		}

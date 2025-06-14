@@ -1,11 +1,11 @@
 import type { EventEmitter } from 'eventemitter3'
 import type { DeviceModelId } from './id.js'
 import type { MXCreativeConsole, MXCreativeConsoleEvents } from './types.js'
-import type { StreamDeckControlDefinition } from './controlDefinition.js'
+import type { MXConsoleControlDefinition } from './controlDefinition.js'
 
 /**
- * A minimal proxy around a StreamDeck instance.
- * This is intended to be used by libraries wrapping this that want to add more methods to the StreamDeck
+ * A minimal proxy around a MXConsole instance.
+ * This is intended to be used by libraries wrapping this that want to add more methods to the MXConsole
  */
 
 export class MXCreativeConsoleProxy implements MXCreativeConsole {
@@ -15,7 +15,7 @@ export class MXCreativeConsoleProxy implements MXCreativeConsole {
 		this.device = device
 	}
 
-	public get CONTROLS(): Readonly<StreamDeckControlDefinition[]> {
+	public get CONTROLS(): Readonly<MXConsoleControlDefinition[]> {
 		return this.device.CONTROLS
 	}
 	public get MODEL(): DeviceModelId {

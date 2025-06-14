@@ -1,4 +1,4 @@
-import type { StreamDeckWeb } from '@logitech-mx-creative-console/webhid'
+import type { MXCreativeConsoleWeb } from '@logitech-mx-creative-console/webhid'
 import { toCanvas } from 'html-to-image'
 import type { Demo } from './demo.js'
 
@@ -22,7 +22,7 @@ export class DomImageDemo implements Demo {
 	private run = false
 	private running: Promise<void> | undefined
 
-	public async start(device: StreamDeckWeb): Promise<void> {
+	public async start(device: MXCreativeConsoleWeb): Promise<void> {
 		const fillSize = device.calculateFillPanelDimensions()
 		this.element = document.querySelector<HTMLElement>('#image-source') || undefined
 		if (this.element) {
@@ -55,7 +55,7 @@ export class DomImageDemo implements Demo {
 			runTick()
 		}
 	}
-	public async stop(device: StreamDeckWeb): Promise<void> {
+	public async stop(device: MXCreativeConsoleWeb): Promise<void> {
 		if (this.element) {
 			this.element.style.display = 'none'
 		}
@@ -65,12 +65,12 @@ export class DomImageDemo implements Demo {
 		await this.running
 		await device.clearPanel()
 	}
-	public async keyDown(_device: StreamDeckWeb, _keyIndex: number): Promise<void> {
+	public async keyDown(_device: MXCreativeConsoleWeb, _keyIndex: number): Promise<void> {
 		if (this.element) {
 			this.element.style.background = getRandomColor()
 		}
 	}
-	public async keyUp(_device: StreamDeckWeb, _keyIndex: number): Promise<void> {
+	public async keyUp(_device: MXCreativeConsoleWeb, _keyIndex: number): Promise<void> {
 		// Nothing to do
 	}
 }

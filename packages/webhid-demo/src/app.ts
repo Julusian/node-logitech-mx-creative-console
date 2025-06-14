@@ -1,4 +1,4 @@
-import type { StreamDeckWeb } from '@logitech-mx-creative-console/webhid'
+import type { MXCreativeConsoleWeb } from '@logitech-mx-creative-console/webhid'
 import { requestStreamDecks, getStreamDecks } from '@logitech-mx-creative-console/webhid'
 import type { Demo } from './demo/demo.js'
 import { DomImageDemo } from './demo/dom.js'
@@ -24,7 +24,7 @@ function appendLog(str: string) {
 const demoSelect = document.getElementById('demo-select') as HTMLInputElement | undefined
 const consentButton = document.getElementById('consent-button')
 
-let device: StreamDeckWeb | null = null
+let device: MXCreativeConsoleWeb | null = null
 let currentDemo: Demo = new FillWhenPressedDemo()
 async function demoChange() {
 	if (demoSelect) {
@@ -55,7 +55,7 @@ async function demoChange() {
 	}
 }
 
-async function openDevice(device: StreamDeckWeb): Promise<void> {
+async function openDevice(device: MXCreativeConsoleWeb): Promise<void> {
 	const info = await device.getHidDeviceInfo()
 	appendLog(`Device opened. Serial: ${info.serialNumber}`)
 

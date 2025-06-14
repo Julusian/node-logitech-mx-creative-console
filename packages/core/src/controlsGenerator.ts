@@ -1,4 +1,4 @@
-import type { StreamDeckButtonControlDefinition, StreamDeckControlDefinition } from './controlDefinition.js'
+import type { MXConsoleButtonControlDefinition, MXConsoleControlDefinition } from './controlDefinition.js'
 import type { Coordinate, Dimension } from './id.js'
 
 export function generateButtonsGrid(
@@ -8,8 +8,8 @@ export function generateButtonsGrid(
 	pixelOffset: Coordinate,
 	pixelPadding: Coordinate,
 	columnOffset = 0,
-): StreamDeckButtonControlDefinition[] {
-	const controls: StreamDeckButtonControlDefinition[] = []
+): MXConsoleButtonControlDefinition[] {
+	const controls: MXConsoleButtonControlDefinition[] = []
 
 	for (let row = 0; row < height; row++) {
 		for (let column = 0; column < width; column++) {
@@ -36,6 +36,6 @@ export function generateButtonsGrid(
 	return controls
 }
 
-export function freezeDefinitions(controls: StreamDeckControlDefinition[]): Readonly<StreamDeckControlDefinition[]> {
+export function freezeDefinitions(controls: MXConsoleControlDefinition[]): Readonly<MXConsoleControlDefinition[]> {
 	return Object.freeze(controls.map((control) => Object.freeze(control)))
 }

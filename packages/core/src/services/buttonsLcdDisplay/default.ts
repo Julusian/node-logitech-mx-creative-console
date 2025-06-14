@@ -1,26 +1,26 @@
 import type {
-	StreamDeckButtonControlDefinition,
-	StreamDeckButtonControlDefinitionLcdFeedback,
+	MXConsoleButtonControlDefinition,
+	MXConsoleButtonControlDefinitionLcdFeedback,
 } from '../../controlDefinition.js'
 import type { HIDDevice } from '../../hid-device.js'
 import type { Dimension, KeyIndex } from '../../id.js'
-import type { StreamDeckProperties } from '../../models/base.js'
+import type { MXConsoleProperties } from '../../models/base.js'
 import type { FillPanelDimensionsOptions, FillImageOptions, FillPanelOptions } from '../../types.js'
-import type { StreamdeckImageWriter } from '../imageWriter/types.js'
+import type { MXConsoleImageWriter } from '../imageWriter/types.js'
 import type { ButtonsLcdDisplayService, GridSpan } from './interface.js'
 import type { ButtonLcdImagePacker, InternalFillImageOptions } from '../imagePacker/interface.js'
 
 export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
-	readonly #imageWriter: StreamdeckImageWriter
+	readonly #imageWriter: MXConsoleImageWriter
 	readonly #imagePacker: ButtonLcdImagePacker
 	readonly #device: Pick<HIDDevice, 'sendReports' | 'sendFeatureReport'>
-	readonly #deviceProperties: Readonly<StreamDeckProperties>
+	readonly #deviceProperties: Readonly<MXConsoleProperties>
 
 	constructor(
-		imageWriter: StreamdeckImageWriter,
+		imageWriter: MXConsoleImageWriter,
 		imagePacker: ButtonLcdImagePacker,
 		device: Pick<HIDDevice, 'sendReports' | 'sendFeatureReport'>,
-		deviceProperties: Readonly<StreamDeckProperties>,
+		deviceProperties: Readonly<MXConsoleProperties>,
 	) {
 		this.#imageWriter = imageWriter
 		this.#imagePacker = imagePacker
@@ -28,14 +28,14 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 		this.#deviceProperties = deviceProperties
 	}
 
-	private getLcdButtonControls(): StreamDeckButtonControlDefinitionLcdFeedback[] {
+	private getLcdButtonControls(): MXConsoleButtonControlDefinitionLcdFeedback[] {
 		return this.#deviceProperties.CONTROLS.filter(
-			(control): control is StreamDeckButtonControlDefinitionLcdFeedback =>
+			(control): control is MXConsoleButtonControlDefinitionLcdFeedback =>
 				control.type === 'button' && control.feedbackType === 'lcd',
 		)
 	}
 
-	private calculateLcdGridSpan(buttonsLcd: StreamDeckButtonControlDefinition[]): GridSpan | null {
+	private calculateLcdGridSpan(buttonsLcd: MXConsoleButtonControlDefinition[]): GridSpan | null {
 		if (buttonsLcd.length === 0) return null
 
 		const allRowValues = buttonsLcd.map((button) => button.row)
@@ -63,10 +63,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 
 			// TODO: Consider that different rows/columns could have different dimensions
 
-			return {
-				width: columnCount * buttonPixelSize.width,
-				height: rowCount * buttonPixelSize.height,
-			}
+			return { width: columnCount * buttonPixelSize.width, height: rowCount * buttonPixelSize.height }
 		}
 	}
 
@@ -94,10 +91,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 		)
 
 		const packets = this.#imageWriter.generateFillImageWrites(
-			{
-				pixelSize: this.#deviceProperties.PANEL_SIZE,
-				pixelPosition: { x: 0, y: 0 },
-			},
+			{ pixelSize: this.#deviceProperties.PANEL_SIZE, pixelPosition: { x: 0, y: 0 } },
 			byteBuffer,
 		)
 		ps.push(this.#device.sendReports(packets))
@@ -109,7 +103,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 				switch (control.feedbackType) {
 					case 'lcd': {
 						// Handled by PANEL_SIZE
-						
+
 
 						break
 					}
@@ -125,7 +119,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 
 	public async clearKey(keyIndex: KeyIndex): Promise<void> {
 		const control = this.#deviceProperties.CONTROLS.find(
-			(control): control is StreamDeckButtonControlDefinition =>
+			(control): control is MXConsoleButtonControlDefinition =>
 				control.type === 'button' && control.index === keyIndex,
 		)
 		if (!control || control.feedbackType === 'none') throw new TypeError(`Expected a valid keyIndex`)
@@ -144,7 +138,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 		this.checkRGBValue(b)
 
 		const control = this.#deviceProperties.CONTROLS.find(
-			(control): control is StreamDeckButtonControlDefinition =>
+			(control): control is MXConsoleButtonControlDefinition =>
 				control.type === 'button' && control.index === keyIndex,
 		)
 		if (!control || control.feedbackType === 'none') throw new TypeError(`Expected a valid keyIndex`)
@@ -179,7 +173,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 		this.checkSourceFormat(sourceFormat)
 
 		const control = this.#deviceProperties.CONTROLS.find(
-			(control): control is StreamDeckButtonControlDefinition =>
+			(control): control is MXConsoleButtonControlDefinition =>
 				control.type === 'button' && control.index === keyIndex,
 		)
 		if (!control || control.feedbackType === 'none') throw new TypeError(`Expected a valid keyIndex`)
@@ -247,7 +241,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 	}
 
 	private async fillImageRangeControl(
-		buttonControl: StreamDeckButtonControlDefinitionLcdFeedback,
+		buttonControl: MXConsoleButtonControlDefinitionLcdFeedback,
 		imageBuffer: Uint8Array,
 		sourceOptions: InternalFillImageOptions,
 	) {
@@ -261,10 +255,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 		)
 
 		const packets = this.#imageWriter.generateFillImageWrites(
-			{
-				pixelSize: buttonControl.pixelSize,
-				pixelPosition: buttonControl.pixelPosition,
-			},
+			{ pixelSize: buttonControl.pixelSize, pixelPosition: buttonControl.pixelPosition },
 			byteBuffer,
 		)
 		await this.#device.sendReports(packets)

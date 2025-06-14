@@ -9,36 +9,36 @@ import type {
 	MXCreativeConsoleEvents,
 } from '../types.js'
 import type { ButtonsLcdDisplayService } from '../services/buttonsLcdDisplay/interface.js'
-import type { StreamDeckButtonControlDefinition, StreamDeckControlDefinition } from '../controlDefinition.js'
+import type { MXConsoleButtonControlDefinition, MXConsoleControlDefinition } from '../controlDefinition.js'
 import type { PropertiesService } from '../services/properties/interface.js'
 import type { CallbackHook } from '../services/callback-hook.js'
 import type { MXCreativeConsoleInputService } from '../services/input/interface.js'
 
 export type EncodeJPEGHelper = (buffer: Uint8Array, width: number, height: number) => Promise<Uint8Array>
 
-export interface OpenStreamDeckOptions {
+export interface OpenMXConsoleOptions {
 	encodeJPEG?: EncodeJPEGHelper
 }
 
-export type StreamDeckProperties = Readonly<{
+export type MXConsoleProperties = Readonly<{
 	MODEL: DeviceModelId
 	PRODUCT_NAME: string
 
-	CONTROLS: Readonly<StreamDeckControlDefinition[]>
+	CONTROLS: Readonly<MXConsoleControlDefinition[]>
 
 	PANEL_SIZE: Dimension
 }>
 
-export interface StreamDeckServicesDefinition {
-	deviceProperties: StreamDeckProperties
+export interface MXConsoleServicesDefinition {
+	deviceProperties: MXConsoleProperties
 	events: CallbackHook<MXCreativeConsoleEvents>
 	properties: PropertiesService
 	buttonsLcd: ButtonsLcdDisplayService
 	inputService: MXCreativeConsoleInputService
 }
 
-export class StreamDeckBase extends EventEmitter<MXCreativeConsoleEvents> implements MXCreativeConsole {
-	get CONTROLS(): Readonly<StreamDeckControlDefinition[]> {
+export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> implements MXCreativeConsole {
+	get CONTROLS(): Readonly<MXConsoleControlDefinition[]> {
 		return this.deviceProperties.CONTROLS
 	}
 
@@ -50,16 +50,16 @@ export class StreamDeckBase extends EventEmitter<MXCreativeConsoleEvents> implem
 	}
 
 	protected readonly device: HIDDevice
-	protected readonly deviceProperties: Readonly<StreamDeckProperties>
-	// readonly #options: Readonly<Required<OpenStreamDeckOptions>>
+	protected readonly deviceProperties: Readonly<MXConsoleProperties>
+	// readonly #options: Readonly<Required<OpenMXConsoleOptions>>
 	readonly #propertiesService: PropertiesService
 	readonly #buttonsLcdService: ButtonsLcdDisplayService
 	readonly #inputService: MXCreativeConsoleInputService
 
 	constructor(
 		device: HIDDevice,
-		_options: Readonly<Required<OpenStreamDeckOptions>>,
-		services: StreamDeckServicesDefinition,
+		_options: Readonly<Required<OpenMXConsoleOptions>>,
+		services: MXConsoleServicesDefinition,
 	) {
 		super()
 
@@ -82,10 +82,10 @@ export class StreamDeckBase extends EventEmitter<MXCreativeConsoleEvents> implem
 
 	protected checkValidKeyIndex(
 		keyIndex: KeyIndex,
-		feedbackType: StreamDeckButtonControlDefinition['feedbackType'] | null,
+		feedbackType: MXConsoleButtonControlDefinition['feedbackType'] | null,
 	): void {
 		const buttonControl = this.deviceProperties.CONTROLS.find(
-			(control): control is StreamDeckButtonControlDefinition =>
+			(control): control is MXConsoleButtonControlDefinition =>
 				control.type === 'button' && control.index === keyIndex,
 		)
 

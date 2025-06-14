@@ -1,13 +1,13 @@
 import type { Coordinate, Dimension } from './id.js'
 
-export interface StreamDeckControlDefinitionBase {
-	type: 'button' | 'encoder' | 'lcd-segment'
+export interface MXConsoleControlDefinitionBase {
+	type: 'button'
 
 	row: number
 	column: number
 }
 
-export interface StreamDeckButtonControlDefinitionBase extends StreamDeckControlDefinitionBase {
+export interface MXConsoleButtonControlDefinitionBase extends MXConsoleControlDefinitionBase {
 	type: 'button'
 
 	index: number
@@ -15,32 +15,19 @@ export interface StreamDeckButtonControlDefinitionBase extends StreamDeckControl
 
 	feedbackType: 'none' | 'lcd'
 }
-export interface StreamDeckButtonControlDefinitionNoFeedback extends StreamDeckButtonControlDefinitionBase {
+export interface MXConsoleButtonControlDefinitionNoFeedback extends MXConsoleButtonControlDefinitionBase {
 	feedbackType: 'none'
 }
 
-export interface StreamDeckButtonControlDefinitionLcdFeedback extends StreamDeckButtonControlDefinitionBase {
+export interface MXConsoleButtonControlDefinitionLcdFeedback extends MXConsoleButtonControlDefinitionBase {
 	feedbackType: 'lcd'
 
 	pixelSize: Dimension
 	pixelPosition: Coordinate
 }
 
-export type StreamDeckButtonControlDefinition =
-	| StreamDeckButtonControlDefinitionNoFeedback
-	| StreamDeckButtonControlDefinitionLcdFeedback
+export type MXConsoleButtonControlDefinition =
+	| MXConsoleButtonControlDefinitionNoFeedback
+	| MXConsoleButtonControlDefinitionLcdFeedback
 
-export interface StreamDeckEncoderControlDefinition extends StreamDeckControlDefinitionBase {
-	type: 'encoder'
-
-	index: number
-	hidIndex: number
-
-	/** Whether the encoder has an led */
-	hasLed: boolean
-
-	/** The number of steps in encoder led rings (if any) */
-	ledRingSteps: number
-}
-
-export type StreamDeckControlDefinition = StreamDeckButtonControlDefinition | StreamDeckEncoderControlDefinition
+export type MXConsoleControlDefinition = MXConsoleButtonControlDefinition

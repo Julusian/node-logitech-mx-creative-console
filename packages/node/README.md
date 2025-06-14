@@ -18,7 +18,7 @@ This library has nothing to do with the official software produced by Logi. Ther
 
 `$ npm install --save @julusian/jpeg-turbo@^2.0.0` (Optional)
 
-It is recommended to install `@julusian/jpeg-turbo` to greatly improve performance for writing images to the StreamDeck XL or the Original-v2. Without doing so `jpeg-js` will be used instead, but image transfers will be noticably more cpu intensive and slower. `jpeg-turbo` has prebuilt binaries, but is not installed by default to ensure installation is easy for users who do not need the performance for the XL or the Original-v2.
+It is recommended to install `@julusian/jpeg-turbo` to greatly improve performance for writing images to the LCD. Without doing so `jpeg-js` will be used instead, but image transfers will be noticably more cpu intensive and slower. `jpeg-turbo` has prebuilt binaries, but is not installed by default to ensure installation is easy for users who do not need the performance.
 
 ### Native dependencies
 
@@ -50,23 +50,13 @@ However, in the event that installation _does_ fail (**or if you are on a platfo
 
 ## Linux
 
-On linux, the udev subsystem blocks access to the StreamDeck without some special configuration.
+On linux, the udev subsystem blocks access to the MXConsole without some special configuration.
 Copy one of the following files into `/etc/udev/rules.d/` and reload the rules with `sudo udevadm control --reload-rules`
 
--   Use the [headless server](./udev/50-logitech-mx-creative-console-headless.rules) version when your software will be running as a system service, and is not related to a logged in user
--   Use the [desktop user](./udev/50-logitech-mx-creative-console-user.rules) version when your software is run by a user session on a distribution using systemd
+- Use the [headless server](./udev/50-logitech-mx-creative-console-headless.rules) version when your software will be running as a system service, and is not related to a logged in user
+- Use the [desktop user](./udev/50-logitech-mx-creative-console-user.rules) version when your software is run by a user session on a distribution using systemd
 
 Unplug and replug the device and it should be usable
-
-## Features
-
--   Multiplatform support: Windows 7-10, MacOS, Linux, and even Raspberry Pi!
--   Support for every StreamDeck model (Original, Mini & XL)
--   Key `down` and key `up` events
--   Fill keys with images or solid RGB colors
--   Fill the entire panel with a single image, spread across all keys
--   Set the Stream Deck brightness
--   TypeScript support
 
 ## API
 

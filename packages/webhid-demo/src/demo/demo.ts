@@ -1,9 +1,9 @@
-import type { KeyIndex, StreamDeckWeb } from '@logitech-mx-creative-console/webhid'
+import type { KeyIndex, MXCreativeConsoleWeb } from '@logitech-mx-creative-console/webhid'
 
 export interface Demo {
-	start(device: StreamDeckWeb): Promise<void>
-	stop(device: StreamDeckWeb): Promise<void>
+	start(device: MXCreativeConsoleWeb): Promise<void>
+	stop(device: MXCreativeConsoleWeb): Promise<void>
 
-	keyDown(device: StreamDeckWeb, keyIndex: KeyIndex): Promise<void>
-	keyUp(device: StreamDeckWeb, keyIndex: KeyIndex): Promise<void>
+	keyDown(device: MXCreativeConsoleWeb, keyIndex: KeyIndex): Promise<void>
+	keyUp(device: MXCreativeConsoleWeb, keyIndex: KeyIndex): Promise<void>
 }

@@ -21,7 +21,7 @@ export {
 	StreamDeckControlDefinition,
 	OpenStreamDeckOptions,
 } from '@logitech-mx-creative-console/core'
-export { MXCreativeConsoleWeb as StreamDeckWeb } from './wrapper.js'
+export { MXCreativeConsoleWeb as MXCreativeConsoleWeb } from './wrapper.js'
 
 /**
  * Request the user to select some streamdecks to open
@@ -29,13 +29,7 @@ export { MXCreativeConsoleWeb as StreamDeckWeb } from './wrapper.js'
  */
 export async function requestStreamDecks(options?: OpenStreamDeckOptions): Promise<MXCreativeConsoleWeb[]> {
 	// TODO - error handling
-	const browserDevices = await navigator.hid.requestDevice({
-		filters: [
-			{
-				vendorId: VENDOR_ID,
-			},
-		],
-	})
+	const browserDevices = await navigator.hid.requestDevice({ filters: [{ vendorId: VENDOR_ID }] })
 
 	return Promise.all(browserDevices.map(async (dev) => openDevice(dev, options)))
 }
@@ -75,10 +69,7 @@ export async function openDevice(
 	await browserDevice.open()
 
 	try {
-		const options: Required<OpenStreamDeckOptions> = {
-			encodeJPEG: encodeJPEG,
-			...userOptions,
-		}
+		const options: Required<OpenStreamDeckOptions> = { encodeJPEG: encodeJPEG, ...userOptions }
 
 		const browserHid = new WebHIDDevice(browserDevice)
 
