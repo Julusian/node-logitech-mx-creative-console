@@ -66,7 +66,7 @@ jobs:
           # Remove any TypeScript build info files to polluting the npm packages
           rm packages/*/dist/*.tsbuildinfo || true
 
-          yarn workspaces foreach --all -pt --exclude elgato-stream-deck-packages --exclude @elgato-stream-deck/webhid-demo npm publish --access=public --tag ${{ steps.do-publish.outputs.tag }} --provenance
+          yarn workspaces foreach --all -pt --exclude logitech-mx-creative-console-packages --exclude @logitech-mx-creative-console/webhid-demo npm publish --access=public --tag ${{ steps.do-publish.outputs.tag }} --provenance
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           CI: true

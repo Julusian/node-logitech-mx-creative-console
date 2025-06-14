@@ -9,7 +9,7 @@
 	"homepage": "https://github.com/julusian/node-logitech-mx-creative-console#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/julusian/node-logitech-mx-creative-console.git"
+		"url": "https://github.com/Julusian/node-logitech-mx-creative-console"
 	},
 	"bugs": {
 		"url": "https://github.com/julusian/node-logitech-mx-creative-console/issues"
