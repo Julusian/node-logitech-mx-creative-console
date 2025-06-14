@@ -1,0 +1,11 @@
+{
+	"packages": {
+		"packages/core": { "component": "core" },
+		"packages/node": { "component": "node" },
+		"packages/webhid": { "component": "webhid" }
+	},
+	"plugins": [
+		{ "type": "node-workspace", "merge": false },
+		{ "type": "linked-versions", "groupName": "lib", "components": ["core", "node", "webhid"] }
+	]
+}

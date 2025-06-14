@@ -1,0 +1,52 @@
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+
+name: release-please
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ github.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      # The logic below handles the npm publication:
+      - name: Checkout Repository
+        if: ${{ steps.release.outputs.releases_created }}
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        if: ${{ steps.release.outputs.releases_created }}
+        with:
+          node-version: 22.x
+          registry-url: 'https://registry.npmjs.org'
+      - name: Build Packages
+        if: ${{ steps.release.outputs.releases_created }}
+        run: |
+          corepack enable
+          yarn install
+          yarn build
+      - name: Publish to NPM
+        if: ${{ steps.release.outputs.releases_created }}
+        run: |
+          yarn config set npmAuthToken $NPM_AUTH_TOKEN
+
+          yarn workspaces foreach --all -pt --exclude logitech-mx-creative-console-packages --exclude @logitech-mx-creative-console/webhid-demo npm publish --access=public
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          CI: true
