@@ -1,1 +1,1 @@
-{}
+{ "packages/core": "0.1.0", "packages/node": "0.1.0", "packages/webhid": "0.1.0" }
