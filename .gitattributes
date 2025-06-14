@@ -11,6 +11,7 @@
 *.tsx text eol=lf
 *.json text eol=lf
 *.md text eol=lf
+*.rules text eol=lf
 
 # Force images/fonts to be handled as binaries
 *.jpg binary
