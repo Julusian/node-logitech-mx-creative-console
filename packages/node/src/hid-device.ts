@@ -1,6 +1,7 @@
 import type { DeviceModelId, HIDDevice, HIDDeviceEvents, HIDDeviceInfo } from '@logitech-mx-creative-console/core'
 import { EventEmitter } from 'eventemitter3'
 import type { HIDAsync, Device as NodeHIDDeviceInfo } from 'node-hid'
+import { uint8ArrayToBuffer } from './util.js'
 
 /**
  * Information about a found MXCreativeConsole
@@ -37,7 +38,7 @@ export class NodeHIDDevice extends EventEmitter<HIDDeviceEvents> implements HIDD
 	}
 
 	public async sendFeatureReport(data: Uint8Array): Promise<void> {
-		await this.device.sendFeatureReport(Buffer.from(data)) // Future: avoid re-wrap
+		await this.device.sendFeatureReport(uint8ArrayToBuffer(data)) // Future: avoid re-wrap
 	}
 	public async getFeatureReport(reportId: number, reportLength: number): Promise<Uint8Array> {
 		return this.device.getFeatureReport(reportId, reportLength)
@@ -45,7 +46,7 @@ export class NodeHIDDevice extends EventEmitter<HIDDeviceEvents> implements HIDD
 	public async sendReports(buffers: Uint8Array[]): Promise<void> {
 		const ps: Promise<any>[] = []
 		for (const data of buffers) {
-			ps.push(this.device.write(Buffer.from(data))) // Future: avoid re-wrap
+			ps.push(this.device.write(uint8ArrayToBuffer(data))) // Future: avoid re-wrap
 		}
 		await Promise.all(ps)
 	}

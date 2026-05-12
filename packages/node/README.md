@@ -16,10 +16,6 @@ This library has nothing to do with the official software produced by Logi. Ther
 
 `$ npm install --save @logitech-mx-creative-console/node`
 
-`$ npm install --save @julusian/jpeg-turbo@^2.0.0` (Optional)
-
-It is recommended to install `@julusian/jpeg-turbo` to greatly improve performance for writing images to the LCD. Without doing so `jpeg-js` will be used instead, but image transfers will be noticably more cpu intensive and slower. `jpeg-turbo` has prebuilt binaries, but is not installed by default to ensure installation is easy for users who do not need the performance.
-
 ### Native dependencies
 
 All of this library's native dependencies ship with prebuilt binaries, so having a full compiler toolchain should not be necessary to install `@logitech-mx-creative-console/node`.

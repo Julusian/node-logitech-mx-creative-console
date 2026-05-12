@@ -1,6 +1,5 @@
-import * as jpegJS from 'jpeg-js'
-import type { EncodeOptions } from '@julusian/jpeg-turbo'
-import type * as tJpegTurbo from '@julusian/jpeg-turbo'
+import jpegTurbo from '@julusian/jpeg-turbo'
+import { uint8ArrayToBuffer } from './util.js'
 
 export interface JPEGEncodeOptions {
 	quality: number
@@ -14,7 +13,7 @@ const DEFAULT_QUALITY = 95
  * `@julusian/jpeg-turbo` will be used if it can be found, otherwise it will fall back to `jpeg-js`
  * @param buffer The buffer to convert
  * @param width Width of the image
- * @param height Hieght of the image
+ * @param height Height of the image
  */
 export async function encodeJPEG(
 	buffer: Uint8Array,
@@ -22,30 +21,20 @@ export async function encodeJPEG(
 	height: number,
 	options: JPEGEncodeOptions | undefined,
 ): Promise<Uint8Array> {
-	try {
-		const jpegTurbo2 = await import('@julusian/jpeg-turbo')
-		// @ts-expect-error - bad export
-		const jpegTurbo = jpegTurbo2.default as typeof tJpegTurbo
-
-		// Try using jpeg-turbo if it is available
-		if (jpegTurbo.bufferSize && !!jpegTurbo.compress) {
-			const encodeOptions: EncodeOptions = {
-				format: jpegTurbo.FORMAT_RGBA,
-				width,
-				height,
-				quality: DEFAULT_QUALITY,
-				...options,
-			}
-			if (buffer.length === width * height * 4) {
-				const tmpBuffer = Buffer.alloc(jpegTurbo.bufferSize(encodeOptions))
-				return jpegTurbo.compress(Buffer.from(buffer), tmpBuffer, encodeOptions) // Future: avoid rewrap
-			}
-		}
-	} catch (_e) {
-		// TODO - log error
+	if (buffer.length < width * height * 4) {
+		throw new Error(
+			`Buffer length (${buffer.length}) is too small for the specified width (${width}) and height (${height}). Expected at least ${width * height * 4} bytes.`,
+		)
 	}
 
-	// If jpeg-turbo is unavailable or fails, then fallback to jpeg-js
-	const jpegBuffer2 = jpegJS.encode({ width, height, data: buffer }, options ? options.quality : DEFAULT_QUALITY)
-	return jpegBuffer2.data
+	const encodeOptions: jpegTurbo.EncodeOptions = {
+		format: jpegTurbo.FORMAT_RGBA,
+		width,
+		height,
+		quality: DEFAULT_QUALITY,
+		...options,
+	}
+
+	const tmpBuffer = Buffer.alloc(jpegTurbo.bufferSize(encodeOptions))
+	return jpegTurbo.compress(uint8ArrayToBuffer(buffer), tmpBuffer, encodeOptions) // Future: avoid rewrap
 }
