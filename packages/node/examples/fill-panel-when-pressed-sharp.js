@@ -2,6 +2,7 @@
 import sharp from 'sharp'
 import { listMXCreativeConsoleDevices, openMxCreativeConsole } from '../dist/index.js'
 import { fileURLToPath } from 'url'
+import { generateMosaicBuffer } from './util.js'
 
 console.log('Press different keys to show each image.')
 const devices = await listMXCreativeConsoleDevices()
@@ -35,11 +36,7 @@ const imgField = await sharp(fileURLToPath(new URL('fixtures/sunny_field.png', i
 	.resize(panelDimensions.width, panelDimensions.height)
 	.raw()
 	.toBuffer()
-const imgMosaic = await sharp(fileURLToPath(new URL('../../../fixtures/mosaic.png', import.meta.url)))
-	.flatten()
-	.resize(panelDimensions.width, panelDimensions.height)
-	.raw()
-	.toBuffer()
+const imgMosaic = generateMosaicBuffer(device.CONTROLS, panelDimensions)
 
 let filled = false
 device.on('down', (control) => {
@@ -49,16 +46,18 @@ device.on('down', (control) => {
 
 	filled = true
 
-	let image
+	let image, format
 	if (control.index > buttonCount / 2) {
 		console.log('Filling entire panel with an image of a sunny field.')
 		image = imgField
+		format = /** @type {'rgb'} */ ('rgb')
 	} else {
 		console.log('Filling entire panel with a mosaic which will show each key as a different color.')
 		image = imgMosaic
+		format = /** @type {'rgba'} */ ('rgba')
 	}
 
-	device.fillPanelBuffer(image).catch((e) => console.error('Fill failed:', e))
+	device.fillPanelBuffer(image, { format }).catch((e) => console.error('Fill failed:', e))
 })
 
 device.on('up', () => {
