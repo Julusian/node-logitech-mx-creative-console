@@ -1,6 +1,6 @@
 {
 	"name": "@logitech-mx-creative-console/node",
-	"version": "0.2.3",
+	"version": "0.3.0",
 	"description": "An npm module for interfacing with the Logitech MX Creative Console in node",
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
@@ -54,7 +54,7 @@
 	},
 	"dependencies": {
 		"@julusian/jpeg-turbo": "^3.0.1",
-		"@logitech-mx-creative-console/core": "0.2.3",
+		"@logitech-mx-creative-console/core": "0.3.0",
 		"eventemitter3": "^5.0.4",
 		"node-hid": "^3.3.0",
 		"p-queue": "^9.2.0",
