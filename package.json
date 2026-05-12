@@ -12,7 +12,7 @@
     "dev": "run build:root --watch",
     "dev:demo": "yarn workspace @logitech-mx-creative-console/webhid-demo start",
     "build": "run build:root && yarn workspace @logitech-mx-creative-console/webhid-demo build",
-    "build:root": "(run -B rimraf packages/*/dist || true) && run -B tsc --build tsconfig.build.json",
+    "build:root": "(run -B rimraf packages/*/dist packages/*/*.tsbuildinfo || true) && run -B tsc --build tsconfig.json",
     "build:udev": "node ./scripts/regenerate-udev.mjs",
     "test": "run lint && run unit",
     "unit": "vitest",
@@ -33,8 +33,8 @@
   },
   "devDependencies": {
     "@sofie-automation/code-standard-preset": "https://github.com/Sofie-Automation/sofie-code-standard-preset#wip/kairos",
-    "@tsconfig/node20": "^20.1.9",
-    "@types/node": "^20.19.40",
+    "@tsconfig/node22": "^22",
+    "@types/node": "^22",
     "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^9.39.4",
     "husky": "^9.1.7",
@@ -44,7 +44,7 @@
     "rimraf": "^6.1.3",
     "sharp": "^0.33.5",
     "snyk-nodejs-lockfile-parser": "^1.60.1",
-    "typescript": "~5.8.3",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.59.2",
     "udev-generator": "^1.0.2",
     "usb": "^2.17.0",
@@ -56,5 +56,8 @@
     "packages/webhid",
     "packages/webhid-demo"
   ],
+  "resolutions": {
+    "@types/w3c-web-hid": "patch:@types/w3c-web-hid@npm%3A1.0.7#~/.yarn/patches/@types-w3c-web-hid-npm-1.0.6-ca95fc3332.patch"
+  },
   "packageManager": "yarn@4.14.1"
 }

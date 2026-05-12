@@ -1,7 +1,13 @@
 {
-	"extends": "./tsconfig.build.json",
-	"exclude": ["node_modules/**"],
+	"extends": "../../tsconfig.base.json",
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules/**", "src/**/*spec.ts", "src/**/__tests__/*", "src/**/__mocks__/*", "dist/**"],
 	"compilerOptions": {
-		"types": ["node", "w3c-web-hid"]
-	}
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"lib": ["ES2023", "dom"],
+		"types": ["w3c-web-hid"],
+		"composite": true
+	},
+	"references": [{ "path": "../core/tsconfig.json" }]
 }

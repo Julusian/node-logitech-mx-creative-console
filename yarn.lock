@@ -997,8 +997,8 @@ __metadata:
     "@julusian/jpeg-turbo": "npm:^3.0.1"
     "@logitech-mx-creative-console/core": "npm:0.2.3"
     eventemitter3: "npm:^5.0.4"
-    jpeg-js: "npm:^0.4.4"
     node-hid: "npm:^3.3.0"
+    p-queue: "npm:^9.2.0"
     tslib: "npm:^2.8.1"
   languageName: unknown
   linkType: soft
@@ -1020,7 +1020,7 @@ __metadata:
     "@logitech-mx-creative-console/core": "npm:0.2.3"
     "@types/w3c-web-hid": "npm:^1.0.7"
     eventemitter3: "npm:^5.0.4"
-    p-queue: "npm:^8.1.1"
+    p-queue: "npm:^9.2.0"
     tslib: "npm:^2.8.1"
   languageName: unknown
   linkType: soft
@@ -1375,10 +1375,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsconfig/node20@npm:^20.1.9":
-  version: 20.1.9
-  resolution: "@tsconfig/node20@npm:20.1.9"
-  checksum: 10c0/04e4e515dc6ce9386af74accb565884c3771b355208acc3d3dee32f0ce4c1d12e59319e05200fb2b87a8655ed4d8eb9910e36667a91e4683879feea9938d90d1
+"@tsconfig/node22@npm:^22":
+  version: 22.0.5
+  resolution: "@tsconfig/node22@npm:22.0.5"
+  checksum: 10c0/c64b1d51e1556da9212463799f5096289d2cc8561eaed10cd0a0a36c25790b4c6bed30c0f846afccf8da75b5750326fa281216a908c2b67ead7b55adaf3eda22
   languageName: node
   linkType: hard
 
@@ -1470,12 +1470,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.19.40":
-  version: 20.19.40
-  resolution: "@types/node@npm:20.19.40"
+"@types/node@npm:^22":
+  version: 22.19.18
+  resolution: "@types/node@npm:22.19.18"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/50b51ec30e213d6255032fc0672799f879f1f031ed0e7ddde865ee4482a57e64a2bc0e4cd8b52fdbc92d403ce8475f8eaca76e4b08b95c11fd1310a702b3c652
+  checksum: 10c0/0f425ca7f4c0ec4bbf9c1e5f9fdb9943f45fe534b9f6915a08bae44fe6f09873d9b8527d800e4b7d9f3899d74249c9c2c2be4e0dcca145014610f5eac9058316
   languageName: node
   linkType: hard
 
@@ -1509,10 +1509,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/w3c-web-hid@npm:^1.0.7":
+"@types/w3c-web-hid@npm:1.0.7":
   version: 1.0.7
   resolution: "@types/w3c-web-hid@npm:1.0.7"
   checksum: 10c0/e0f1204970e193fa006664b975d65b36608c424d6511a06bee6d495d2c8af2f2df9ef67f8d4fe2e5f5e460285edabe3ace5989879c6476b080ec76f092c2d7d3
+  languageName: node
+  linkType: hard
+
+"@types/w3c-web-hid@patch:@types/w3c-web-hid@npm%3A1.0.7#~/.yarn/patches/@types-w3c-web-hid-npm-1.0.6-ca95fc3332.patch":
+  version: 1.0.7
+  resolution: "@types/w3c-web-hid@patch:@types/w3c-web-hid@npm%3A1.0.7#~/.yarn/patches/@types-w3c-web-hid-npm-1.0.6-ca95fc3332.patch::version=1.0.7&hash=e2b372"
+  checksum: 10c0/9a8d9f1eade97e0bc5894ca3228d035adb97ddbd6f0d4ddca5817ea86d31792b1f6497f6664467598b0639c67c76a936a4b22bfff0e732f4914e302ac30d9742
   languageName: node
   linkType: hard
 
@@ -3097,7 +3104,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eventemitter3@npm:^5.0.1, eventemitter3@npm:^5.0.4":
+"eventemitter3@npm:^5.0.4":
   version: 5.0.4
   resolution: "eventemitter3@npm:5.0.4"
   checksum: 10c0/575b8cac8d709e1473da46f8f15ef311b57ff7609445a7c71af5cd42598583eee6f098fa7a593e30f27e94b8865642baa0689e8fa97c016f742abdb3b1bf6d9a
@@ -4273,8 +4280,8 @@ __metadata:
   resolution: "logitech-mx-creative-console-packages@workspace:."
   dependencies:
     "@sofie-automation/code-standard-preset": "https://github.com/Sofie-Automation/sofie-code-standard-preset#wip/kairos"
-    "@tsconfig/node20": "npm:^20.1.9"
-    "@types/node": "npm:^20.19.40"
+    "@tsconfig/node22": "npm:^22"
+    "@types/node": "npm:^22"
     "@vitest/coverage-v8": "npm:^3.2.4"
     eslint: "npm:^9.39.4"
     husky: "npm:^9.1.7"
@@ -4284,7 +4291,7 @@ __metadata:
     rimraf: "npm:^6.1.3"
     sharp: "npm:^0.33.5"
     snyk-nodejs-lockfile-parser: "npm:^1.60.1"
-    typescript: "npm:~5.8.3"
+    typescript: "npm:~6.0.3"
     typescript-eslint: "npm:^8.59.2"
     udev-generator: "npm:^1.0.2"
     usb: "npm:^2.17.0"
@@ -4913,20 +4920,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-queue@npm:^8.1.1":
-  version: 8.1.1
-  resolution: "p-queue@npm:8.1.1"
+"p-queue@npm:^9.2.0":
+  version: 9.2.0
+  resolution: "p-queue@npm:9.2.0"
   dependencies:
-    eventemitter3: "npm:^5.0.1"
-    p-timeout: "npm:^6.1.2"
-  checksum: 10c0/7732a6a0fbb67b388ae71a3f4a114c79291f2f466fe31929749aaa237c6ca13b7c3075785b4a16812ec3ed65107944421e6dd7c02a8dceefb69f8c5cc3c7652d
+    eventemitter3: "npm:^5.0.4"
+    p-timeout: "npm:^7.0.0"
+  checksum: 10c0/817af11d7b76e9e7414cb5326d6a9224ef85996bb72315af3a17e87a5b7bc740eba3cbfa8f9a4c6e241acbaf0b7894cf5065a9e58c4947dddd7917fb70b2eebc
   languageName: node
   linkType: hard
 
-"p-timeout@npm:^6.1.2":
-  version: 6.1.3
-  resolution: "p-timeout@npm:6.1.3"
-  checksum: 10c0/6dcd1efc1a18afac08dd4f8e09797bbe635110e597d27026b478f884b867616871499427643a6b2e11f0404b2936d17db69da2b5e58d5fe99e1fac80a53f0250
+"p-timeout@npm:^7.0.0":
+  version: 7.0.1
+  resolution: "p-timeout@npm:7.0.1"
+  checksum: 10c0/87d96529d1096d506607218dba6f9ec077c6dbedd0c2e2788c748e33bcd05faae8a81009fd9d22ec0b3c95fc83f4717306baba223f6e464737d8b99294c3e863
   languageName: node
   linkType: hard
 
@@ -6306,23 +6313,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:~5.8.3":
-  version: 5.8.3
-  resolution: "typescript@npm:5.8.3"
+"typescript@npm:~6.0.3":
+  version: 6.0.3
+  resolution: "typescript@npm:6.0.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/5f8bb01196e542e64d44db3d16ee0e4063ce4f3e3966df6005f2588e86d91c03e1fb131c2581baf0fb65ee79669eea6e161cd448178986587e9f6844446dbb48
+  checksum: 10c0/4a25ff5045b984370f48f196b3a0120779b1b343d40b9a68d114ea5e5fff099809b2bb777576991a63a5cd59cf7bffd96ff6fe10afcefbcb8bd6fb96ad4b6606
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A~5.8.3#optional!builtin<compat/typescript>":
-  version: 5.8.3
-  resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
+"typescript@patch:typescript@npm%3A~6.0.3#optional!builtin<compat/typescript>":
+  version: 6.0.3
+  resolution: "typescript@patch:typescript@npm%3A6.0.3#optional!builtin<compat/typescript>::version=6.0.3&hash=5786d5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/39117e346ff8ebd87ae1510b3a77d5d92dae5a89bde588c747d25da5c146603a99c8ee588c7ef80faaf123d89ed46f6dbd918d534d641083177d5fac38b8a1cb
+  checksum: 10c0/2f25c74e65663c248fa1ade2b8459d9ce5372ff9dad07067310f132966ebec1d93f6c42f0baf77a6b6a7a91460463f708e6887013aaade22111037457c6b25df
   languageName: node
   linkType: hard
 

@@ -4,14 +4,11 @@
 	"include": ["src/**/*.ts"],
 	"compilerOptions": {
 		"outDir": "./dist",
-		"baseUrl": "./",
-		"paths": {
-			"*": ["./node_modules/*"],
-			"@logitech-mx-creative-console/webhid-demo": ["./src/index.ts"]
-		},
+		"rootDir": "./src",
 		"lib": ["es6", "dom"],
 		"types": ["w3c-web-hid"],
-		"module": "Node16",
-		"moduleResolution": "Node16"
-	}
+		"module": "esnext",
+		"moduleResolution": "bundler"
+	},
+	"references": [{ "path": "../webhid/tsconfig.json" }]
 }

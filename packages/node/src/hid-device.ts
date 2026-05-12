@@ -1,6 +1,7 @@
 import type { DeviceModelId, HIDDevice, HIDDeviceEvents, HIDDeviceInfo } from '@logitech-mx-creative-console/core'
 import { EventEmitter } from 'eventemitter3'
 import type { HIDAsync, Device as NodeHIDDeviceInfo } from 'node-hid'
+import PQueue from 'p-queue'
 import { uint8ArrayToBuffer } from './util.js'
 
 /**
@@ -21,6 +22,7 @@ export interface MXCreativeConsoleDeviceInfo {
  */
 export class NodeHIDDevice extends EventEmitter<HIDDeviceEvents> implements HIDDevice {
 	private device: HIDAsync
+	readonly #writeQueue = new PQueue({ concurrency: 1 })
 
 	constructor(device: HIDAsync) {
 		super()
@@ -44,11 +46,14 @@ export class NodeHIDDevice extends EventEmitter<HIDDeviceEvents> implements HIDD
 		return this.device.getFeatureReport(reportId, reportLength)
 	}
 	public async sendReports(buffers: Uint8Array[]): Promise<void> {
-		const ps: Promise<any>[] = []
-		for (const data of buffers) {
-			ps.push(this.device.write(uint8ArrayToBuffer(data))) // Future: avoid re-wrap
-		}
-		await Promise.all(ps)
+		await this.#writeQueue.add(async () => {
+			for (const data of buffers) {
+				await this.device.write(uint8ArrayToBuffer(data)) // Future: avoid re-wrap
+			}
+
+			// Small delay to prevent overwhelming the device with back-to-back reports, which can cause it to skip some draws
+			await new Promise((resolve) => setTimeout(resolve, 10))
+		})
 	}
 
 	public async getDeviceInfo(): Promise<HIDDeviceInfo> {
