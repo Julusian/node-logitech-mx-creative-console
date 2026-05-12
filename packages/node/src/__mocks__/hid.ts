@@ -1,5 +1,7 @@
 import { EventEmitter } from 'events'
 import type { Device, HIDAsync } from 'node-hid'
+import { vi } from 'vitest'
+
 export class DummyHID extends EventEmitter implements HIDAsync {
 	constructor() {
 		super()
@@ -35,7 +37,7 @@ export class DummyHID extends EventEmitter implements HIDAsync {
 		throw new Error('Method not implemented.')
 	}
 
-	public getDeviceInfo = jest.fn(async (): Promise<Device> => {
+	public getDeviceInfo = vi.fn(async (): Promise<Device> => {
 		throw new Error('Not implemented')
 	})
 }

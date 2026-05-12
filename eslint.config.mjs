@@ -23,7 +23,7 @@ const customConfig = [
 		rules: { '@typescript-eslint/no-require-imports': 'off', 'n/no-missing-import': 'off' },
 	},
 	{
-		files: ['**/__tests__/**/*', '**/examples/**/*'],
+		files: ['**/__tests__/**/*', '**/__mocks__/**/*', '**/examples/**/*'],
 		rules: { 'n/no-extraneous-require': 'off', 'n/no-extraneous-import': 'off' },
 	},
 	{
