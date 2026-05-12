@@ -1,6 +1,6 @@
 {
 	"name": "@logitech-mx-creative-console/webhid-demo",
-	"version": "0.2.3",
+	"version": "0.3.0",
 	"private": true,
 	"type": "module",
 	"license": "MIT",
@@ -21,7 +21,7 @@
 		"build": "run -B -T rimraf dist && NODE_ENV=production vite build"
 	},
 	"dependencies": {
-		"@logitech-mx-creative-console/webhid": "0.2.3",
+		"@logitech-mx-creative-console/webhid": "0.3.0",
 		"html-to-image": "^1.11.13"
 	},
 	"devDependencies": {
