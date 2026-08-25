@@ -70,12 +70,12 @@ if (devices.length === 0) throw new Error('No MX Creative Console connected!')
 // You must provide the devicePath yourself as the first argument to the constructor.
 const myDevice = await openMxCreativeConsole(devices[0].path)
 
-myDevice.on('down', (keyIndex) => {
-	console.log('key %d down', keyIndex)
+myDevice.on('down', (key) => {
+	console.log('key %d down', key.index)
 })
 
-myDevice.on('up', (keyIndex) => {
-	console.log('key %d up', keyIndex)
+myDevice.on('up', (key) => {
+	console.log('key %d up', key.index)
 })
 
 // Fired whenever an error is detected by the `node-hid` library.
