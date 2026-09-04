@@ -4,7 +4,7 @@ import type {
 } from '../../controlDefinition.js'
 import type { HIDDevice } from '../../hid-device.js'
 import type { Dimension, KeyIndex } from '../../id.js'
-import type { MXConsoleProperties } from '../../models/base.js'
+import type { MXConsolePanelProperties } from '../../models/base.js'
 import type { FillPanelDimensionsOptions, FillImageOptions, FillPanelOptions } from '../../types.js'
 import type { MXConsoleImageWriter } from '../imageWriter/types.js'
 import type { ButtonsLcdDisplayService, GridSpan } from './interface.js'
@@ -14,13 +14,13 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 	readonly #imageWriter: MXConsoleImageWriter
 	readonly #imagePacker: ButtonLcdImagePacker
 	readonly #device: Pick<HIDDevice, 'sendReports' | 'sendFeatureReport'>
-	readonly #deviceProperties: Readonly<MXConsoleProperties>
+	readonly #deviceProperties: Readonly<MXConsolePanelProperties>
 
 	constructor(
 		imageWriter: MXConsoleImageWriter,
 		imagePacker: ButtonLcdImagePacker,
 		device: Pick<HIDDevice, 'sendReports' | 'sendFeatureReport'>,
-		deviceProperties: Readonly<MXConsoleProperties>,
+		deviceProperties: Readonly<MXConsolePanelProperties>,
 	) {
 		this.#imageWriter = imageWriter
 		this.#imagePacker = imagePacker

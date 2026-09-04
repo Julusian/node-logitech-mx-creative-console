@@ -6,9 +6,11 @@ import { generateMosaicBuffer } from './util.js'
 
 console.log('Press different keys to show each image.')
 const devices = await listMXCreativeConsoleDevices()
-if (!devices[0]) throw new Error('No device found')
 
-const device = await openMxCreativeConsole(devices[0].path)
+const dialpad = devices.find((device) => device.model === 'mx-creative-keypad')
+if (!dialpad) throw new Error('No device found')
+
+const device = await openMxCreativeConsole(dialpad.path)
 await device.clearPanel()
 
 const panelDimensions = device.calculateFillPanelDimensions()
