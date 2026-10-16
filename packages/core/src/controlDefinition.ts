@@ -27,8 +27,7 @@ export interface MXConsoleButtonControlDefinitionLcdFeedback extends MXConsoleBu
 }
 
 export type MXConsoleButtonControlDefinition =
-	| MXConsoleButtonControlDefinitionNoFeedback
-	| MXConsoleButtonControlDefinitionLcdFeedback
+	MXConsoleButtonControlDefinitionNoFeedback | MXConsoleButtonControlDefinitionLcdFeedback
 
 export interface MXConsoleEncoderControlDefinition extends MXConsoleControlDefinitionBase {
 	type: 'encoder'
