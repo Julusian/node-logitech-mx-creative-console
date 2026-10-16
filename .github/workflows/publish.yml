@@ -54,7 +54,7 @@ jobs:
             echo "prerelease=${PRERELEASE_TAG}-${TIMESTAMP}-${HASH}" >> $GITHUB_OUTPUT
 
           else
-            PUBLISHED_VERSION=$(yarn npm info --json @elgato-stream-deck/node | jq -c '.version' -r)
+            PUBLISHED_VERSION=$(yarn npm info --json @logitech-mx-creative-console/node | jq -c '.version' -r)
             THIS_VERSION=$(node -p "require('./packages/node/package.json').version")
             # Simple bash helper to comapre version numbers
             verlte() {
