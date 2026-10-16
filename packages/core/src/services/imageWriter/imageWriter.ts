@@ -1,5 +1,5 @@
 import { uint8ArrayToDataView } from '../../util.js'
-import type { MXConsoleImageWriter, MXConsoleImageWriterProps } from './types.js'
+import type { ImageWriteStatus, MXConsoleImageWriter, MXConsoleImageWriterProps } from './types.js'
 
 export class MXConsoleDefaultImageWriter implements MXConsoleImageWriter<MXConsoleImageWriterProps> {
 	// The length is sent as a uint16
@@ -58,7 +58,24 @@ export class MXConsoleDefaultImageWriter implements MXConsoleImageWriter<MXConso
 
 		return result
 	}
+
+	public parseWriteAnswer(answer: Uint8Array): ImageWriteStatus {
+		// The answer is: device index, feature index, function/software id, the part of the image, then the status
+		const status = answer[4]
+		switch (status) {
+			case IMAGE_WRITE_STATUS_OK:
+				return 'accepted'
+			case IMAGE_WRITE_STATUS_BUSY:
+				return 'busy'
+			default:
+				throw new Error(`Image write failed with status 0x${status.toString(16).padStart(2, '0')}`)
+		}
+	}
 }
+
+const IMAGE_WRITE_STATUS_OK = 0x00
+/** Reported for the last write of an image, when the device has too many images queued to accept it */
+const IMAGE_WRITE_STATUS_BUSY = 0xfb
 
 function generateWritePacketByte(index: number, isFirst: boolean, isLast: boolean): number {
 	let value = index | 0b00100000

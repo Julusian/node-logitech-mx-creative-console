@@ -50,9 +50,6 @@ export class NodeHIDDevice extends EventEmitter<HIDDeviceEvents> implements HIDD
 			for (const data of buffers) {
 				await this.device.write(uint8ArrayToBuffer(data)) // Future: avoid re-wrap
 			}
-
-			// Small delay to prevent overwhelming the device with back-to-back reports, which can cause it to skip some draws
-			await new Promise((resolve) => setTimeout(resolve, 10))
 		})
 	}
 

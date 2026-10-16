@@ -5,6 +5,7 @@ import type { OpenMXConsoleOptions } from './models/base.js'
 import { mxCreativeKeypadFactory, mxCreativeKeypadInitWrites } from './models/mx-creative-keypad.js'
 import { mxCreativeDialpadFactory, mxCreativeDialpadInitWrites } from './models/mx-creative-dialpad.js'
 import type { PropertiesService } from './services/properties/interface.js'
+import type { HidppTransport } from './hidpp.js'
 
 export * from './types.js'
 export * from './id.js'
@@ -12,6 +13,7 @@ export * from './controlDefinition.js'
 export type { HIDDevice, HIDDeviceInfo, HIDDeviceEvents } from './hid-device.js'
 export type { OpenMXConsoleOptions, EncodeJPEGHelper, EncodeJPEGHelperOptions } from './models/base.js'
 export { MXCreativeConsoleProxy } from './proxy.js'
+export { HidppTransport, HidppError, HidppTimeoutError, type HidppRequestOptions } from './hidpp.js'
 export type { PropertiesService } from './services/properties/interface.js'
 export { uint8ArrayToDataView } from './util.js'
 
@@ -27,64 +29,29 @@ const INIT_SETTLE_DELAY = 100
 
 /**
  * How long to wait for a device to answer an init write before sending it again.
- * A device handles one request at a time and silently drops any arriving while it is busy, or
- * while it is still waking up, so the only way to know a write took effect is its answer.
+ * A write arriving while the device is still waking up is silently dropped.
  */
 const INIT_RESPONSE_TIMEOUT = 250
 const INIT_WRITE_ATTEMPTS = 3
-
-const HIDPP_SHORT_REPORT_ID = 0x10
-const HIDPP_LONG_REPORT_ID = 0x11
-/** The feature index an error answer carries, followed by the feature index and function it is for */
-const HIDPP_ERROR_FEATURE_INDEX = 0xff
-
-/**
- * Whether an input report answers a HID++ request.
- * A successful answer echoes the device index, feature index and function/software id of the request,
- * while an error answer carries them after the error marker.
- */
-function isHidppAnswer(request: Uint8Array, reportId: number, data: Uint8Array): boolean {
-	if (reportId !== HIDPP_SHORT_REPORT_ID && reportId !== HIDPP_LONG_REPORT_ID) return false
-	if (data[0] !== request[1]) return false
-
-	if (data[1] === request[2] && data[2] === request[3]) return true
-	return data[1] === HIDPP_ERROR_FEATURE_INDEX && data[2] === request[2] && data[3] === request[3]
-}
-
-/** Send a HID++ request, resolving once the device answers it, or false if it never does */
-async function sendHidppRequest(device: HIDDevice, request: Uint8Array): Promise<boolean> {
-	for (let attempt = 0; attempt < INIT_WRITE_ATTEMPTS; attempt++) {
-		const answered = Promise.withResolvers<boolean>()
-		const onInput = (reportId: number, data: Uint8Array) => {
-			if (isHidppAnswer(request, reportId, data)) answered.resolve(true)
-		}
-		const timeout = setTimeout(() => answered.resolve(false), INIT_RESPONSE_TIMEOUT)
-
-		device.on('input', onInput)
-		try {
-			await device.sendReports([request])
-			if (await answered.promise) return true
-		} finally {
-			device.off('input', onInput)
-			clearTimeout(timeout)
-		}
-	}
-
-	return false
-}
 
 /**
  * Perform the writes which initialise a device, if it needs any.
  * Controls are not reported to software until these enable them, so a dropped write means a
  * control which never produces any input. Each is resent until the device answers it.
  */
-export async function performInitWrites(device: HIDDevice, initWrites: Uint8Array[] | undefined): Promise<void> {
+export async function performInitWrites(
+	transport: HidppTransport,
+	initWrites: Uint8Array[] | undefined,
+): Promise<void> {
 	if (!initWrites) return
 
 	await new Promise((resolve) => setTimeout(resolve, INIT_SETTLE_DELAY))
 
 	for (const write of initWrites) {
-		await sendHidppRequest(device, write)
+		// A control which never got enabled is not worth failing the open for
+		await transport
+			.request(write, { timeout: INIT_RESPONSE_TIMEOUT, attempts: INIT_WRITE_ATTEMPTS })
+			.catch(() => undefined)
 	}
 }
 
@@ -96,6 +63,7 @@ export interface DeviceModelSpec {
 
 	factory: (
 		device: HIDDevice,
+		transport: HidppTransport,
 		options: Required<OpenMXConsoleOptions>,
 		propertiesService?: PropertiesService,
 	) => MXCreativeConsole

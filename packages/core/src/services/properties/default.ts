@@ -1,11 +1,14 @@
 import type { HIDDevice } from '../../hid-device.js'
+import type { HidppTransport } from '../../hidpp.js'
 import type { PropertiesService } from './interface.js'
 
 export class DefaultPropertiesService implements PropertiesService {
 	readonly #device: HIDDevice
+	readonly #transport: HidppTransport
 
-	constructor(device: HIDDevice) {
+	constructor(device: HIDDevice, transport: HidppTransport) {
 		this.#device = device
+		this.#transport = transport
 	}
 
 	public async setBrightness(percentage: number): Promise<void> {
@@ -21,7 +24,7 @@ export class DefaultPropertiesService implements PropertiesService {
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00,
 		])
-		await this.#device.sendReports([brightnessCommandBuffer])
+		await this.#transport.request(brightnessCommandBuffer)
 	}
 
 	public async resetToLogo(): Promise<void> {

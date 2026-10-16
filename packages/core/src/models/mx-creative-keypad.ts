@@ -1,4 +1,5 @@
 import type { HIDDevice } from '../hid-device.js'
+import type { HidppTransport } from '../hidpp.js'
 import type { OpenMXConsoleOptions, MXConsolePanelProperties } from './base.js'
 import { MXConsoleBase } from './base.js'
 import { DeviceModelId, MODEL_NAMES } from '../id.js'
@@ -24,17 +25,21 @@ const keypadProperties: MXConsolePanelProperties = {
 	PANEL_SIZE: { width: 480, height: 480 },
 }
 
-export function mxCreativeKeypadFactory(device: HIDDevice, options: Required<OpenMXConsoleOptions>): MXConsoleBase {
+export function mxCreativeKeypadFactory(
+	device: HIDDevice,
+	transport: HidppTransport,
+	options: Required<OpenMXConsoleOptions>,
+): MXConsoleBase {
 	const events = new CallbackHook<MXCreativeConsoleEvents>()
 
-	return new MXConsoleBase(device, options, {
+	return new MXConsoleBase(device, transport, options, {
 		deviceProperties: keypadProperties,
 		events,
-		properties: new DefaultPropertiesService(device),
+		properties: new DefaultPropertiesService(device, transport),
 		buttonsLcd: new DefaultButtonsLcdService(
 			new MXConsoleDefaultImageWriter(),
 			new JpegButtonLcdImagePacker(options.encodeJPEG),
-			device,
+			transport,
 			keypadProperties,
 		),
 		inputService: new KeypadInputService(keypadProperties, events),

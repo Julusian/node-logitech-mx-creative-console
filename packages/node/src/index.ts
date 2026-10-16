@@ -3,7 +3,7 @@ import type {
 	MXCreativeConsole,
 	EncodeJPEGHelperOptions,
 } from '@logitech-mx-creative-console/core'
-import { DEVICE_MODELS, VENDOR_ID, performInitWrites } from '@logitech-mx-creative-console/core'
+import { DEVICE_MODELS, VENDOR_ID, HidppTransport, performInitWrites } from '@logitech-mx-creative-console/core'
 import * as HID from 'node-hid'
 import { NodeHIDDevice, MXCreativeConsoleDeviceInfo } from './hid-device.js'
 import { MXCreativeConsoleNode } from './wrapper.js'
@@ -111,9 +111,10 @@ export async function openMxCreativeConsole(
 			throw new Error('MX Creative Console is of unexpected type.')
 		}
 
-		await performInitWrites(device, model.initWrites)
+		const transport = new HidppTransport(device)
+		await performInitWrites(transport, model.initWrites)
 
-		const rawDevice = model.factory(device, options)
+		const rawDevice = model.factory(device, transport, options)
 		return new MXCreativeConsoleNode(rawDevice, userOptions?.resetToLogoOnClose ?? false)
 	} catch (e) {
 		if (device) await device.close().catch(() => null) // Suppress error

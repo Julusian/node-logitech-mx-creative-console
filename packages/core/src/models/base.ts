@@ -13,6 +13,7 @@ import type { MXConsoleButtonControlDefinition, MXConsoleControlDefinition } fro
 import type { PropertiesService } from '../services/properties/interface.js'
 import type { CallbackHook } from '../services/callback-hook.js'
 import type { MXCreativeConsoleInputService } from '../services/input/interface.js'
+import type { HidppTransport } from '../hidpp.js'
 
 export interface EncodeJPEGHelperOptions {
 	/**
@@ -76,6 +77,7 @@ export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> impleme
 
 	constructor(
 		device: HIDDevice,
+		transport: HidppTransport,
 		_options: Readonly<Required<OpenMXConsoleOptions>>,
 		services: MXConsoleServicesDefinition,
 	) {
@@ -91,7 +93,7 @@ export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> impleme
 		// propogate events
 		services.events?.listen((key, ...args) => this.emit(key, ...args))
 
-		this.device.on('input', (reportId, data: Uint8Array) => this.#inputService.handleInput(reportId, data))
+		transport.on('input', (reportId, data: Uint8Array) => this.#inputService.handleInput(reportId, data))
 
 		this.device.on('error', (err) => {
 			this.emit('error', err)

@@ -2,29 +2,34 @@ import type {
 	MXConsoleButtonControlDefinition,
 	MXConsoleButtonControlDefinitionLcdFeedback,
 } from '../../controlDefinition.js'
-import type { HIDDevice } from '../../hid-device.js'
+import type { HidppTransport } from '../../hidpp.js'
 import type { Coordinate, Dimension, KeyIndex } from '../../id.js'
 import type { MXConsolePanelProperties } from '../../models/base.js'
 import type { FillPanelDimensionsOptions, FillImageOptions, FillPanelOptions } from '../../types.js'
-import type { MXConsoleImageWriter } from '../imageWriter/types.js'
+import type { ImageWriteStatus, MXConsoleImageWriter } from '../imageWriter/types.js'
 import type { ButtonsLcdDisplayService, GridSpan } from './interface.js'
 import type { ButtonLcdImagePacker, InternalFillImageOptions } from '../imagePacker/interface.js'
+
+/** How long to wait before resending an image the device was too busy to accept */
+const IMAGE_BUSY_RETRY_DELAY = 5
+/** How long to keep resending an image the device is too busy to accept */
+const IMAGE_BUSY_TIMEOUT = 1000
 
 export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 	readonly #imageWriter: MXConsoleImageWriter
 	readonly #imagePacker: ButtonLcdImagePacker
-	readonly #device: Pick<HIDDevice, 'sendReports' | 'sendFeatureReport'>
+	readonly #transport: Pick<HidppTransport, 'runExclusive'>
 	readonly #deviceProperties: Readonly<MXConsolePanelProperties>
 
 	constructor(
 		imageWriter: MXConsoleImageWriter,
 		imagePacker: ButtonLcdImagePacker,
-		device: Pick<HIDDevice, 'sendReports' | 'sendFeatureReport'>,
+		transport: Pick<HidppTransport, 'runExclusive'>,
 		deviceProperties: Readonly<MXConsolePanelProperties>,
 	) {
 		this.#imageWriter = imageWriter
 		this.#imagePacker = imagePacker
-		this.#device = device
+		this.#transport = transport
 		this.#deviceProperties = deviceProperties
 	}
 
@@ -104,7 +109,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 			{ pixelSize: this.#deviceProperties.PANEL_SIZE, pixelPosition: { x: 0, y: 0 } },
 			byteBuffer,
 		)
-		ps.push(this.#device.sendReports(packets))
+		ps.push(this.#sendImage(packets))
 
 		/*
 			for (const control of this.#deviceProperties.CONTROLS) {
@@ -241,7 +246,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 				{ pixelSize: bounds, pixelPosition: bounds },
 				byteBuffer,
 			)
-			await this.#device.sendReports(packets)
+			await this.#sendImage(packets)
 		} else {
 			// The image is too detailed to fit in a single write, so fall back to drawing each button individually
 			await Promise.all(
@@ -314,7 +319,28 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 			{ pixelSize: buttonControl.pixelSize, pixelPosition: buttonControl.pixelPosition },
 			byteBuffer,
 		)
-		await this.#device.sendReports(packets)
+		await this.#sendImage(packets)
+	}
+
+	/**
+	 * Send the packets of an image, resending it until the device has room for it.
+	 * Nothing else is sent until it is accepted, so that a newer image cannot be drawn before it.
+	 */
+	async #sendImage(packets: Uint8Array[]): Promise<void> {
+		await this.#transport.runExclusive(async (send) => {
+			const deadline = Date.now() + IMAGE_BUSY_TIMEOUT
+			for (;;) {
+				let status: ImageWriteStatus = 'accepted'
+				for (const packet of packets) {
+					status = this.#imageWriter.parseWriteAnswer(await send(packet))
+					if (status !== 'accepted') break
+				}
+				if (status === 'accepted') return
+
+				if (Date.now() >= deadline) throw new Error('Device was too busy to accept the image')
+				await new Promise((resolve) => setTimeout(resolve, IMAGE_BUSY_RETRY_DELAY))
+			}
+		})
 	}
 
 	private checkRGBValue(value: number): void {

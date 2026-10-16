@@ -1,4 +1,5 @@
 import type { HIDDevice } from '../hid-device.js'
+import type { HidppTransport } from '../hidpp.js'
 import type { OpenMXConsoleOptions, MXConsoleProperties } from './base.js'
 import { MXConsoleBase } from './base.js'
 import { DeviceModelId, MODEL_NAMES } from '../id.js'
@@ -59,11 +60,15 @@ const dialpadProperties: MXConsoleProperties = {
 	]),
 }
 
-export function mxCreativeDialpadFactory(device: HIDDevice, options: Required<OpenMXConsoleOptions>): MXConsoleBase {
+export function mxCreativeDialpadFactory(
+	device: HIDDevice,
+	transport: HidppTransport,
+	options: Required<OpenMXConsoleOptions>,
+): MXConsoleBase {
 	const events = new CallbackHook<MXCreativeConsoleEvents>()
 
 	// The dialpad has no display, and nothing to configure
-	return new MXConsoleBase(device, options, {
+	return new MXConsoleBase(device, transport, options, {
 		deviceProperties: dialpadProperties,
 		events,
 		inputService: new DialpadInputService(dialpadProperties, events, INVERTED_DIAL_HID_INDEXES),

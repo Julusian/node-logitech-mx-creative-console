@@ -1,7 +1,7 @@
 /* eslint-disable n/no-unsupported-features/node-builtins */
 
 import type { OpenMXConsoleOptions, MXCreativeConsole } from '@logitech-mx-creative-console/core'
-import { DEVICE_MODELS, VENDOR_ID, performInitWrites } from '@logitech-mx-creative-console/core'
+import { DEVICE_MODELS, VENDOR_ID, HidppTransport, performInitWrites } from '@logitech-mx-creative-console/core'
 import { WebHIDDevice } from './hid-device.js'
 import { encodeJPEG } from './jpeg.js'
 import { MXCreativeConsoleWeb } from './wrapper.js'
@@ -73,9 +73,10 @@ export async function openDevice(
 
 		const browserHid = new WebHIDDevice(browserDevice)
 
-		await performInitWrites(browserHid, model.initWrites)
+		const transport = new HidppTransport(browserHid)
+		await performInitWrites(transport, model.initWrites)
 
-		const device: MXCreativeConsole = model.factory(browserHid, options || {})
+		const device: MXCreativeConsole = model.factory(browserHid, transport, options || {})
 		return new MXCreativeConsoleWeb(device, browserHid)
 	} catch (e) {
 		await browserDevice.close().catch(() => null) // Suppress error
