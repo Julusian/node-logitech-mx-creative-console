@@ -7,7 +7,7 @@ import { generateMosaicBuffer } from './util.js'
 console.log('Press different keys to show each image.')
 const devices = await listMXCreativeConsoleDevices()
 
-const dialpad = devices.find((device) => device.model === 'mx-creative-keypad')
+const dialpad = devices.find((device) => device.modelInfo.id === 'mx-creative-keypad')
 if (!dialpad) throw new Error('No device found')
 
 const device = await openMxCreativeConsole(dialpad.path)
@@ -31,14 +31,14 @@ device.getHidDeviceInfo().then((ser) => {
 	console.log('hid', ser)
 })
 
-const buttonCount = device.CONTROLS.filter((control) => control.type === 'button').length
+const buttonCount = device.modelInfo.controls.filter((control) => control.type === 'button').length
 
 const imgField = await sharp(fileURLToPath(new URL('fixtures/sunny_field.png', import.meta.url)))
 	.flatten()
 	.resize(panelDimensions.width, panelDimensions.height)
 	.raw()
 	.toBuffer()
-const imgMosaic = generateMosaicBuffer(device.CONTROLS, panelDimensions)
+const imgMosaic = generateMosaicBuffer(device.modelInfo.controls, panelDimensions)
 
 let filled = false
 device.on('down', (control) => {

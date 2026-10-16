@@ -3,7 +3,7 @@
 /**
  * Generate a mosaic RGBA buffer where each LCD button cell is filled with a random solid color.
  *
- * @param {import('../dist/index.js').MXCreativeConsole['CONTROLS']} controls
+ * @param {import('../dist/index.js').MXConsoleModelInfo['controls']} controls
  * @param {{ width: number, height: number }} panelDimensions
  * @returns {Uint8ClampedArray} RGBA image buffer
  */

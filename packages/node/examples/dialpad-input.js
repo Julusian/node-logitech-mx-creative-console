@@ -3,7 +3,7 @@ import { listMXCreativeConsoleDevices, openMxCreativeConsole } from '../dist/ind
 
 const devices = await listMXCreativeConsoleDevices()
 
-const dialpad = devices.find((device) => device.model === 'mx-creative-dialpad')
+const dialpad = devices.find((device) => device.modelInfo.id === 'mx-creative-dialpad')
 if (!dialpad) throw new Error('No device found')
 
 const device = await openMxCreativeConsole(dialpad.path)

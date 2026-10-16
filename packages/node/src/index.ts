@@ -3,7 +3,7 @@ import type {
 	MXCreativeConsole,
 	EncodeJPEGHelperOptions,
 } from '@logitech-mx-creative-console/core'
-import { DEVICE_MODELS, VENDOR_ID, HidppTransport, performInitWrites } from '@logitech-mx-creative-console/core'
+import { findModelByUsb, getDriver } from '@logitech-mx-creative-console/core'
 import * as HID from 'node-hid'
 import { NodeHIDDevice, MXCreativeConsoleDeviceInfo } from './hid-device.js'
 import { MXCreativeConsoleNode } from './wrapper.js'
@@ -17,12 +17,21 @@ export {
 	MXCreativeConsole,
 	LcdPosition,
 	Dimension,
+	MXConsoleControlBounds,
 	MXConsoleControlDefinitionBase,
 	MXConsoleButtonControlDefinition,
 	MXConsoleButtonControlDefinitionNoFeedback,
+	MXConsoleButtonControlDefinitionLcdFeedback,
 	MXConsoleEncoderControlDefinition,
 	MXConsoleControlDefinition,
 	OpenMXConsoleOptions,
+	MXConsoleModelInfo,
+	MXConsoleModelFeatures,
+	MXConsoleTransport,
+	UsbMatch,
+	DEVICE_MODEL_INFO,
+	getModelInfo,
+	findModelByUsb,
 } from '@logitech-mx-creative-console/core'
 
 export { MXCreativeConsoleDeviceInfo, JPEGEncodeOptions }
@@ -50,13 +59,10 @@ export async function listMXCreativeConsoleDevices(): Promise<MXCreativeConsoleD
  * If the provided device is a mx creative console, get the info about it
  */
 export function getMXCreativeConsoleDeviceInfo(dev: HID.Device): MXCreativeConsoleDeviceInfo | null {
-	const model = DEVICE_MODELS.find((m) => m.productIds.includes(dev.productId))
+	const model = findModelByUsb(dev.vendorId, dev.productId, dev.usage, dev.interface)
+	if (!model || !dev.path) return null
 
-	if (model && dev.vendorId === VENDOR_ID && dev.path) {
-		return { model: model.id, path: dev.path, serialNumber: dev.serialNumber }
-	} else {
-		return null
-	}
+	return { modelInfo: model, model: model.id, path: dev.path, serialNumber: dev.serialNumber }
 }
 
 /**
@@ -104,17 +110,13 @@ export async function openMxCreativeConsole(
 
 		const deviceInfo = await device.getDeviceInfo()
 
-		const model = DEVICE_MODELS.find(
-			(m) => deviceInfo.vendorId === VENDOR_ID && m.productIds.includes(deviceInfo.productId),
-		)
-		if (!model) {
+		const model = findModelByUsb(deviceInfo.vendorId, deviceInfo.productId)
+		const driver = model && getDriver(model.id)
+		if (!driver) {
 			throw new Error('MX Creative Console is of unexpected type.')
 		}
 
-		const transport = new HidppTransport(device)
-		await performInitWrites(transport, model.initWrites)
-
-		const rawDevice = model.factory(device, transport, options)
+		const rawDevice = await driver(device, options)
 		return new MXCreativeConsoleNode(rawDevice, userOptions?.resetToLogoOnClose ?? false)
 	} catch (e) {
 		if (device) await device.close().catch(() => null) // Suppress error

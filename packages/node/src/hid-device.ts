@@ -1,4 +1,10 @@
-import type { DeviceModelId, HIDDevice, HIDDeviceEvents, HIDDeviceInfo } from '@logitech-mx-creative-console/core'
+import type {
+	DeviceModelId,
+	HIDDevice,
+	HIDDeviceEvents,
+	HIDDeviceInfo,
+	MXConsoleModelInfo,
+} from '@logitech-mx-creative-console/core'
 import { EventEmitter } from 'eventemitter3'
 import type { HIDAsync, Device as NodeHIDDeviceInfo } from 'node-hid'
 import PQueue from 'p-queue'
@@ -8,7 +14,12 @@ import { uint8ArrayToBuffer } from './util.js'
  * Information about a found MXCreativeConsole
  */
 export interface MXCreativeConsoleDeviceInfo {
-	/** The model of the device */
+	/** Static information about the model of the device */
+	modelInfo: MXConsoleModelInfo
+	/**
+	 * The model of the device
+	 * @deprecated Use `modelInfo.id` instead
+	 */
 	model: DeviceModelId
 	/** The connected path of the device in the usb tree */
 	path: string

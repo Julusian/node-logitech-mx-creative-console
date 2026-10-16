@@ -49,10 +49,12 @@ export class ChaseDemo implements Demo {
 
 		this.counter = 0
 
-		const controls = device.CONTROLS.filter(
-			(control): control is MXConsoleButtonControlDefinitionLcdFeedback =>
-				control.type === 'button' && control.feedbackType === 'lcd',
-		).sort((a, b) => b.index - a.index)
+		const controls = device.modelInfo.controls
+			.filter(
+				(control): control is MXConsoleButtonControlDefinitionLcdFeedback =>
+					control.type === 'button' && control.feedbackType === 'lcd',
+			)
+			.sort((a, b) => b.index - a.index)
 
 		const controlsAndCanvases: ControlAndCanvas[] = controls.map((control) => {
 			const canvas = document.createElement('canvas')

@@ -21,6 +21,8 @@ Check one of the installable packages for installation and usage instructions:
 
 The existing implementations are a light wrapper around the platform agnostic [`@logitech-mx-creative-console/core`](https://npm.im/@logitech-mx-creative-console/core). You can use your own HID implementation and device scanning/opening logic and reuse all the protocol bits.
 
+Identify a device with `findModelByUsb(vendorId, productId)`, then open it with the driver from `getDriver(model.id)`, which performs any writes the model needs to initialise it.
+
 ## Demo
 
 If you are using a Chromium v89+ based browser, you can try out the [webhid demo](https://julusian.github.io/node-logitech-mx-creative-console/)

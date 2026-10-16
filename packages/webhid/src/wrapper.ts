@@ -32,7 +32,7 @@ export class MXCreativeConsoleWeb extends MXCreativeConsoleProxy {
 		const ctx = canvas.getContext('2d', { willReadFrequently: true })
 		if (!ctx) throw new Error('Failed to get canvas context')
 
-		const control = this.CONTROLS.find(
+		const control = this.modelInfo.controls.find(
 			(control): control is MXConsoleButtonControlDefinition =>
 				control.type === 'button' && control.index === keyIndex,
 		)

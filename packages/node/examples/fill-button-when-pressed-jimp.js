@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url'
 
 const devices = await listMXCreativeConsoleDevices()
 
-const dialpad = devices.find((device) => device.model === 'mx-creative-keypad')
+const dialpad = devices.find((device) => device.modelInfo.id === 'mx-creative-keypad')
 if (!dialpad) throw new Error('No device found')
 
 const device = await openMxCreativeConsole(dialpad.path)

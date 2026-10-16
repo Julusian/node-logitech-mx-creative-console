@@ -3,14 +3,14 @@ import { listMXCreativeConsoleDevices, openMxCreativeConsole } from '../dist/ind
 
 const devices = await listMXCreativeConsoleDevices()
 
-const dialpad = devices.find((device) => device.model === 'mx-creative-keypad')
+const dialpad = devices.find((device) => device.modelInfo.id === 'mx-creative-keypad')
 if (!dialpad) throw new Error('No device found')
 
 const device = await openMxCreativeConsole(dialpad.path)
 
 // Fill it white so we can see the brightness changes
-const buttonControls = device.CONTROLS.filter((control) => control.type === 'button')
-for (const control of device.CONTROLS) {
+const buttonControls = device.modelInfo.controls.filter((control) => control.type === 'button')
+for (const control of device.modelInfo.controls) {
 	if (control.type === 'button' && control.feedbackType !== 'none') {
 		device.fillKeyColor(control.index, 255, 255, 255).catch((e) => console.error('Fill failed:', e))
 	}

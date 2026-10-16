@@ -21,7 +21,7 @@ export class RapidFillDemo implements Demo {
 					console.log('Filling with rgb(%d, %d, %d)', r, g, b)
 
 					const ps: Array<Promise<void>> = []
-					for (const control of device.CONTROLS) {
+					for (const control of device.modelInfo.controls) {
 						if (control.type === 'button' && control.feedbackType !== 'none') {
 							ps.push(device.fillKeyColor(control.index, r, g, b))
 						}

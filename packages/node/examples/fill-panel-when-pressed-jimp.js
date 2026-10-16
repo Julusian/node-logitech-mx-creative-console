@@ -7,7 +7,7 @@ import { generateMosaicBuffer } from './util.js'
 console.log('Press keys 0-7 to show the first image, and keys 8-15 to show the second image.')
 const devices = await listMXCreativeConsoleDevices()
 
-const dialpad = devices.find((device) => device.model === 'mx-creative-keypad')
+const dialpad = devices.find((device) => device.modelInfo.id === 'mx-creative-keypad')
 if (!dialpad) throw new Error('No device found')
 
 const device = await openMxCreativeConsole(dialpad.path)
@@ -19,10 +19,10 @@ if (!panelDimensions) throw new Error("MXConsole doesn't support fillPanel")
 const bmpImgField = await Jimp.read(fileURLToPath(new URL('fixtures/sunny_field.png', import.meta.url))).then((img) => {
 	return img.resize({ w: panelDimensions.width, h: panelDimensions.height })
 })
-const buttonCount = device.CONTROLS.filter((control) => control.type === 'button').length
+const buttonCount = device.modelInfo.controls.filter((control) => control.type === 'button').length
 
 const imgField = bmpImgField.bitmap.data
-const imgMosaic = generateMosaicBuffer(device.CONTROLS, panelDimensions)
+const imgMosaic = generateMosaicBuffer(device.modelInfo.controls, panelDimensions)
 
 let filled = false
 device.on('down', (control) => {

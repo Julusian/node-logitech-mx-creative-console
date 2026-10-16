@@ -2,7 +2,7 @@
 import { openMxCreativeConsole, listMXCreativeConsoleDevices } from '../dist/index.js'
 
 listMXCreativeConsoleDevices().then(async (devices) => {
-	const dialpad = devices.find((device) => device.model === 'mx-creative-keypad')
+	const dialpad = devices.find((device) => device.modelInfo.id === 'mx-creative-keypad')
 	if (!dialpad) throw new Error('No device found')
 
 	openMxCreativeConsole(dialpad.path).then((keypad) => {
@@ -24,7 +24,7 @@ listMXCreativeConsoleDevices().then(async (devices) => {
 
 					const ps = []
 
-					for (const control of keypad.CONTROLS) {
+					for (const control of keypad.modelInfo.controls) {
 						if (control.type === 'button' && control.feedbackType !== 'none') {
 							ps.push(keypad.fillKeyColor(control.index, r, g, b))
 						}

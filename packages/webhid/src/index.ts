@@ -1,7 +1,7 @@
 /* eslint-disable n/no-unsupported-features/node-builtins */
 
 import type { OpenMXConsoleOptions, MXCreativeConsole } from '@logitech-mx-creative-console/core'
-import { DEVICE_MODELS, VENDOR_ID, HidppTransport, performInitWrites } from '@logitech-mx-creative-console/core'
+import { findModelByUsb, getDriver, VENDOR_ID } from '@logitech-mx-creative-console/core'
 import { WebHIDDevice } from './hid-device.js'
 import { encodeJPEG } from './jpeg.js'
 import { MXCreativeConsoleWeb } from './wrapper.js'
@@ -13,6 +13,7 @@ export {
 	MXCreativeConsole,
 	LcdPosition,
 	Dimension,
+	MXConsoleControlBounds,
 	MXConsoleControlDefinitionBase,
 	MXConsoleButtonControlDefinition,
 	MXConsoleButtonControlDefinitionNoFeedback,
@@ -20,6 +21,13 @@ export {
 	MXConsoleEncoderControlDefinition,
 	MXConsoleControlDefinition,
 	OpenMXConsoleOptions,
+	MXConsoleModelInfo,
+	MXConsoleModelFeatures,
+	MXConsoleTransport,
+	UsbMatch,
+	DEVICE_MODEL_INFO,
+	getModelInfo,
+	findModelByUsb,
 } from '@logitech-mx-creative-console/core'
 export { MXCreativeConsoleWeb as MXCreativeConsoleWeb } from './wrapper.js'
 
@@ -59,10 +67,9 @@ export async function openDevice(
 	browserDevice: HIDDevice,
 	userOptions?: OpenMXConsoleOptions,
 ): Promise<MXCreativeConsoleWeb> {
-	const model = DEVICE_MODELS.find(
-		(m) => browserDevice.vendorId === VENDOR_ID && m.productIds.includes(browserDevice.productId),
-	)
-	if (!model) {
+	const model = findModelByUsb(browserDevice.vendorId, browserDevice.productId)
+	const driver = model && getDriver(model.id)
+	if (!driver) {
 		throw new Error('Surface is of unexpected type.')
 	}
 
@@ -73,10 +80,7 @@ export async function openDevice(
 
 		const browserHid = new WebHIDDevice(browserDevice)
 
-		const transport = new HidppTransport(browserHid)
-		await performInitWrites(transport, model.initWrites)
-
-		const device: MXCreativeConsole = model.factory(browserHid, transport, options || {})
+		const device: MXCreativeConsole = await driver(browserHid, options)
 		return new MXCreativeConsoleWeb(device, browserHid)
 	} catch (e) {
 		await browserDevice.close().catch(() => null) // Suppress error

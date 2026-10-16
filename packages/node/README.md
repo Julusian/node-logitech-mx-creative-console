@@ -56,7 +56,7 @@ export function openMxCreativeConsole(
 ): Promise<MXCreativeConsole>
 ```
 
-The MXCreativeConsole type can be found [here](/packages/core/src/models/types.ts#L15)
+The MXCreativeConsole type can be found [here](/packages/core/src/types.ts)
 
 ## Example
 
@@ -90,6 +90,27 @@ console.log('Successfully wrote a red square to key 4.')
 ```
 
 Some more complex demos can be found in the [examples](examples/) folder.
+
+## Model information
+
+Every supported model is described as plain data in `DEVICE_MODEL_INFO`, so a UI can be built for a device without opening it. Each model lists its controls, along with where each control sits on the face of the device, and its usb identifiers.
+
+```typescript
+import { DEVICE_MODEL_INFO, listMXCreativeConsoleDevices } from '@logitech-mx-creative-console/node'
+
+for (const model of Object.values(DEVICE_MODEL_INFO)) {
+	console.log(`${model.name} is ${model.faceSize.width}x${model.faceSize.height}`)
+	for (const control of model.controls) {
+		console.log(`  ${control.type} ${control.id} at`, control.bounds)
+	}
+}
+
+// Discovered devices carry the same info, as does `modelInfo` on an opened device
+const devices = await listMXCreativeConsoleDevices()
+console.log(devices[0]?.modelInfo.name)
+```
+
+For the Keypad, the `bounds` are in panel pixels, so the bounds of a button are also the region it occupies in an image filling the panel. The page buttons below the panel, and every control on the Dialpad, are currently estimates rather than measured.
 
 ## Contributing
 
