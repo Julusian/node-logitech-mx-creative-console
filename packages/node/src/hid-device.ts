@@ -17,38 +17,67 @@ export interface MXCreativeConsoleDeviceInfo {
 }
 
 /**
+ * An opened HID collection of a console, and the report ids it carries.
+ * An empty set of report ids means the handle is the device as a whole.
+ */
+export interface NodeHIDCollection {
+	handle: HIDAsync
+	reportIds: ReadonlySet<number>
+}
+
+/**
  * The wrapped node-hid HIDDevice.
  * This translates it into the common format expected by @logitech-mx-creative-console/core
  */
 export class NodeHIDDevice extends EventEmitter<HIDDeviceEvents> implements HIDDevice {
-	private device: HIDAsync
+	readonly #collections: readonly NodeHIDCollection[]
 	readonly #writeQueue = new PQueue({ concurrency: 1 })
 
-	constructor(device: HIDAsync) {
+	constructor(collections: NodeHIDCollection[]) {
 		super()
 
-		this.device = device
-		this.device.on('error', (error) => this.emit('error', error))
+		this.#collections = collections
 
-		this.device.on('data', (data: Buffer) => {
-			this.emit('input', data[0], data.subarray(1))
-		})
+		for (const { handle } of collections) {
+			let receivedInput = false
+
+			handle.on('data', (data: Buffer) => {
+				receivedInput = true
+				this.emit('input', data[0], data.subarray(1))
+			})
+
+			handle.on('error', (error) => {
+				// Some collections are write only, such as the one images are sent to, and their read
+				// loop fails as soon as it is started. That is not a device failure, so don't report it.
+				if (receivedInput || collections.length === 1) this.emit('error', error)
+			})
+		}
+	}
+
+	/**
+	 * Windows splits a device into one handle per collection, each rejecting reports which belong to
+	 * another, so a report has to be written to the handle owning it. Elsewhere the device is a
+	 * single handle taking every report, which no collection claims and so falls through to here.
+	 */
+	#handleForReport(reportId: number): HIDAsync {
+		const collection = this.#collections.find((collection) => collection.reportIds.has(reportId))
+		return (collection ?? this.#collections[0]).handle
 	}
 
 	public async close(): Promise<void> {
-		await this.device.close()
+		await Promise.all(this.#collections.map(async ({ handle }) => handle.close()))
 	}
 
 	public async sendFeatureReport(data: Uint8Array): Promise<void> {
-		await this.device.sendFeatureReport(uint8ArrayToBuffer(data)) // Future: avoid re-wrap
+		await this.#handleForReport(data[0]).sendFeatureReport(uint8ArrayToBuffer(data)) // Future: avoid re-wrap
 	}
 	public async getFeatureReport(reportId: number, reportLength: number): Promise<Uint8Array> {
-		return this.device.getFeatureReport(reportId, reportLength)
+		return this.#handleForReport(reportId).getFeatureReport(reportId, reportLength)
 	}
 	public async sendReports(buffers: Uint8Array[]): Promise<void> {
 		await this.#writeQueue.add(async () => {
 			for (const data of buffers) {
-				await this.device.write(uint8ArrayToBuffer(data)) // Future: avoid re-wrap
+				await this.#handleForReport(data[0]).write(uint8ArrayToBuffer(data)) // Future: avoid re-wrap
 			}
 
 			// Small delay to prevent overwhelming the device with back-to-back reports, which can cause it to skip some draws
@@ -57,7 +86,7 @@ export class NodeHIDDevice extends EventEmitter<HIDDeviceEvents> implements HIDD
 	}
 
 	public async getDeviceInfo(): Promise<HIDDeviceInfo> {
-		const info: NodeHIDDeviceInfo = await this.device.getDeviceInfo()
+		const info: NodeHIDDeviceInfo = await this.#collections[0].handle.getDeviceInfo()
 
 		return { path: info.path, productId: info.productId, vendorId: info.vendorId, serialNumber: info.serialNumber }
 	}

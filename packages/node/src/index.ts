@@ -1,13 +1,16 @@
 import type { OpenMXConsoleOptions, MXCreativeConsole } from '@logitech-mx-creative-console/core'
-import { DEVICE_MODELS, VENDOR_ID } from '@logitech-mx-creative-console/core'
+import { DEVICE_MODELS, VENDOR_ID, performInitWrites } from '@logitech-mx-creative-console/core'
 import * as HID from 'node-hid'
+import type { NodeHIDCollection } from './hid-device.js'
 import { NodeHIDDevice, MXCreativeConsoleDeviceInfo } from './hid-device.js'
 import { MXCreativeConsoleNode } from './wrapper.js'
 import { encodeJPEG, JPEGEncodeOptions } from './jpeg.js'
+import { findDeviceCollections, isPrimaryCollection } from './collections.js'
 
 export {
 	VENDOR_ID,
 	DeviceModelId,
+	MODEL_NAMES,
 	KeyIndex,
 	MXCreativeConsole,
 	LcdPosition,
@@ -31,23 +34,23 @@ export interface OpenMXCreativeConsoleOptionsNode extends OpenMXConsoleOptions {
  * Scan for and list detected devices
  */
 export async function listMXCreativeConsoleDevices(): Promise<MXCreativeConsoleDeviceInfo[]> {
-	const devices: Record<string, MXCreativeConsoleDeviceInfo> = {}
+	const devices: MXCreativeConsoleDeviceInfo[] = []
 	for (const dev of await HID.devicesAsync()) {
-		if (dev.path && !devices[dev.path]) {
-			const info = getMXCreativeConsoleDeviceInfo(dev)
-			if (info) devices[dev.path] = info
-		}
+		const info = getMXCreativeConsoleDeviceInfo(dev)
+		if (info) devices.push(info)
 	}
-	return Object.values<MXCreativeConsoleDeviceInfo>(devices)
+	return devices
 }
 
 /**
- * If the provided device is a mx creative console, get the info about it
+ * If the provided device is a mx creative console, get the info about it.
+ * Only the collection identifying the device is reported, so that a device split across multiple
+ * collections is not mistaken for multiple devices.
  */
 export function getMXCreativeConsoleDeviceInfo(dev: HID.Device): MXCreativeConsoleDeviceInfo | null {
 	const model = DEVICE_MODELS.find((m) => m.productIds.includes(dev.productId))
 
-	if (model && dev.vendorId === VENDOR_ID && dev.path) {
+	if (model && dev.vendorId === VENDOR_ID && dev.path && isPrimaryCollection(dev)) {
 		return { model: model.id, path: dev.path, serialNumber: dev.serialNumber }
 	} else {
 		return null
@@ -82,10 +85,17 @@ export async function openMxCreativeConsole(
 		...userOptions,
 	}
 
-	let device: NodeHIDDevice | undefined
+	const collections: NodeHIDCollection[] = []
 	try {
-		const hidDevice = await HID.HIDAsync.open(devicePath)
-		device = new NodeHIDDevice(hidDevice)
+		// The device may be split across multiple collections, which must all be opened to talk to it
+		for (const collection of findDeviceCollections(await HID.devicesAsync(), devicePath)) {
+			collections.push({
+				handle: await HID.HIDAsync.open(collection.path),
+				reportIds: collection.reportIds,
+			})
+		}
+
+		const device = new NodeHIDDevice(collections)
 
 		const deviceInfo = await device.getDeviceInfo()
 
@@ -96,12 +106,12 @@ export async function openMxCreativeConsole(
 			throw new Error('MX Creative Console is of unexpected type.')
 		}
 
-		if (model.initWrites) await device.sendReports(model.initWrites)
+		await performInitWrites(device, model.initWrites)
 
 		const rawDevice = model.factory(device, options)
 		return new MXCreativeConsoleNode(rawDevice, userOptions?.resetToLogoOnClose ?? false)
 	} catch (e) {
-		if (device) await device.close().catch(() => null) // Suppress error
+		await Promise.all(collections.map(async ({ handle }) => handle.close().catch(() => null))) // Suppress error
 		throw e
 	}
 }

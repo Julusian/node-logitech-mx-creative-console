@@ -26,14 +26,19 @@ export type MXConsoleProperties = Readonly<{
 
 	CONTROLS: Readonly<MXConsoleControlDefinition[]>
 
-	PANEL_SIZE: Dimension
+	PANEL_SIZE?: Dimension
 }>
+
+/** The properties of a device which has a display */
+export type MXConsolePanelProperties = MXConsoleProperties & Readonly<{ PANEL_SIZE: Dimension }>
 
 export interface MXConsoleServicesDefinition {
 	deviceProperties: MXConsoleProperties
 	events: CallbackHook<MXCreativeConsoleEvents>
-	properties: PropertiesService
-	buttonsLcd: ButtonsLcdDisplayService
+	/** Omitted by devices with nothing to configure, such as a device without a display */
+	properties?: PropertiesService
+	/** Omitted by devices without a display */
+	buttonsLcd?: ButtonsLcdDisplayService
 	inputService: MXCreativeConsoleInputService
 }
 
@@ -52,8 +57,8 @@ export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> impleme
 	protected readonly device: HIDDevice
 	protected readonly deviceProperties: Readonly<MXConsoleProperties>
 	// readonly #options: Readonly<Required<OpenMXConsoleOptions>>
-	readonly #propertiesService: PropertiesService
-	readonly #buttonsLcdService: ButtonsLcdDisplayService
+	readonly #propertiesService: PropertiesService | undefined
+	readonly #buttonsLcdService: ButtonsLcdDisplayService | undefined
 	readonly #inputService: MXCreativeConsoleInputService
 
 	constructor(
@@ -98,8 +103,14 @@ export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> impleme
 		}
 	}
 
+	/** The service backing everything drawn to the device, which devices without a display do not have */
+	#getButtonsLcdService(): ButtonsLcdDisplayService {
+		if (!this.#buttonsLcdService) throw new Error(`${this.PRODUCT_NAME} does not have a display`)
+		return this.#buttonsLcdService
+	}
+
 	public calculateFillPanelDimensions(options?: FillPanelDimensionsOptions): Dimension | null {
-		return this.#buttonsLcdService.calculateFillPanelDimensions(options)
+		return this.#buttonsLcdService?.calculateFillPanelDimensions(options) ?? null
 	}
 
 	public async close(): Promise<void> {
@@ -111,10 +122,14 @@ export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> impleme
 	}
 
 	public async setBrightness(percentage: number): Promise<void> {
+		if (!this.#propertiesService) throw new Error(`${this.PRODUCT_NAME} does not support setting the brightness`)
+
 		return this.#propertiesService.setBrightness(percentage)
 	}
 
 	public async resetToLogo(): Promise<void> {
+		if (!this.#propertiesService) throw new Error(`${this.PRODUCT_NAME} does not have a logo to reset to`)
+
 		return this.#propertiesService.resetToLogo()
 		// const finish = new Uint8Array(20)
 		// const finishView = uint8ArrayToDataView(finish)
@@ -138,30 +153,27 @@ export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> impleme
 	public async fillKeyColor(keyIndex: KeyIndex, r: number, g: number, b: number): Promise<void> {
 		this.checkValidKeyIndex(keyIndex, null)
 
-		await this.#buttonsLcdService.fillKeyColor(keyIndex, r, g, b)
+		await this.#getButtonsLcdService().fillKeyColor(keyIndex, r, g, b)
 	}
 
 	public async fillKeyBuffer(keyIndex: KeyIndex, imageBuffer: Uint8Array, options?: FillImageOptions): Promise<void> {
 		this.checkValidKeyIndex(keyIndex, 'lcd')
 
-		await this.#buttonsLcdService.fillKeyBuffer(keyIndex, imageBuffer, options)
+		await this.#getButtonsLcdService().fillKeyBuffer(keyIndex, imageBuffer, options)
 	}
 
 	public async fillPanelBuffer(imageBuffer: Uint8Array, options?: FillPanelOptions): Promise<void> {
-		await this.#buttonsLcdService.fillPanelBuffer(imageBuffer, options)
+		await this.#getButtonsLcdService().fillPanelBuffer(imageBuffer, options)
 	}
 
 	public async clearKey(keyIndex: KeyIndex): Promise<void> {
 		this.checkValidKeyIndex(keyIndex, null)
 
-		await this.#buttonsLcdService.clearKey(keyIndex)
+		await this.#getButtonsLcdService().clearKey(keyIndex)
 	}
 
 	public async clearPanel(): Promise<void> {
-		const ps: Array<Promise<void>> = []
-
-		ps.push(this.#buttonsLcdService.clearPanel())
-
-		await Promise.all(ps)
+		// A device without a display has nothing to clear
+		await this.#buttonsLcdService?.clearPanel()
 	}
 }
