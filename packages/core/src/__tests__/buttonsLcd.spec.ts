@@ -21,6 +21,13 @@ const properties: MXConsolePanelProperties = {
 const ACCEPTED = [0xff, 0x02, 0x2b, 0xc1, 0x00, 0x01]
 const BUSY = [0xff, 0x02, 0x2b, 0xc1, 0xfb, 0x00]
 
+interface Region {
+	x: number
+	y: number
+	width: number
+	height: number
+}
+
 function setup(options?: { packedLength?: (width: number) => number | null; answer?: () => number[] }) {
 	const packer = {
 		convertPixelBuffer: vi.fn<ButtonLcdImagePacker['convertPixelBuffer']>(async (_buffer, _options, size) => {
@@ -32,11 +39,26 @@ function setup(options?: { packedLength?: (width: number) => number | null; answ
 	const transport: Pick<HidppTransport, 'runExclusive'> = { runExclusive: async (fn) => fn(send) }
 
 	const service = new DefaultButtonsLcdService(new MXConsoleDefaultImageWriter(), packer, transport, properties)
-	return { service, packer, send }
+
+	/** The regions of each image sent, from the first packet of each */
+	const drawnRegions = (): Region[] =>
+		send.mock.calls
+			.map((call) => call[0])
+			.filter((packet) => packet[4] & 0x80)
+			.map(writeRegion)
+
+	/** Read a pixel of an image given to the packer, as rgba */
+	const encodedPixel = (call: number, x: number, y: number) => {
+		const [pixels, sourceOptions] = packer.convertPixelBuffer.mock.calls[call]
+		const offset = sourceOptions.offset + y * sourceOptions.stride + x * 4
+		return Array.from(pixels.subarray(offset, offset + 4))
+	}
+
+	return { service, packer, send, drawnRegions, encodedPixel }
 }
 
 /** The position and size an image write was drawn at */
-function writeRegion(packet: Uint8Array) {
+function writeRegion(packet: Uint8Array): Region {
 	const view = new DataView(packet.buffer, packet.byteOffset, packet.byteLength)
 	return { x: view.getUint16(9), y: view.getUint16(11), width: view.getUint16(13), height: view.getUint16(15) }
 }
@@ -53,6 +75,15 @@ function makePanelBuffer(): Uint8Array {
 	return buffer
 }
 
+const WHOLE_PANEL = { x: 23, y: 6, width: 434, height: 434 }
+const WHOLE_LCD = { x: 0, y: 0, width: 480, height: 480 }
+const keyRegion = (index: number): Region => ({
+	x: 23 + (index % 3) * 158,
+	y: 6 + Math.floor(index / 3) * 158,
+	width: 118,
+	height: 118,
+})
+
 describe('DefaultButtonsLcdService', () => {
 	afterEach(() => {
 		vi.useRealTimers()
@@ -66,44 +97,37 @@ describe('DefaultButtonsLcdService', () => {
 	})
 
 	test('fills the panel with a single image, with the gaps between the keys added', async () => {
-		const { service, packer, send } = setup()
+		const { service, packer, drawnRegions, encodedPixel } = setup()
 
 		await service.fillPanelBuffer(makePanelBuffer(), { format: 'rgb' })
 
+		expect(drawnRegions()).toEqual([WHOLE_PANEL])
 		expect(packer.convertPixelBuffer).toHaveBeenCalledTimes(1)
-		const [buffer, sourceOptions, size] = packer.convertPixelBuffer.mock.calls[0]
-		expect(size).toMatchObject({ width: 434, height: 434 })
-		expect(sourceOptions).toEqual({ format: 'rgb', offset: 0, stride: 434 * 3 })
+		expect(packer.convertPixelBuffer.mock.calls[0][1]).toMatchObject({ format: 'rgba', stride: 434 * 4 })
 
-		const red = (x: number, y: number) => buffer[(y * 434 + x) * 3]
-		for (const control of properties.CONTROLS) {
-			if (control.type !== 'button' || control.feedbackType !== 'lcd') continue
-			const x = control.pixelPosition.x - 23
-			const y = control.pixelPosition.y - 6
-			expect(red(x, y)).toBe(control.index + 1)
-			expect(red(x + 117, y + 117)).toBe(control.index + 1)
+		for (let index = 0; index < 9; index++) {
+			const region = keyRegion(index)
+			const x = region.x - 23
+			const y = region.y - 6
+			expect(encodedPixel(0, x, y)).toEqual([index + 1, 0, 0, 255])
+			expect(encodedPixel(0, x + 117, y + 117)).toEqual([index + 1, 0, 0, 255])
 		}
 		// The gaps between the keys
-		expect(red(118, 0)).toBe(0)
-		expect(red(157, 0)).toBe(0)
-		expect(red(0, 118)).toBe(0)
-		expect(red(200, 140)).toBe(0)
-
-		expect(send).toHaveBeenCalledTimes(1)
-		expect(writeRegion(send.mock.calls[0][0])).toEqual({ x: 23, y: 6, width: 434, height: 434 })
+		expect(encodedPixel(0, 118, 0)[0]).toBe(0)
+		expect(encodedPixel(0, 157, 0)[0]).toBe(0)
+		expect(encodedPixel(0, 0, 118)[0]).toBe(0)
+		expect(encodedPixel(0, 200, 140)[0]).toBe(0)
 	})
 
 	test('fills the panel with an image including the gaps', async () => {
-		const { service, packer, send } = setup()
+		const { service, drawnRegions, encodedPixel } = setup()
 
-		const image = new Uint8Array(434 * 434 * 4)
-		await service.fillPanelBuffer(image, { format: 'rgba', withPadding: true })
+		const image = new Uint8Array(434 * 434 * 3)
+		image.set([7, 8, 9], (140 * 434 + 200) * 3)
+		await service.fillPanelBuffer(image, { format: 'rgb', withPadding: true })
 
-		expect(packer.convertPixelBuffer).toHaveBeenCalledTimes(1)
-		expect(packer.convertPixelBuffer.mock.calls[0][0]).toBe(image)
-		expect(packer.convertPixelBuffer.mock.calls[0][1]).toEqual({ format: 'rgba', offset: 0, stride: 434 * 4 })
-		expect(send).toHaveBeenCalledTimes(1)
-		expect(writeRegion(send.mock.calls[0][0])).toEqual({ x: 23, y: 6, width: 434, height: 434 })
+		expect(drawnRegions()).toEqual([WHOLE_PANEL])
+		expect(encodedPixel(0, 200, 140)).toEqual([7, 8, 9, 255])
 	})
 
 	test('rejects a panel image of the wrong size', async () => {
@@ -118,30 +142,65 @@ describe('DefaultButtonsLcdService', () => {
 	})
 
 	test('falls back to filling each key when the panel image is too large', async () => {
-		const { service, packer, send } = setup({ packedLength: (width) => (width === 434 ? null : 10) })
+		const { service, drawnRegions } = setup({ packedLength: (width) => (width === 434 ? null : 10) })
 
 		await service.fillPanelBuffer(makePanelBuffer(), { format: 'rgb' })
 
-		// The whole panel, then each key
-		expect(packer.convertPixelBuffer).toHaveBeenCalledTimes(10)
-		expect(send).toHaveBeenCalledTimes(9)
+		const regions = drawnRegions()
+		expect(regions).toHaveLength(9)
+		for (let index = 0; index < 9; index++) expect(regions).toContainEqual(keyRegion(index))
+	})
 
-		for (const [buffer, sourceOptions, size] of packer.convertPixelBuffer.mock.calls.slice(1)) {
-			expect(size).toEqual({ width: 118, height: 118 })
-			expect(sourceOptions.stride).toBe(434 * 3)
-			// Reading the first pixel of the key finds its fill
-			const key = buffer[sourceOptions.offset] - 1
-			const control = properties.CONTROLS.find((c) => c.type === 'button' && c.index === key)
-			expect(control).toBeDefined()
-			if (control?.type !== 'button' || control.feedbackType !== 'lcd') throw new Error('not lcd')
-			expect(sourceOptions.offset).toBe(
-				(control.pixelPosition.y - 6) * 434 * 3 + (control.pixelPosition.x - 23) * 3,
-			)
-		}
+	test('draws keys individually while the content of the keys between them is unknown', async () => {
+		const { service, drawnRegions } = setup()
 
-		const regions = send.mock.calls.map((call) => writeRegion(call[0]))
-		expect(regions).toContainEqual({ x: 23, y: 6, width: 118, height: 118 })
-		expect(regions).toContainEqual({ x: 339, y: 322, width: 118, height: 118 })
+		await Promise.all([service.fillKeyColor(0, 255, 0, 0), service.fillKeyColor(2, 0, 255, 0)])
+
+		expect(drawnRegions()).toEqual([keyRegion(0), keyRegion(2)])
+	})
+
+	test('combines keys updated together once their content is known', async () => {
+		const { service, send, drawnRegions, encodedPixel } = setup()
+
+		await service.clearPanel()
+		send.mockClear()
+
+		await Promise.all([service.fillKeyColor(0, 255, 0, 0), service.fillKeyColor(1, 0, 255, 0)])
+
+		expect(drawnRegions()).toEqual([{ x: 23, y: 6, width: 276, height: 118 }])
+		expect(encodedPixel(1, 0, 0)).toEqual([255, 0, 0, 255])
+		expect(encodedPixel(1, 158, 0)).toEqual([0, 255, 0, 255])
+	})
+
+	test('only draws the latest content of a key updated again before it was drawn', async () => {
+		const { service, drawnRegions, encodedPixel } = setup()
+
+		await Promise.all([
+			service.fillKeyColor(4, 255, 0, 0),
+			service.fillKeyColor(4, 0, 255, 0),
+			service.fillKeyColor(4, 0, 0, 255),
+		])
+
+		expect(drawnRegions()).toEqual([keyRegion(4)])
+		expect(encodedPixel(0, 0, 0)).toEqual([0, 0, 255, 255])
+	})
+
+	test('clears the whole lcd', async () => {
+		const { service, drawnRegions, encodedPixel } = setup()
+
+		await service.clearPanel()
+
+		expect(drawnRegions()).toEqual([WHOLE_LCD])
+		expect(encodedPixel(0, 240, 240)[0]).toBe(0)
+	})
+
+	test('draws a key filled after a clear, after the clear', async () => {
+		const { service, drawnRegions } = setup()
+
+		await service.fillKeyColor(4, 255, 0, 0)
+		await Promise.all([service.clearPanel(), service.fillKeyColor(4, 0, 255, 0)])
+
+		expect(drawnRegions()).toEqual([keyRegion(4), WHOLE_LCD, keyRegion(4)])
 	})
 
 	test('throws when a key image cannot be made small enough', async () => {
@@ -150,19 +209,40 @@ describe('DefaultButtonsLcdService', () => {
 		await expect(service.fillKeyColor(0, 255, 0, 0)).rejects.toThrow()
 	})
 
-	test('resends the whole image while the device is busy', async () => {
+	test('resends the whole image while the device is busy, without encoding it again', async () => {
 		// Each image is 2 packets, and the device is busy for the first attempt
 		const answers = [ACCEPTED, BUSY, ACCEPTED, ACCEPTED]
-		const { service, send } = setup({ packedLength: () => 5000, answer: () => answers.shift() ?? ACCEPTED })
+		const { service, send, packer } = setup({ packedLength: () => 5000, answer: () => answers.shift() ?? ACCEPTED })
 
 		await service.fillKeyColor(4, 255, 0, 0)
 
-		expect(send).toHaveBeenCalledTimes(4)
-		const parts = send.mock.calls.map((call) => call[0][4])
-		expect(parts).toEqual([0xa1, 0x62, 0xa1, 0x62])
+		expect(send.mock.calls.map((call) => call[0][4])).toEqual([0xa1, 0x62, 0xa1, 0x62])
+		expect(packer.convertPixelBuffer).toHaveBeenCalledTimes(1)
 	})
 
-	test('stops resending once the device has been busy too long', async () => {
+	test('includes updates made while the device was busy in the next image', async () => {
+		let deviceBusy = false
+		const { service, send, drawnRegions, encodedPixel } = setup({ answer: () => (deviceBusy ? BUSY : ACCEPTED) })
+
+		await service.clearPanel()
+		send.mockClear()
+
+		// The device stays busy until the second key is updated
+		deviceBusy = true
+		const firstFill = service.fillKeyColor(0, 255, 0, 0)
+		await vi.waitFor(() => expect(send).toHaveBeenCalled())
+		const secondFill = service.fillKeyColor(1, 0, 255, 0)
+		deviceBusy = false
+
+		await Promise.all([firstFill, secondFill])
+
+		const regions = drawnRegions()
+		expect(regions[0]).toEqual(keyRegion(0))
+		expect(regions.at(-1)).toEqual({ x: 23, y: 6, width: 276, height: 118 })
+		expect(encodedPixel(2, 158, 0)).toEqual([0, 255, 0, 255])
+	})
+
+	test('gives up once the device has been busy too long', async () => {
 		vi.useFakeTimers()
 		const { service, send } = setup({ answer: () => BUSY })
 

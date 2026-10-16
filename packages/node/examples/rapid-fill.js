@@ -22,19 +22,22 @@ listMXCreativeConsoleDevices().then(async (devices) => {
 					const b = getRandomIntInclusive(0, 255)
 					console.log('Filling with rgb(%d, %d, %d)', r, g, b)
 
+					const ps = []
+
 					for (const control of keypad.CONTROLS) {
 						if (control.type === 'button' && control.feedbackType !== 'none') {
-							await keypad.fillKeyColor(control.index, r, g, b)
+							ps.push(keypad.fillKeyColor(control.index, r, g, b))
 						}
 					}
+
+					await Promise.all(ps)
 				} catch (e) {
 					console.error('Fill failed:', e)
 				} finally {
-					await new Promise((resolve) => setTimeout(resolve, 100))
 					isFilling = false
 				}
 			})
-		}, 1000 / 5)
+		}, 1000 / 10)
 
 		function getRandomIntInclusive(min, max) {
 			min = Math.ceil(min)
