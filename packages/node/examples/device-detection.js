@@ -44,14 +44,14 @@ async function refresh() {
 }
 refresh()
 
-usb.on('attach', function (e) {
-	if (e.deviceDescriptor.idVendor === VENDOR_ID) {
+usb.addEventListener('connect', (e) => {
+	if (e.device.vendorId === VENDOR_ID) {
 		refresh()
 	}
 })
-usb.on('detach', function (e) {
-	if (e.deviceDescriptor.idVendor === VENDOR_ID) {
-		console.log(`${JSON.stringify(e.deviceDescriptor)} was removed`)
+usb.addEventListener('disconnect', (e) => {
+	if (e.device.vendorId === VENDOR_ID) {
+		console.log(`${e.device.productName ?? e.device.productId} was removed`)
 		refresh()
 	}
 })
