@@ -92,5 +92,16 @@ jobs:
         if: ${{ steps.do-publish.outputs.tag }}
         run: |
           yarn workspaces foreach --all -pt --exclude logitech-mx-creative-console-packages --exclude @logitech-mx-creative-console/webhid-demo npm publish --access=public --tag ${{ steps.do-publish.outputs.tag }} --provenance
+
+          VERSION=$(node -p "require('./packages/core/package.json').version")
+          {
+            echo "## Published \`${VERSION}\`"
+            echo
+            echo "npm tag: \`${{ steps.do-publish.outputs.tag }}\`"
+            echo
+            for PACKAGE in core node webhid; do
+              echo "- [@logitech-mx-creative-console/${PACKAGE}@${VERSION}](https://www.npmjs.com/package/@logitech-mx-creative-console/${PACKAGE}/v/${VERSION})"
+            done
+          } >> $GITHUB_STEP_SUMMARY
         env:
           CI: true
