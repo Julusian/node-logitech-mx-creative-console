@@ -91,12 +91,12 @@ Some the [demo site](https://julusian.github.io/node-logitech-mx-creative-consol
 
 ## Model information
 
-Every supported model is described as plain data in `DEVICE_MODEL_INFO`, so a UI can be built for a device without opening it. Each model lists its controls, along with where each control sits on the face of the device, and its usb identifiers.
+Every supported model is described as plain data in `DEVICE_MODELS`, so a UI can be built for a device without opening it. Each model lists its controls, along with where each control sits on the face of the device, and its usb identifiers.
 
 ```typescript
-import { DEVICE_MODEL_INFO, reopenMXCreativeConsoleDevices } from '@logitech-mx-creative-console/webhid'
+import { DEVICE_MODELS, reopenMXCreativeConsoleDevices } from '@logitech-mx-creative-console/webhid'
 
-for (const model of Object.values(DEVICE_MODEL_INFO)) {
+for (const model of Object.values(DEVICE_MODELS)) {
 	console.log(`${model.name} is ${model.faceSize.width}x${model.faceSize.height}`)
 	for (const control of model.controls) {
 		console.log(`  ${control.type} ${control.id} at`, control.bounds)

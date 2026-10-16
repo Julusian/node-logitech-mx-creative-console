@@ -76,20 +76,6 @@ export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> impleme
 		return this.#modelInfo
 	}
 
-	/** @deprecated Use `modelInfo.controls` instead */
-	get CONTROLS(): Readonly<MXConsoleControlDefinition[]> {
-		return this.deviceProperties.controls
-	}
-
-	/** @deprecated Use `modelInfo.id` instead */
-	get MODEL(): DeviceModelId {
-		return this.deviceProperties.model
-	}
-	/** @deprecated Use `modelInfo.name` instead */
-	get PRODUCT_NAME(): string {
-		return this.deviceProperties.productName
-	}
-
 	protected readonly device: HIDDevice
 	protected readonly deviceProperties: Readonly<MXConsoleProperties>
 	readonly #modelInfo: MXConsoleModelInfo

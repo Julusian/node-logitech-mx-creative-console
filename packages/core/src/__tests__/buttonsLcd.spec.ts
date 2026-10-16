@@ -20,7 +20,6 @@ const properties: MXConsolePanelProperties = {
 			column: 0,
 			index: 9,
 			hidIndex: 0x01a1,
-			hidId: 0x01a1,
 			feedbackType: 'none',
 			bounds: { x: 23, y: 520, width: 118, height: 40 },
 		},

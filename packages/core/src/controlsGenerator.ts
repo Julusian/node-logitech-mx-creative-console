@@ -16,11 +16,6 @@ export function generateButtonsGrid(
 			const index = row * width + column
 			const hidIndex = index + 1
 
-			const pixelPosition = {
-				x: pixelOffset.x + column * (pixelSize.width + pixelPadding.x),
-				y: pixelOffset.y + row * (pixelSize.height + pixelPadding.y),
-			}
-
 			controls.push({
 				id: `button-${index}`,
 				type: 'button',
@@ -28,12 +23,14 @@ export function generateButtonsGrid(
 				column: column + columnOffset,
 				index,
 				hidIndex,
-				hidId: hidIndex,
 				feedbackType: 'lcd',
 				pixelSize,
-				pixelPosition,
 
-				bounds: { ...pixelPosition, ...pixelSize },
+				bounds: {
+					x: pixelOffset.x + column * (pixelSize.width + pixelPadding.x),
+					y: pixelOffset.y + row * (pixelSize.height + pixelPadding.y),
+					...pixelSize,
+				},
 			})
 		}
 	}
@@ -57,7 +54,6 @@ export function freezeDefinitions(controls: MXConsoleControlDefinition[]): Reado
 			Object.freeze(control.bounds)
 			if (control.type === 'button' && control.feedbackType === 'lcd') {
 				Object.freeze(control.pixelSize)
-				Object.freeze(control.pixelPosition)
 			}
 			return Object.freeze(control)
 		}),

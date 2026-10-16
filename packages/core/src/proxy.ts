@@ -1,7 +1,5 @@
 import type { EventEmitter } from 'eventemitter3'
-import type { DeviceModelId } from './id.js'
 import type { MXCreativeConsole, MXCreativeConsoleEvents } from './types.js'
-import type { MXConsoleControlDefinition } from './controlDefinition.js'
 import type { MXConsoleModelInfo } from './modelInfo.js'
 
 /**
@@ -18,18 +16,6 @@ export class MXCreativeConsoleProxy implements MXCreativeConsole {
 
 	public get modelInfo(): MXConsoleModelInfo {
 		return this.device.modelInfo
-	}
-	/** @deprecated Use `modelInfo.controls` instead */
-	public get CONTROLS(): Readonly<MXConsoleControlDefinition[]> {
-		return this.device.CONTROLS
-	}
-	/** @deprecated Use `modelInfo.id` instead */
-	public get MODEL(): DeviceModelId {
-		return this.device.MODEL
-	}
-	/** @deprecated Use `modelInfo.name` instead */
-	public get PRODUCT_NAME(): string {
-		return this.device.PRODUCT_NAME
 	}
 
 	public calculateFillPanelDimensions(

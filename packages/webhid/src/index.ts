@@ -25,7 +25,7 @@ export {
 	MXConsoleModelFeatures,
 	MXConsoleTransport,
 	UsbMatch,
-	DEVICE_MODEL_INFO,
+	DEVICE_MODELS,
 	getModelInfo,
 	findModelByUsb,
 } from '@logitech-mx-creative-console/core'

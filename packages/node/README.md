@@ -93,12 +93,12 @@ Some more complex demos can be found in the [examples](examples/) folder.
 
 ## Model information
 
-Every supported model is described as plain data in `DEVICE_MODEL_INFO`, so a UI can be built for a device without opening it. Each model lists its controls, along with where each control sits on the face of the device, and its usb identifiers.
+Every supported model is described as plain data in `DEVICE_MODELS`, so a UI can be built for a device without opening it. Each model lists its controls, along with where each control sits on the face of the device, and its usb identifiers.
 
 ```typescript
-import { DEVICE_MODEL_INFO, listMXCreativeConsoleDevices } from '@logitech-mx-creative-console/node'
+import { DEVICE_MODELS, listMXCreativeConsoleDevices } from '@logitech-mx-creative-console/node'
 
-for (const model of Object.values(DEVICE_MODEL_INFO)) {
+for (const model of Object.values(DEVICE_MODELS)) {
 	console.log(`${model.name} is ${model.faceSize.width}x${model.faceSize.height}`)
 	for (const control of model.controls) {
 		console.log(`  ${control.type} ${control.id} at`, control.bounds)

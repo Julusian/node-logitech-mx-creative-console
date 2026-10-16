@@ -1,12 +1,8 @@
 import type { EventEmitter } from 'eventemitter3'
-import type { DeviceModelId, Dimension, KeyIndex } from './id.js'
+import type { Dimension, KeyIndex } from './id.js'
 import type { HIDDeviceInfo } from './hid-device.js'
 import type { MXConsoleModelInfo } from './modelInfo.js'
-import type {
-	MXConsoleButtonControlDefinition,
-	MXConsoleControlDefinition,
-	MXConsoleEncoderControlDefinition,
-} from './controlDefinition.js'
+import type { MXConsoleButtonControlDefinition, MXConsoleEncoderControlDefinition } from './controlDefinition.js'
 
 export interface FillImageOptions {
 	format: 'rgb' | 'rgba' | 'bgr' | 'bgra'
@@ -41,23 +37,6 @@ export type MXCreativeConsoleEvents = {
 export interface MXCreativeConsole extends EventEmitter<MXCreativeConsoleEvents> {
 	/** Static information about the model of this device */
 	readonly modelInfo: MXConsoleModelInfo
-
-	/**
-	 * List of the controls on this surface
-	 * @deprecated Use `modelInfo.controls` instead
-	 */
-	readonly CONTROLS: Readonly<MXConsoleControlDefinition[]>
-
-	/**
-	 * The model of this device
-	 * @deprecated Use `modelInfo.id` instead
-	 */
-	readonly MODEL: DeviceModelId
-	/**
-	 * The name of the product/model
-	 * @deprecated Use `modelInfo.name` instead
-	 */
-	readonly PRODUCT_NAME: string
 
 	/**
 	 * Calculate the dimensions to use for `fillPanelBuffer`, to fill the whole button lcd panel with a single image.

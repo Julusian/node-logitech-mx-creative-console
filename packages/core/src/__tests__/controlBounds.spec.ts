@@ -1,11 +1,11 @@
 import { describe, expect, test } from 'vitest'
-import { DEVICE_MODEL_INFO } from '../modelInfo.js'
+import { DEVICE_MODELS } from '../modelInfo.js'
 import type { MXConsoleModelInfo } from '../modelInfo.js'
 import type { MXConsoleControlBounds } from '../controlDefinition.js'
 
 /** The bounds are transcribed by hand, so guard the invariants a consumer drawing a device relies on */
 describe('control bounds', () => {
-	const models = Object.values<MXConsoleModelInfo>(DEVICE_MODEL_INFO)
+	const models = Object.values<MXConsoleModelInfo>(DEVICE_MODELS)
 
 	function overlaps(a: MXConsoleControlBounds, b: MXConsoleControlBounds): boolean {
 		return a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height
@@ -65,14 +65,6 @@ describe('control bounds', () => {
 				if (control.type !== 'button' || control.feedbackType !== 'lcd') continue
 
 				expect({ width: control.bounds.width, height: control.bounds.height }).toEqual(control.pixelSize)
-			}
-		})
-
-		test('a button drawn to the panel is at its deprecated pixelPosition', () => {
-			for (const control of model.controls) {
-				if (control.type !== 'button' || control.feedbackType !== 'lcd') continue
-
-				expect({ x: control.bounds.x, y: control.bounds.y }).toEqual(control.pixelPosition)
 			}
 		})
 	})

@@ -4,11 +4,11 @@
 import fs from 'node:fs/promises'
 
 import { UdevRuleGenerator } from 'udev-generator'
-import { DEVICE_MODEL_INFO } from '@logitech-mx-creative-console/core'
+import { DEVICE_MODELS } from '@logitech-mx-creative-console/core'
 
 const generator = new UdevRuleGenerator()
 
-for (const model of Object.values(DEVICE_MODEL_INFO)) {
+for (const model of Object.values(DEVICE_MODELS)) {
 	for (const match of model.usb) {
 		generator.addDevice(match.vendorId, match.productId, model.transports.includes('bluetooth'))
 	}

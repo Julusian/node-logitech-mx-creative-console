@@ -131,9 +131,8 @@ export const DEVICE_MODEL_DEFINITIONS: Readonly<{ [id in DeviceModelId]: MXConso
 
 /**
  * Static information about every known model.
- * @experimental Will become DEVICE_MODELS in the next major
  */
-export const DEVICE_MODEL_INFO: Readonly<{ [id in DeviceModelId]: MXConsoleModelInfo }> = Object.freeze(
+export const DEVICE_MODELS: Readonly<{ [id in DeviceModelId]: MXConsoleModelInfo }> = Object.freeze(
 	Object.fromEntries(
 		Object.values<MXConsoleModelDefinition>(DEVICE_MODEL_DEFINITIONS).map((definition) => [
 			definition.info.id,
@@ -142,15 +141,13 @@ export const DEVICE_MODEL_INFO: Readonly<{ [id in DeviceModelId]: MXConsoleModel
 	),
 ) as Readonly<{ [id in DeviceModelId]: MXConsoleModelInfo }>
 
-const ALL_MODEL_INFO: readonly MXConsoleModelInfo[] = Object.freeze(
-	Object.values<MXConsoleModelInfo>(DEVICE_MODEL_INFO),
-)
+const ALL_MODEL_INFO: readonly MXConsoleModelInfo[] = Object.freeze(Object.values<MXConsoleModelInfo>(DEVICE_MODELS))
 
 /**
  * Get the information about a model, if it is known
  */
 export function getModelInfo(id: DeviceModelId): MXConsoleModelInfo | undefined {
-	return DEVICE_MODEL_INFO[id]
+	return DEVICE_MODELS[id]
 }
 
 /**
@@ -176,10 +173,3 @@ export function findModelByUsb(
 
 	return undefined
 }
-
-/**
- * @deprecated Use `DEVICE_MODEL_INFO[id].name` instead
- */
-export const MODEL_NAMES: { [key in DeviceModelId]: string } = Object.freeze(
-	Object.fromEntries(ALL_MODEL_INFO.map((info) => [info.id, info.name])),
-) as { [key in DeviceModelId]: string }

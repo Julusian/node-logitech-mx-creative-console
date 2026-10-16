@@ -11,7 +11,7 @@ listMXCreativeConsoleDevices().then(async (devices) => {
 		})
 
 		let isFilling = false
-		setInterval(() => {
+		const interval = setInterval(() => {
 			if (isFilling) return
 			isFilling = true
 
@@ -38,6 +38,10 @@ listMXCreativeConsoleDevices().then(async (devices) => {
 				}
 			})
 		}, 1000 / 10)
+
+		keypad.on('error', () => {
+			clearInterval(interval)
+		})
 
 		function getRandomIntInclusive(min, max) {
 			min = Math.ceil(min)

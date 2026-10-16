@@ -1,23 +1,23 @@
 import { describe, expect, test } from 'vitest'
-import { DEVICE_MODEL_INFO, findModelByUsb, getModelInfo } from '../modelInfo.js'
+import { DEVICE_MODELS, findModelByUsb, getModelInfo } from '../modelInfo.js'
 import type { MXConsoleModelInfo } from '../modelInfo.js'
-import { DEVICE_MODELS, DEVICE_MODELS2, getDriver } from '../registry.js'
+import { getDriver } from '../registry.js'
 
 describe('model info', () => {
-	const models = Object.values<MXConsoleModelInfo>(DEVICE_MODEL_INFO)
+	const models = Object.values<MXConsoleModelInfo>(DEVICE_MODELS)
 
 	test('snapshot', () => {
 		// The data is transcribed by hand, so make every change to it visible in review
-		expect(DEVICE_MODEL_INFO).toMatchSnapshot()
+		expect(DEVICE_MODELS).toMatchSnapshot()
 	})
 
 	test('survives a json round-trip', () => {
 		// toStrictEqual, as toEqual would ignore a property which is undefined
-		expect(JSON.parse(JSON.stringify(DEVICE_MODEL_INFO))).toStrictEqual(DEVICE_MODEL_INFO)
+		expect(JSON.parse(JSON.stringify(DEVICE_MODELS))).toStrictEqual(DEVICE_MODELS)
 	})
 
 	test('each model is keyed by its own id', () => {
-		for (const [id, model] of Object.entries<MXConsoleModelInfo>(DEVICE_MODEL_INFO)) {
+		for (const [id, model] of Object.entries<MXConsoleModelInfo>(DEVICE_MODELS)) {
 			expect(model.id).toBe(id)
 			expect(getModelInfo(model.id)).toBe(model)
 		}
@@ -64,16 +64,6 @@ describe('model info', () => {
 	test('every model has a driver', () => {
 		for (const model of models) {
 			expect(getDriver(model.id)).toBeTypeOf('function')
-		}
-	})
-
-	test('agrees with DEVICE_MODELS2', () => {
-		expect(Object.keys(DEVICE_MODELS2).sort()).toEqual(Object.keys(DEVICE_MODEL_INFO).sort())
-		expect(DEVICE_MODELS.map((spec) => spec.id).sort()).toEqual(Object.keys(DEVICE_MODEL_INFO).sort())
-
-		for (const model of models) {
-			const legacy = DEVICE_MODELS2[model.id]
-			expect(legacy.productIds).toEqual(model.usb.map((match) => match.productId))
 		}
 	})
 })

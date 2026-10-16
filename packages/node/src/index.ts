@@ -12,7 +12,6 @@ import { encodeJPEG, JPEGEncodeOptions } from './jpeg.js'
 export {
 	VENDOR_ID,
 	DeviceModelId,
-	MODEL_NAMES,
 	KeyIndex,
 	MXCreativeConsole,
 	LcdPosition,
@@ -29,7 +28,7 @@ export {
 	MXConsoleModelFeatures,
 	MXConsoleTransport,
 	UsbMatch,
-	DEVICE_MODEL_INFO,
+	DEVICE_MODELS,
 	getModelInfo,
 	findModelByUsb,
 } from '@logitech-mx-creative-console/core'
@@ -62,7 +61,7 @@ export function getMXCreativeConsoleDeviceInfo(dev: HID.Device): MXCreativeConso
 	const model = findModelByUsb(dev.vendorId, dev.productId, dev.usage, dev.interface)
 	if (!model || !dev.path) return null
 
-	return { modelInfo: model, model: model.id, path: dev.path, serialNumber: dev.serialNumber }
+	return { modelInfo: model, path: dev.path, serialNumber: dev.serialNumber }
 }
 
 /**

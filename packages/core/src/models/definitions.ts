@@ -6,7 +6,7 @@ import type { MXConsoleStaticProperties } from './base.js'
  * The static properties of each model.
  *
  * Note: this module must not import anything which pulls in the services used to drive a device,
- * so that `DEVICE_MODEL_INFO` can be consumed without them.
+ * so that `DEVICE_MODELS` can be consumed without them.
  */
 
 /**
@@ -49,7 +49,6 @@ keypadControls.push(
 			column: button.column,
 			index: button.index,
 			hidIndex: button.hidIndex,
-			hidId: button.hidIndex,
 			feedbackType: 'none',
 
 			bounds: {
@@ -113,7 +112,6 @@ export const dialpadProperties: MXConsoleStaticProperties = {
 			column: button.column,
 			index,
 			hidIndex: button.hidIndex,
-			hidId: button.hidIndex,
 			feedbackType: 'none',
 
 			bounds: { x: button.x, y: button.y, width: dialpadButtonSize, height: dialpadButtonSize },

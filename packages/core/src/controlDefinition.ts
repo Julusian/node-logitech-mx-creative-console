@@ -1,4 +1,4 @@
-import type { Coordinate, Dimension } from './id.js'
+import type { Dimension } from './id.js'
 
 /**
  * A rectangle on the face of a device, with the origin at its top left and `y` increasing downwards.
@@ -29,11 +29,6 @@ export interface MXConsoleButtonControlDefinitionBase extends MXConsoleControlDe
 	index: number
 	/** @internal on wire HID index of this button */
 	hidIndex: number
-	/**
-	 * @internal on wire HID index of this button
-	 * @deprecated Use `hidIndex` instead
-	 */
-	hidId: number
 
 	feedbackType: 'none' | 'lcd'
 }
@@ -45,8 +40,6 @@ export interface MXConsoleButtonControlDefinitionLcdFeedback extends MXConsoleBu
 	feedbackType: 'lcd'
 
 	pixelSize: Dimension
-	/** @deprecated Use the `x` and `y` of `bounds` instead */
-	pixelPosition: Coordinate
 }
 
 export type MXConsoleButtonControlDefinition =

@@ -8,8 +8,8 @@ export { HidppTransport, HidppError, HidppTimeoutError, type HidppRequestOptions
 export type { PropertiesService } from './services/properties/interface.js'
 export { uint8ArrayToDataView } from './util.js'
 
-export { VENDOR_ID, DEVICE_MODEL_INFO, MODEL_NAMES, getModelInfo, findModelByUsb } from './modelInfo.js'
+export { VENDOR_ID, DEVICE_MODELS, getModelInfo, findModelByUsb } from './modelInfo.js'
 export type { MXConsoleModelInfo, MXConsoleModelFeatures, MXConsoleTransport, UsbMatch } from './modelInfo.js'
 
-export { DEVICE_MODELS, DEVICE_MODELS2, getDriver, performInitWrites } from './registry.js'
-export type { DeviceModelSpec, MXConsoleDriver } from './registry.js'
+export { getDriver, performInitWrites } from './registry.js'
+export type { MXConsoleDriver } from './registry.js'

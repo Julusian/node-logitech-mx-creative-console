@@ -4,7 +4,6 @@ import type { MXCreativeConsole } from './types.js'
 import type { OpenMXConsoleOptions } from './models/base.js'
 import type { MXConsoleModelDefinition } from './modelInfo.js'
 import { DEVICE_MODEL_DEFINITIONS } from './modelInfo.js'
-import type { PropertiesService } from './services/properties/interface.js'
 import { HidppTransport } from './hidpp.js'
 import { mxCreativeKeypadFactory, mxCreativeKeypadInitWrites } from './models/mx-creative-keypad.js'
 import { mxCreativeDialpadFactory, mxCreativeDialpadInitWrites } from './models/mx-creative-dialpad.js'
@@ -61,25 +60,6 @@ type MXConsoleModelFactory = (
  */
 export type MXConsoleDriver = (device: HIDDevice, options: Required<OpenMXConsoleOptions>) => Promise<MXCreativeConsole>
 
-export interface DeviceModelSpec {
-	id: DeviceModelId
-	// type: DeviceModelType
-	productIds: number[]
-	productName: string
-
-	factory: (
-		device: HIDDevice,
-		transport: HidppTransport,
-		options: Required<OpenMXConsoleOptions>,
-		propertiesService?: PropertiesService,
-	) => MXCreativeConsole
-
-	/**
-	 * Some extra writes to do after the device is opened, to initialise it
-	 */
-	initWrites?: Uint8Array[]
-}
-
 interface ModelDriverSpec {
 	factory: MXConsoleModelFactory
 	/** The writes to perform after the device is opened, to initialise it */
@@ -134,33 +114,3 @@ const DEVICE_MODEL_DRIVERS: { [id in DeviceModelId]: MXConsoleDriver } = Object.
 export function getDriver(id: DeviceModelId): MXConsoleDriver | undefined {
 	return DEVICE_MODEL_DRIVERS[id]
 }
-
-function createLegacySpec(definition: MXConsoleModelDefinition): Omit<DeviceModelSpec, 'id' | 'productName'> {
-	const spec = DEVICE_MODEL_DRIVER_SPECS[definition.info.id]
-
-	return {
-		productIds: definition.info.usb.map((match) => match.productId),
-		factory: (device, transport, options) => spec.factory(definition, device, transport, options),
-		initWrites: spec.initWrites ?? undefined,
-	}
-}
-
-/**
- * List of all the known models, and the classes to use them
- * @deprecated Use `DEVICE_MODEL_INFO` and {@link getDriver} instead
- */
-export const DEVICE_MODELS2: { [key in DeviceModelId]: Omit<DeviceModelSpec, 'id' | 'productName'> } =
-	Object.fromEntries(
-		Object.values<MXConsoleModelDefinition>(DEVICE_MODEL_DEFINITIONS).map((definition) => [
-			definition.info.id,
-			createLegacySpec(definition),
-		]),
-	) as { [key in DeviceModelId]: Omit<DeviceModelSpec, 'id' | 'productName'> }
-
-/** @deprecated Use `DEVICE_MODEL_INFO` and {@link getDriver} instead */
-export const DEVICE_MODELS: DeviceModelSpec[] = Object.entries<Omit<DeviceModelSpec, 'id' | 'productName'>>(
-	DEVICE_MODELS2,
-).map(([id, spec]) => {
-	const modelId = id as any as DeviceModelId
-	return { id: modelId, productName: DEVICE_MODEL_DEFINITIONS[modelId].info.name, ...spec }
-})
