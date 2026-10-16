@@ -2,9 +2,10 @@
 import { openMxCreativeConsole, listMXCreativeConsoleDevices } from '../dist/index.js'
 
 listMXCreativeConsoleDevices().then(async (devices) => {
-	if (!devices[0]) throw new Error('No device found')
+	const dialpad = devices.find((device) => device.model === 'mx-creative-keypad')
+	if (!dialpad) throw new Error('No device found')
 
-	openMxCreativeConsole(devices[0].path).then((keypad) => {
+	openMxCreativeConsole(dialpad.path).then((keypad) => {
 		keypad.on('error', (error) => {
 			console.error(error)
 		})

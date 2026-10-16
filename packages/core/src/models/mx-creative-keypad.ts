@@ -1,5 +1,5 @@
 import type { HIDDevice } from '../hid-device.js'
-import type { OpenMXConsoleOptions, MXConsoleProperties } from './base.js'
+import type { OpenMXConsoleOptions, MXConsolePanelProperties } from './base.js'
 import { MXConsoleBase } from './base.js'
 import { DeviceModelId, MODEL_NAMES } from '../id.js'
 import { freezeDefinitions, generateButtonsGrid } from '../controlsGenerator.js'
@@ -11,7 +11,7 @@ import { MXConsoleDefaultImageWriter } from '../services/imageWriter/imageWriter
 import { KeypadInputService } from '../services/input/mx-creative-keypad.js'
 import { DefaultPropertiesService } from '../services/properties/default.js'
 
-const keypadProperties: MXConsoleProperties = {
+const keypadProperties: MXConsolePanelProperties = {
 	MODEL: DeviceModelId.MX_CREATIVE_KEYPAD,
 	PRODUCT_NAME: MODEL_NAMES[DeviceModelId.MX_CREATIVE_KEYPAD],
 
