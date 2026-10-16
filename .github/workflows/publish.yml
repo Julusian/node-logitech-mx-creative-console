@@ -29,7 +29,9 @@ jobs:
         with:
           node-version: 18.x
       - name: Enable corepack
-        run: corepack enable
+        run: |
+          npm install -g corepack
+          corepack enable
       - name: Check release is desired
         id: do-publish
         run: |

@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: 22.x
       - run: |
+          npm install -g corepack
           corepack enable
           yarn install
         env:
@@ -44,6 +45,7 @@ jobs:
         with:
           node-version: 22.x
       - run: |
+          npm install -g corepack
           corepack enable
           yarn install
         env:
@@ -72,6 +74,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
+          npm install -g corepack
           corepack enable
           yarn install
         env:
@@ -99,6 +102,7 @@ jobs:
           node-version: 22.x
       - name: yarn install
         run: |
+          npm install -g corepack
           corepack enable
           yarn install
       - name: generate files
@@ -130,6 +134,7 @@ jobs:
           node-version: 22.x
       - name: Prepare build
         run: |
+          npm install -g corepack
           corepack enable
           yarn install
           yarn build

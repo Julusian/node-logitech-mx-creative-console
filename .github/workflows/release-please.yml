@@ -40,6 +40,7 @@ jobs:
       - name: Sync version changes
         if: steps.rp.outputs.prs_created == 'true'
         run: |
+          npm install -g corepack
           corepack enable
           yarn install
 
