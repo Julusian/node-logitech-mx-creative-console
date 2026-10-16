@@ -5,6 +5,12 @@ import type { CallbackHook } from '../callback-hook.js'
 import type { MXConsoleButtonControlDefinition } from '../../controlDefinition.js'
 import { uint8ArrayToDataView } from '../../util.js'
 
+/**
+ * The HID++ feature index of the keypad's reprogrammable controls, which the page buttons report through.
+ * This is a property of the firmware, and is what its notifications are tagged with.
+ */
+export const KEYPAD_REPROG_CONTROLS_FEATURE_INDEX = 0x0b
+
 export class KeypadInputService implements MXCreativeConsoleInputService {
 	protected readonly deviceProperties: Readonly<MXConsoleProperties>
 	readonly #eventSource: CallbackHook<MXCreativeConsoleEvents>
@@ -80,7 +86,12 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 	}
 
 	#handlePageButtonInput(view: DataView): void {
-		if (view.getUint8(0) !== 0xff || view.getUint8(1) !== 0x0b || view.getUint8(2) !== 0x00) return
+		if (
+			view.getUint8(0) !== 0xff ||
+			view.getUint8(1) !== KEYPAD_REPROG_CONTROLS_FEATURE_INDEX ||
+			view.getUint8(2) !== 0x00
+		)
+			return
 
 		const pushedControls: MXConsoleButtonControlDefinition[] = []
 		const pushedControlIds = new Set<number>()

@@ -89,7 +89,9 @@ interface ModelDriverSpec {
 const DEVICE_MODEL_DRIVER_SPECS: { [id in DeviceModelId]: ModelDriverSpec } = {
 	[DeviceModelId.MX_CREATIVE_KEYPAD]: {
 		factory: mxCreativeKeypadFactory,
-		initWrites: mxCreativeKeypadInitWrites,
+		initWrites: mxCreativeKeypadInitWrites(
+			DEVICE_MODEL_DEFINITIONS[DeviceModelId.MX_CREATIVE_KEYPAD].properties.controls,
+		),
 	},
 	[DeviceModelId.MX_CREATIVE_DIALPAD]: {
 		factory: mxCreativeDialpadFactory,

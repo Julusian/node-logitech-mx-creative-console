@@ -4,6 +4,19 @@ import type { HIDDevice } from './hid-device.js'
 /** The feature index an error answer carries, followed by the feature index and function it is for */
 const HIDPP_ERROR_FEATURE_INDEX = 0xff
 
+/** HID++ long reports, which every request is sent as */
+const HIDPP_LONG_REPORT_ID = 0x11
+const HIDPP_LONG_REPORT_LENGTH = 20
+/** Requests are addressed to the whole device, rather than a paired one */
+const HIDPP_DEVICE_INDEX = 0xff
+/** Tags each request, and is echoed in its answer, so a notification (which carries none) is told apart */
+const HIDPP_SOFTWARE_ID = 0x0b
+
+/** The function of the reprogrammable controls feature which sets how a control is reported */
+const REPROG_CONTROLS_SET_REPORTING_FUNCTION_ID = 3
+/** Report the control to the software instead of it acting as a normal HID button */
+const REPROG_CONTROLS_DIVERT = 0x03
+
 const DEFAULT_TIMEOUT = 500
 const DEFAULT_ATTEMPTS = 1
 
@@ -17,6 +30,31 @@ export interface HidppRequestOptions {
 export interface HidppTransportEvents {
 	/** Input reports which are not answers to a request, such as notifications */
 	input: [reportId: number, payload: Uint8Array]
+}
+
+/** A HID++ request: report id, device index, feature index, (function << 4) | software id, then parameters */
+export function createHidppRequest(featureIndex: number, functionId: number, params: number[]): Uint8Array {
+	const request = new Uint8Array(HIDPP_LONG_REPORT_LENGTH)
+	request.set([
+		HIDPP_LONG_REPORT_ID,
+		HIDPP_DEVICE_INDEX,
+		featureIndex,
+		(functionId << 4) | HIDPP_SOFTWARE_ID,
+		...params,
+	])
+	return request
+}
+
+/**
+ * A request to the reprogrammable controls feature, diverting a control to be reported to the software.
+ * Until diverted, the control is not reported to the software at all.
+ */
+export function createDivertControlRequest(featureIndex: number, controlId: number): Uint8Array {
+	return createHidppRequest(featureIndex, REPROG_CONTROLS_SET_REPORTING_FUNCTION_ID, [
+		controlId >> 8,
+		controlId & 0xff,
+		REPROG_CONTROLS_DIVERT,
+	])
 }
 
 /** The device answered a request with an error */
