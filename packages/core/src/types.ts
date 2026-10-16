@@ -103,7 +103,7 @@ export interface MXCreativeConsole extends EventEmitter<MXCreativeConsoleEvents>
 	clearPanel(): Promise<void>
 
 	/**
-	 * Sets the brightness of the keys on the Stream Deck
+	 * Sets the brightness of the keys on the Surface
 	 *
 	 * @param {number} percentage The percentage brightness
 	 */
@@ -115,12 +115,12 @@ export interface MXCreativeConsole extends EventEmitter<MXCreativeConsoleEvents>
 	resetToLogo(): Promise<void>
 
 	// /**
-	//  * Get firmware version from Stream Deck
+	//  * Get firmware version from Surface
 	//  */
 	// getFirmwareVersion(): Promise<string>
 
 	// /**
-	//  * Get serial number from Stream Deck
+	//  * Get serial number from Surface
 	//  */
 	// getSerialNumber(): Promise<string>
 }

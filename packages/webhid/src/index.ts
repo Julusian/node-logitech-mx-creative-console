@@ -63,7 +63,7 @@ export async function openDevice(
 		(m) => browserDevice.vendorId === VENDOR_ID && m.productIds.includes(browserDevice.productId),
 	)
 	if (!model) {
-		throw new Error('Stream Deck is of unexpected type.')
+		throw new Error('Surface is of unexpected type.')
 	}
 
 	await browserDevice.open()
