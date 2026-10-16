@@ -22,8 +22,7 @@ jobs:
         with:
           node-version: 22.x
       - run: |
-          npm install -g corepack
-          corepack enable
+          npm install -g corepack --force
           yarn install
         env:
           CI: true
@@ -45,8 +44,7 @@ jobs:
         with:
           node-version: 22.x
       - run: |
-          npm install -g corepack
-          corepack enable
+          npm install -g corepack --force
           yarn install
         env:
           CI: true
@@ -74,8 +72,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
-          npm install -g corepack
-          corepack enable
+          npm install -g corepack --force
           yarn install
         env:
           CI: true
@@ -102,8 +99,7 @@ jobs:
           node-version: 22.x
       - name: yarn install
         run: |
-          npm install -g corepack
-          corepack enable
+          npm install -g corepack --force
           yarn install
       - name: generate files
         run: |
@@ -134,8 +130,7 @@ jobs:
           node-version: 22.x
       - name: Prepare build
         run: |
-          npm install -g corepack
-          corepack enable
+          npm install -g corepack --force
           yarn install
           yarn build
         env:
