@@ -2981,7 +2981,7 @@ __metadata:
     snyk-nodejs-lockfile-parser: "npm:^2.10.4"
     typescript: "npm:~6.0.3"
     typescript-eslint: "npm:^8.71.2"
-    udev-generator: "npm:^1.0.3"
+    udev-generator: "npm:^1.1.0"
     usb: "npm:^3.2.1"
     vite: "npm:^8.3.4"
     vitest: "npm:^5.0.4"
@@ -4211,10 +4211,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"udev-generator@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "udev-generator@npm:1.0.3"
-  checksum: 10c0/c0893f5371128907c55dc08da54d4ef175cded5b844bc26d73b6fdb641491dcfff2fad22a08a57cac100c524a6a9925996fef8a3ac924f632ded8fab66e19f01
+"udev-generator@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "udev-generator@npm:1.1.0"
+  checksum: 10c0/f74bd51263490dd028f7a157f46ea99bf33816fdb4341f0004d865bfc29a2a31afa0ab3f0af3bf2c1d93f414a772a5f1f44f2d8f82aca4bcce1b30d4851bfa65
   languageName: node
   linkType: hard
 
