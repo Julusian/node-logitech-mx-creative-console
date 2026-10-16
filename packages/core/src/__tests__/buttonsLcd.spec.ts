@@ -9,13 +9,25 @@ import { DeviceModelId } from '../id.js'
 
 // The layout of the keypad
 const properties: MXConsolePanelProperties = {
-	MODEL: DeviceModelId.MX_CREATIVE_KEYPAD,
-	PRODUCT_NAME: 'Test',
-	CONTROLS: freezeDefinitions([
+	model: DeviceModelId.MX_CREATIVE_KEYPAD,
+	productName: 'Test',
+	controls: freezeDefinitions([
 		...generateButtonsGrid(3, 3, { width: 118, height: 118 }, { x: 23, y: 6 }, { x: 40, y: 40 }),
-		{ type: 'button', row: 3, column: 0, index: 9, hidId: 0x01a1, feedbackType: 'none' },
+		{
+			id: 'page-l',
+			type: 'button',
+			row: 3,
+			column: 0,
+			index: 9,
+			hidIndex: 0x01a1,
+			hidId: 0x01a1,
+			feedbackType: 'none',
+			bounds: { x: 23, y: 520, width: 118, height: 40 },
+		},
 	]),
-	PANEL_SIZE: { width: 480, height: 480 },
+	faceSize: { width: 480, height: 560 },
+	panelSize: { width: 480, height: 480 },
+	supportsBrightness: true,
 }
 
 const ACCEPTED = [0xff, 0x02, 0x2b, 0xc1, 0x00, 0x01]

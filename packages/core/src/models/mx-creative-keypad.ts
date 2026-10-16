@@ -2,8 +2,7 @@ import type { HIDDevice } from '../hid-device.js'
 import type { HidppTransport } from '../hidpp.js'
 import type { OpenMXConsoleOptions, MXConsolePanelProperties } from './base.js'
 import { MXConsoleBase } from './base.js'
-import { DeviceModelId, MODEL_NAMES } from '../id.js'
-import { freezeDefinitions, generateButtonsGrid } from '../controlsGenerator.js'
+import type { MXConsoleModelDefinition } from '../modelInfo.js'
 import { CallbackHook } from '../services/callback-hook.js'
 import type { MXCreativeConsoleEvents } from '../types.js'
 import { DefaultButtonsLcdService } from '../services/buttonsLcdDisplay/default.js'
@@ -12,37 +11,30 @@ import { MXConsoleDefaultImageWriter } from '../services/imageWriter/imageWriter
 import { KeypadInputService } from '../services/input/mx-creative-keypad.js'
 import { DefaultPropertiesService } from '../services/properties/default.js'
 
-const keypadProperties: MXConsolePanelProperties = {
-	MODEL: DeviceModelId.MX_CREATIVE_KEYPAD,
-	PRODUCT_NAME: MODEL_NAMES[DeviceModelId.MX_CREATIVE_KEYPAD],
-
-	CONTROLS: freezeDefinitions([
-		...generateButtonsGrid(3, 3, { width: 118, height: 118 }, { x: 23, y: 6 }, { x: 40, y: 40 }),
-		{ type: 'button', row: 3, column: 0, index: 9, hidId: 0x01a1, feedbackType: 'none' },
-		{ type: 'button', row: 3, column: 1, index: 10, hidId: 0x01a2, feedbackType: 'none' },
-	]),
-
-	PANEL_SIZE: { width: 480, height: 480 },
-}
-
 export function mxCreativeKeypadFactory(
+	definition: MXConsoleModelDefinition,
 	device: HIDDevice,
 	transport: HidppTransport,
 	options: Required<OpenMXConsoleOptions>,
 ): MXConsoleBase {
+	const { panelSize } = definition.properties
+	if (!panelSize) throw new Error(`${definition.info.name} is expected to have a display`)
+	const properties: MXConsolePanelProperties = { ...definition.properties, panelSize }
+
 	const events = new CallbackHook<MXCreativeConsoleEvents>()
 
 	return new MXConsoleBase(device, transport, options, {
-		deviceProperties: keypadProperties,
+		modelInfo: definition.info,
+		deviceProperties: properties,
 		events,
 		properties: new DefaultPropertiesService(device, transport),
 		buttonsLcd: new DefaultButtonsLcdService(
 			new MXConsoleDefaultImageWriter(),
 			new JpegButtonLcdImagePacker(options.encodeJPEG),
 			transport,
-			keypadProperties,
+			properties,
 		),
-		inputService: new KeypadInputService(keypadProperties, events),
+		inputService: new KeypadInputService(properties, events),
 	})
 }
 

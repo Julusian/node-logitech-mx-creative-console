@@ -14,6 +14,7 @@ import type { PropertiesService } from '../services/properties/interface.js'
 import type { CallbackHook } from '../services/callback-hook.js'
 import type { MXCreativeConsoleInputService } from '../services/input/interface.js'
 import type { HidppTransport } from '../hidpp.js'
+import type { MXConsoleModelInfo } from '../modelInfo.js'
 
 export interface EncodeJPEGHelperOptions {
 	/**
@@ -35,18 +36,32 @@ export interface OpenMXConsoleOptions {
 }
 
 export type MXConsoleProperties = Readonly<{
-	MODEL: DeviceModelId
-	PRODUCT_NAME: string
+	model: DeviceModelId
+	productName: string
 
-	CONTROLS: Readonly<MXConsoleControlDefinition[]>
+	controls: Readonly<MXConsoleControlDefinition[]>
 
-	PANEL_SIZE?: Dimension
+	/** The extent of the face, which every control's `bounds` is within */
+	faceSize: Dimension
+
+	/** The size of the display, or null if there is none */
+	panelSize: Dimension | null
+
+	/** Whether the brightness of the display can be set */
+	supportsBrightness: boolean
 }>
 
+/**
+ * The properties of a model which are known without a device present.
+ * The identity of the model is applied when its `MXConsoleModelDefinition` is built
+ */
+export type MXConsoleStaticProperties = Omit<MXConsoleProperties, 'model' | 'productName'>
+
 /** The properties of a device which has a display */
-export type MXConsolePanelProperties = MXConsoleProperties & Readonly<{ PANEL_SIZE: Dimension }>
+export type MXConsolePanelProperties = MXConsoleProperties & Readonly<{ panelSize: Dimension }>
 
 export interface MXConsoleServicesDefinition {
+	modelInfo: MXConsoleModelInfo
 	deviceProperties: MXConsoleProperties
 	events: CallbackHook<MXCreativeConsoleEvents>
 	/** Omitted by devices with nothing to configure, such as a device without a display */
@@ -57,19 +72,27 @@ export interface MXConsoleServicesDefinition {
 }
 
 export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> implements MXCreativeConsole {
-	get CONTROLS(): Readonly<MXConsoleControlDefinition[]> {
-		return this.deviceProperties.CONTROLS
+	get modelInfo(): MXConsoleModelInfo {
+		return this.#modelInfo
 	}
 
-	get MODEL(): DeviceModelId {
-		return this.deviceProperties.MODEL
+	/** @deprecated Use `modelInfo.controls` instead */
+	get CONTROLS(): Readonly<MXConsoleControlDefinition[]> {
+		return this.deviceProperties.controls
 	}
+
+	/** @deprecated Use `modelInfo.id` instead */
+	get MODEL(): DeviceModelId {
+		return this.deviceProperties.model
+	}
+	/** @deprecated Use `modelInfo.name` instead */
 	get PRODUCT_NAME(): string {
-		return this.deviceProperties.PRODUCT_NAME
+		return this.deviceProperties.productName
 	}
 
 	protected readonly device: HIDDevice
 	protected readonly deviceProperties: Readonly<MXConsoleProperties>
+	readonly #modelInfo: MXConsoleModelInfo
 	// readonly #options: Readonly<Required<OpenMXConsoleOptions>>
 	readonly #propertiesService: PropertiesService | undefined
 	readonly #buttonsLcdService: ButtonsLcdDisplayService | undefined
@@ -84,6 +107,7 @@ export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> impleme
 		super()
 
 		this.device = device
+		this.#modelInfo = services.modelInfo
 		this.deviceProperties = services.deviceProperties
 		// this.#options = options
 		this.#propertiesService = services.properties
@@ -104,7 +128,7 @@ export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> impleme
 		keyIndex: KeyIndex,
 		feedbackType: MXConsoleButtonControlDefinition['feedbackType'] | null,
 	): void {
-		const buttonControl = this.deviceProperties.CONTROLS.find(
+		const buttonControl = this.deviceProperties.controls.find(
 			(control): control is MXConsoleButtonControlDefinition =>
 				control.type === 'button' && control.index === keyIndex,
 		)
@@ -120,7 +144,7 @@ export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> impleme
 
 	/** The service backing everything drawn to the device, which devices without a display do not have */
 	#getButtonsLcdService(): ButtonsLcdDisplayService {
-		if (!this.#buttonsLcdService) throw new Error(`${this.PRODUCT_NAME} does not have a display`)
+		if (!this.#buttonsLcdService) throw new Error(`${this.deviceProperties.productName} does not have a display`)
 		return this.#buttonsLcdService
 	}
 
@@ -137,13 +161,15 @@ export class MXConsoleBase extends EventEmitter<MXCreativeConsoleEvents> impleme
 	}
 
 	public async setBrightness(percentage: number): Promise<void> {
-		if (!this.#propertiesService) throw new Error(`${this.PRODUCT_NAME} does not support setting the brightness`)
+		if (!this.#propertiesService)
+			throw new Error(`${this.deviceProperties.productName} does not support setting the brightness`)
 
 		return this.#propertiesService.setBrightness(percentage)
 	}
 
 	public async resetToLogo(): Promise<void> {
-		if (!this.#propertiesService) throw new Error(`${this.PRODUCT_NAME} does not have a logo to reset to`)
+		if (!this.#propertiesService)
+			throw new Error(`${this.deviceProperties.productName} does not have a logo to reset to`)
 
 		return this.#propertiesService.resetToLogo()
 		// const finish = new Uint8Array(20)

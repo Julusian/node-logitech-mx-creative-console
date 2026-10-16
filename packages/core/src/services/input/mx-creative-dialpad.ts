@@ -35,9 +35,9 @@ export class DialpadInputService implements MXCreativeConsoleInputService {
 		this.#eventSource = eventSource
 		this.#invertedDialHidIndexes = invertedDialHidIndexes
 
-		for (const control of deviceProperties.CONTROLS) {
+		for (const control of deviceProperties.controls) {
 			if (control.type === 'button') {
-				this.#buttonControlsByCid.set(control.hidId, control)
+				this.#buttonControlsByCid.set(control.hidIndex, control)
 			} else {
 				this.#encoderControlsByHidIndex.set(control.hidIndex, control)
 			}

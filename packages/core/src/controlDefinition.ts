@@ -1,16 +1,38 @@
 import type { Coordinate, Dimension } from './id.js'
 
+/**
+ * A rectangle on the face of a device, with the origin at its top left and `y` increasing downwards.
+ * Distances are in the units of `MXConsoleModelInfo.faceSize`; for models with a panel those are panel
+ * pixels, so these bounds are also the region the control occupies in an image filling the panel.
+ */
+export interface MXConsoleControlBounds {
+	x: number
+	y: number
+	width: number
+	height: number
+}
+
 export interface MXConsoleControlDefinitionBase {
+	id: string
 	type: 'button' | 'encoder'
 
 	row: number
 	column: number
+
+	/** Where this control sits on the face, within `MXConsoleModelInfo.faceSize` */
+	bounds: MXConsoleControlBounds
 }
 
 export interface MXConsoleButtonControlDefinitionBase extends MXConsoleControlDefinitionBase {
 	type: 'button'
 
 	index: number
+	/** @internal on wire HID index of this button */
+	hidIndex: number
+	/**
+	 * @internal on wire HID index of this button
+	 * @deprecated Use `hidIndex` instead
+	 */
 	hidId: number
 
 	feedbackType: 'none' | 'lcd'
@@ -23,6 +45,7 @@ export interface MXConsoleButtonControlDefinitionLcdFeedback extends MXConsoleBu
 	feedbackType: 'lcd'
 
 	pixelSize: Dimension
+	/** @deprecated Use the `x` and `y` of `bounds` instead */
 	pixelPosition: Coordinate
 }
 
@@ -33,6 +56,7 @@ export interface MXConsoleEncoderControlDefinition extends MXConsoleControlDefin
 	type: 'encoder'
 
 	index: number
+	/** @internal on wire HID index of this encoder */
 	hidIndex: number
 
 	/** Whether the encoder has an led */

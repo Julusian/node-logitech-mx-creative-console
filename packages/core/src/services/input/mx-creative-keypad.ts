@@ -17,10 +17,10 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 		this.deviceProperties = deviceProperties
 		this.#eventSource = eventSource
 
-		for (const control of this.deviceProperties.CONTROLS) {
+		for (const control of this.deviceProperties.controls) {
 			if (control.type !== 'button') continue
 
-			this.#buttonControlsByEncoded.set(control.hidId, control)
+			this.#buttonControlsByEncoded.set(control.hidIndex, control)
 		}
 	}
 
@@ -55,7 +55,7 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 			const control = this.#buttonControlsByEncoded.get(value)
 			if (!control) continue
 
-			pushedControlIds.add(control.hidId)
+			pushedControlIds.add(control.hidIndex)
 			pushedControls.push(control)
 		}
 
@@ -72,9 +72,9 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 
 		for (const control of pushedControls) {
 			// Check if already pressed
-			if (this.#pushedButtons.has(control.hidId)) continue
+			if (this.#pushedButtons.has(control.hidIndex)) continue
 
-			this.#pushedButtons.add(control.hidId)
+			this.#pushedButtons.add(control.hidIndex)
 			this.#eventSource.emit('down', control)
 		}
 	}
@@ -92,7 +92,7 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 			const control = this.#buttonControlsByEncoded.get(value)
 			if (!control) continue
 
-			pushedControlIds.add(control.hidId)
+			pushedControlIds.add(control.hidIndex)
 			pushedControls.push(control)
 		}
 
@@ -109,9 +109,9 @@ export class KeypadInputService implements MXCreativeConsoleInputService {
 
 		for (const control of pushedControls) {
 			// Check if already pressed
-			if (this.#pushedArrowButtons.has(control.hidId)) continue
+			if (this.#pushedArrowButtons.has(control.hidIndex)) continue
 
-			this.#pushedArrowButtons.add(control.hidId)
+			this.#pushedArrowButtons.add(control.hidIndex)
 			this.#eventSource.emit('down', control)
 		}
 	}

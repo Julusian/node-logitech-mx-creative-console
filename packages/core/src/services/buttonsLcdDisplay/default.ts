@@ -26,13 +26,13 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 
 		const keys = new Map<number, Region>()
 		for (const control of this.getLcdButtonControls()) {
-			keys.set(control.index, { ...control.pixelPosition, ...control.pixelSize })
+			keys.set(control.index, { ...control.bounds })
 		}
-		this.#drawQueue = new LcdDrawQueue(imageWriter, imagePacker, transport, keys, deviceProperties.PANEL_SIZE)
+		this.#drawQueue = new LcdDrawQueue(imageWriter, imagePacker, transport, keys, deviceProperties.panelSize)
 	}
 
 	private getLcdButtonControls(): MXConsoleButtonControlDefinitionLcdFeedback[] {
-		return this.#deviceProperties.CONTROLS.filter(
+		return this.#deviceProperties.controls.filter(
 			(control): control is MXConsoleButtonControlDefinitionLcdFeedback =>
 				control.type === 'button' && control.feedbackType === 'lcd',
 		)
@@ -184,7 +184,7 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 	}
 
 	private getLcdButtonControl(keyIndex: KeyIndex): MXConsoleButtonControlDefinitionLcdFeedback {
-		const control = this.#deviceProperties.CONTROLS.find(
+		const control = this.#deviceProperties.controls.find(
 			(control): control is MXConsoleButtonControlDefinition =>
 				control.type === 'button' && control.index === keyIndex,
 		)
