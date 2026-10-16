@@ -3,7 +3,7 @@ import type {
 	MXConsoleButtonControlDefinitionLcdFeedback,
 } from '../../controlDefinition.js'
 import type { HIDDevice } from '../../hid-device.js'
-import type { Dimension, KeyIndex } from '../../id.js'
+import type { Coordinate, Dimension, KeyIndex } from '../../id.js'
 import type { MXConsolePanelProperties } from '../../models/base.js'
 import type { FillPanelDimensionsOptions, FillImageOptions, FillPanelOptions } from '../../types.js'
 import type { MXConsoleImageWriter } from '../imageWriter/types.js'
@@ -49,22 +49,25 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 		}
 	}
 
-	private calculateDimensionsFromGridSpan(
-		gridSpan: GridSpan,
-		buttonPixelSize: Dimension,
-		withPadding: boolean | undefined,
-	): Dimension {
-		if (withPadding) {
-			// TODO: Implement padding
-			throw new Error('Not implemented')
-		} else {
-			const rowCount = gridSpan.maxRow - gridSpan.minRow + 1
-			const columnCount = gridSpan.maxCol - gridSpan.minCol + 1
+	private calculateDimensionsFromGridSpan(gridSpan: GridSpan, buttonPixelSize: Dimension): Dimension {
+		const rowCount = gridSpan.maxRow - gridSpan.minRow + 1
+		const columnCount = gridSpan.maxCol - gridSpan.minCol + 1
 
-			// TODO: Consider that different rows/columns could have different dimensions
+		// TODO: Consider that different rows/columns could have different dimensions
 
-			return { width: columnCount * buttonPixelSize.width, height: rowCount * buttonPixelSize.height }
-		}
+		return { width: columnCount * buttonPixelSize.width, height: rowCount * buttonPixelSize.height }
+	}
+
+	/**
+	 * The region of the lcd covered by the buttons, including the gaps between them
+	 */
+	private calculatePaddedBounds(buttonsLcd: MXConsoleButtonControlDefinitionLcdFeedback[]): Coordinate & Dimension {
+		const x = Math.min(...buttonsLcd.map((button) => button.pixelPosition.x))
+		const y = Math.min(...buttonsLcd.map((button) => button.pixelPosition.y))
+		const maxX = Math.max(...buttonsLcd.map((button) => button.pixelPosition.x + button.pixelSize.width))
+		const maxY = Math.max(...buttonsLcd.map((button) => button.pixelPosition.y + button.pixelSize.height))
+
+		return { x, y, width: maxX - x, height: maxY - y }
 	}
 
 	public calculateFillPanelDimensions(options: FillPanelDimensionsOptions | undefined): Dimension | null {
@@ -73,7 +76,12 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 
 		if (!gridSpan || buttonLcdControls.length === 0) return null
 
-		return this.calculateDimensionsFromGridSpan(gridSpan, buttonLcdControls[0].pixelSize, options?.withPadding)
+		if (options?.withPadding) {
+			const bounds = this.calculatePaddedBounds(buttonLcdControls)
+			return { width: bounds.width, height: bounds.height }
+		}
+
+		return this.calculateDimensionsFromGridSpan(gridSpan, buttonLcdControls[0].pixelSize)
 	}
 
 	public async clearPanel(): Promise<void> {
@@ -88,7 +96,9 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 			blackBuffer,
 			{ format: 'rgba', offset: 0, stride: this.#deviceProperties.PANEL_SIZE.width * 4 },
 			this.#deviceProperties.PANEL_SIZE,
+			this.#imageWriter.maxImageByteLength,
 		)
+		if (!byteBuffer) throw new Error('Failed to encode image small enough for the device')
 
 		const packets = this.#imageWriter.generateFillImageWrites(
 			{ pixelSize: this.#deviceProperties.PANEL_SIZE, pixelPosition: { x: 0, y: 0 } },
@@ -201,11 +211,9 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 			throw new Error(`Panel does not support being filled`)
 		}
 
-		const panelDimensions = this.calculateDimensionsFromGridSpan(
-			panelGridSpan,
-			buttonLcdControls[0].pixelSize,
-			options?.withPadding,
-		)
+		const panelDimensions = options?.withPadding
+			? this.calculatePaddedBounds(buttonLcdControls)
+			: this.calculateDimensionsFromGridSpan(panelGridSpan, buttonLcdControls[0].pixelSize)
 
 		const expectedByteCount = sourceFormat.length * panelDimensions.width * panelDimensions.height
 		if (imageBuffer.length !== expectedByteCount) {
@@ -214,30 +222,76 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 			)
 		}
 
-		const stride = panelDimensions.width * sourceFormat.length
+		// The whole panel is drawn as a single image, as drawing each button in turn visibly ripples across the panel
+		const bounds = this.calculatePaddedBounds(buttonLcdControls)
+		const paddedStride = bounds.width * sourceFormat.length
+		const paddedBuffer = options?.withPadding
+			? imageBuffer
+			: this.padPanelBuffer(imageBuffer, sourceFormat.length, panelGridSpan, buttonLcdControls, bounds)
 
-		const ps: Array<Promise<void>> = []
-		for (const control of buttonLcdControls) {
-			const controlRow = control.row - panelGridSpan.minRow
-			const controlCol = control.column - panelGridSpan.minCol
+		const byteBuffer = await this.#imagePacker.convertPixelBuffer(
+			paddedBuffer,
+			{ format: sourceFormat, offset: 0, stride: paddedStride },
+			bounds,
+			this.#imageWriter.maxImageByteLength,
+		)
 
-			// TODO: Consider that different rows/columns could have different dimensions
-			const iconSize = control.pixelSize.width * sourceFormat.length
-
-			const rowOffset = stride * controlRow * control.pixelSize.height
-			const colOffset = controlCol * iconSize
-
-			// TODO: Implement padding
-			ps.push(
-				this.fillImageRangeControl(control, imageBuffer, {
-					format: sourceFormat,
-					offset: rowOffset + colOffset,
-					stride,
-				}),
+		if (byteBuffer) {
+			const packets = this.#imageWriter.generateFillImageWrites(
+				{ pixelSize: bounds, pixelPosition: bounds },
+				byteBuffer,
+			)
+			await this.#device.sendReports(packets)
+		} else {
+			// The image is too detailed to fit in a single write, so fall back to drawing each button individually
+			await Promise.all(
+				buttonLcdControls.map(async (control) =>
+					this.fillImageRangeControl(control, paddedBuffer, {
+						format: sourceFormat,
+						offset:
+							(control.pixelPosition.y - bounds.y) * paddedStride +
+							(control.pixelPosition.x - bounds.x) * sourceFormat.length,
+						stride: paddedStride,
+					}),
+				),
 			)
 		}
+	}
 
-		await Promise.all(ps)
+	/**
+	 * Insert the gaps between the buttons into an image which excludes them, leaving the gaps black
+	 */
+	private padPanelBuffer(
+		imageBuffer: Uint8Array,
+		bytesPerPixel: number,
+		gridSpan: GridSpan,
+		buttonsLcd: MXConsoleButtonControlDefinitionLcdFeedback[],
+		bounds: Coordinate & Dimension,
+	): Uint8Array {
+		const panelDimensions = this.calculateDimensionsFromGridSpan(gridSpan, buttonsLcd[0].pixelSize)
+		const sourceStride = panelDimensions.width * bytesPerPixel
+		const paddedStride = bounds.width * bytesPerPixel
+
+		const paddedBuffer = new Uint8Array(paddedStride * bounds.height)
+
+		for (const control of buttonsLcd) {
+			// TODO: Consider that different rows/columns could have different dimensions
+			const sourceX = (control.column - gridSpan.minCol) * control.pixelSize.width
+			const sourceY = (control.row - gridSpan.minRow) * control.pixelSize.height
+			const targetX = control.pixelPosition.x - bounds.x
+			const targetY = control.pixelPosition.y - bounds.y
+			const rowByteCount = control.pixelSize.width * bytesPerPixel
+
+			for (let y = 0; y < control.pixelSize.height; y++) {
+				const sourceOffset = (sourceY + y) * sourceStride + sourceX * bytesPerPixel
+				paddedBuffer.set(
+					imageBuffer.subarray(sourceOffset, sourceOffset + rowByteCount),
+					(targetY + y) * paddedStride + targetX * bytesPerPixel,
+				)
+			}
+		}
+
+		return paddedBuffer
 	}
 
 	private async fillImageRangeControl(
@@ -252,7 +306,9 @@ export class DefaultButtonsLcdService implements ButtonsLcdDisplayService {
 			imageBuffer,
 			sourceOptions,
 			buttonControl.pixelSize,
+			this.#imageWriter.maxImageByteLength,
 		)
+		if (!byteBuffer) throw new Error('Failed to encode image small enough for the device')
 
 		const packets = this.#imageWriter.generateFillImageWrites(
 			{ pixelSize: buttonControl.pixelSize, pixelPosition: buttonControl.pixelPosition },

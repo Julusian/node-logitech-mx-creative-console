@@ -2,7 +2,16 @@ import { uint8ArrayToDataView } from '../../util.js'
 import type { MXConsoleImageWriter, MXConsoleImageWriterProps } from './types.js'
 
 export class MXConsoleDefaultImageWriter implements MXConsoleImageWriter<MXConsoleImageWriterProps> {
+	// The length is sent as a uint16
+	public readonly maxImageByteLength = 0xffff
+
 	public generateFillImageWrites(props: MXConsoleImageWriterProps, byteBuffer: Uint8Array): Uint8Array[] {
+		if (byteBuffer.length > this.maxImageByteLength) {
+			throw new RangeError(
+				`Image of ${byteBuffer.length} bytes exceeds the maximum of ${this.maxImageByteLength} bytes`,
+			)
+		}
+
 		const MAX_PACKET_SIZE = 4095
 
 		const result: Uint8Array[] = []

@@ -50,6 +50,6 @@ export class MXCreativeConsoleWeb extends MXCreativeConsoleProxy {
 		if (!dimensions) throw new Error('Panel does not support filling')
 
 		const data = ctx.getImageData(0, 0, dimensions.width, dimensions.height)
-		return this.device.fillPanelBuffer(data.data, { format: 'rgba' })
+		return this.device.fillPanelBuffer(data.data, { ...options, format: 'rgba' })
 	}
 }

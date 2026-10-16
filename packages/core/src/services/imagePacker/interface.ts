@@ -7,9 +7,15 @@ export interface InternalFillImageOptions extends FillImageOptions {
 }
 
 export interface ButtonLcdImagePacker {
+	/**
+	 * Convert a pixel buffer into the bytes to send to the device
+	 * @param maxByteLength The largest result the device will accept
+	 * @returns The packed image, or null if it could not be made small enough
+	 */
 	convertPixelBuffer(
 		sourceBuffer: Uint8Array,
 		sourceOptions: InternalFillImageOptions,
 		targetSize: Dimension,
-	): Promise<Uint8Array>
+		maxByteLength: number,
+	): Promise<Uint8Array | null>
 }

@@ -14,7 +14,20 @@ import type { PropertiesService } from '../services/properties/interface.js'
 import type { CallbackHook } from '../services/callback-hook.js'
 import type { MXCreativeConsoleInputService } from '../services/input/interface.js'
 
-export type EncodeJPEGHelper = (buffer: Uint8Array, width: number, height: number) => Promise<Uint8Array>
+export interface EncodeJPEGHelperOptions {
+	/**
+	 * The quality to encode at, 1-100.
+	 * Provided when the default quality produced an image too large to send to the device.
+	 */
+	quality?: number
+}
+
+export type EncodeJPEGHelper = (
+	buffer: Uint8Array,
+	width: number,
+	height: number,
+	options?: EncodeJPEGHelperOptions,
+) => Promise<Uint8Array>
 
 export interface OpenMXConsoleOptions {
 	encodeJPEG?: EncodeJPEGHelper

@@ -1,11 +1,19 @@
+import type { EncodeJPEGHelperOptions } from '@logitech-mx-creative-console/core'
+
 /**
  * The default JPEG encoder.
  * Utilises a hidden canvas to convert a byte array buffer into a jpeg
  * @param buffer The buffer to convert
  * @param width Width of the image
- * @param height Hieght of the image
+ * @param height Height of the image
+ * @param options Options for the encoding
  */
-export async function encodeJPEG(buffer: Uint8Array, width: number, height: number): Promise<Uint8Array> {
+export async function encodeJPEG(
+	buffer: Uint8Array,
+	width: number,
+	height: number,
+	options?: EncodeJPEGHelperOptions,
+): Promise<Uint8Array> {
 	const blob = await new Promise<Blob>((resolve, reject) => {
 		const canvas = document.createElement('canvas')
 		canvas.width = width
@@ -24,7 +32,7 @@ export async function encodeJPEG(buffer: Uint8Array, width: number, height: numb
 					}
 				},
 				'image/jpeg',
-				0.9,
+				(options?.quality ?? 90) / 100,
 			)
 		} else {
 			reject(new Error('Failed to get canvas context'))

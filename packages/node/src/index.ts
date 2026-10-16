@@ -1,4 +1,8 @@
-import type { OpenMXConsoleOptions, MXCreativeConsole } from '@logitech-mx-creative-console/core'
+import type {
+	OpenMXConsoleOptions,
+	MXCreativeConsole,
+	EncodeJPEGHelperOptions,
+} from '@logitech-mx-creative-console/core'
 import { DEVICE_MODELS, VENDOR_ID, performInitWrites } from '@logitech-mx-creative-console/core'
 import * as HID from 'node-hid'
 import { NodeHIDDevice, MXCreativeConsoleDeviceInfo } from './hid-device.js'
@@ -78,8 +82,18 @@ export async function openMxCreativeConsole(
 		: undefined
 
 	const options: Required<OpenMXConsoleOptions> = {
-		encodeJPEG: async (buffer: Uint8Array, width: number, height: number) =>
-			encodeJPEG(buffer, width, height, jpegOptions),
+		encodeJPEG: async (
+			buffer: Uint8Array,
+			width: number,
+			height: number,
+			helperOptions?: EncodeJPEGHelperOptions,
+		) =>
+			encodeJPEG(
+				buffer,
+				width,
+				height,
+				helperOptions?.quality !== undefined ? { ...jpegOptions, quality: helperOptions.quality } : jpegOptions,
+			),
 		...userOptions,
 	}
 

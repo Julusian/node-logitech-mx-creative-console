@@ -13,6 +13,10 @@ export interface FillImageOptions {
 export interface FillPanelOptions extends FillImageOptions, FillPanelDimensionsOptions {}
 
 export interface FillPanelDimensionsOptions {
+	/**
+	 * Whether the image includes the gaps between the buttons.
+	 * When false (the default), the gaps are excluded and the image is split between the buttons
+	 */
 	withPadding?: boolean
 }
 
