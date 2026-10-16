@@ -849,7 +849,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@logitech-mx-creative-console/core@npm:0.3.0, @logitech-mx-creative-console/core@workspace:packages/core":
+"@logitech-mx-creative-console/core@npm:0.4.0, @logitech-mx-creative-console/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@logitech-mx-creative-console/core@workspace:packages/core"
   dependencies:
@@ -863,7 +863,7 @@ __metadata:
   resolution: "@logitech-mx-creative-console/node@workspace:packages/node"
   dependencies:
     "@julusian/jpeg-turbo": "npm:^3.1.0"
-    "@logitech-mx-creative-console/core": "npm:0.3.0"
+    "@logitech-mx-creative-console/core": "npm:0.4.0"
     eventemitter3: "npm:^5.0.4"
     node-hid: "npm:^3.4.0"
     p-queue: "npm:^10.0.0"
@@ -875,17 +875,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@logitech-mx-creative-console/webhid-demo@workspace:packages/webhid-demo"
   dependencies:
-    "@logitech-mx-creative-console/webhid": "npm:0.3.0"
+    "@logitech-mx-creative-console/webhid": "npm:0.4.0"
     html-to-image: "npm:^1.11.13"
     vite: "npm:^8.3.4"
   languageName: unknown
   linkType: soft
 
-"@logitech-mx-creative-console/webhid@npm:0.3.0, @logitech-mx-creative-console/webhid@workspace:packages/webhid":
+"@logitech-mx-creative-console/webhid@npm:0.4.0, @logitech-mx-creative-console/webhid@workspace:packages/webhid":
   version: 0.0.0-use.local
   resolution: "@logitech-mx-creative-console/webhid@workspace:packages/webhid"
   dependencies:
-    "@logitech-mx-creative-console/core": "npm:0.3.0"
+    "@logitech-mx-creative-console/core": "npm:0.4.0"
     "@types/w3c-web-hid": "npm:^1.0.7"
     eventemitter3: "npm:^5.0.4"
     p-queue: "npm:^10.0.0"
