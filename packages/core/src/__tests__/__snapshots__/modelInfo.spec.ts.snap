@@ -7,9 +7,9 @@ exports[`model info > snapshot 1`] = `
       {
         "bounds": {
           "height": 100,
-          "width": 100,
-          "x": 240,
-          "y": 0,
+          "width": 185,
+          "x": 468,
+          "y": 59,
         },
         "column": 2,
         "hasLed": false,
@@ -22,10 +22,10 @@ exports[`model info > snapshot 1`] = `
       },
       {
         "bounds": {
-          "height": 100,
-          "width": 100,
-          "x": 120,
-          "y": 120,
+          "height": 400,
+          "width": 400,
+          "x": 164,
+          "y": 220,
         },
         "column": 1,
         "hasLed": false,
@@ -38,10 +38,10 @@ exports[`model info > snapshot 1`] = `
       },
       {
         "bounds": {
-          "height": 100,
-          "width": 100,
-          "x": 0,
-          "y": 0,
+          "height": 116,
+          "width": 116,
+          "x": 48,
+          "y": 50,
         },
         "column": 0,
         "feedbackType": "none",
@@ -54,10 +54,10 @@ exports[`model info > snapshot 1`] = `
       },
       {
         "bounds": {
-          "height": 100,
-          "width": 100,
-          "x": 120,
-          "y": 0,
+          "height": 116,
+          "width": 116,
+          "x": 182,
+          "y": 50,
         },
         "column": 1,
         "feedbackType": "none",
@@ -70,10 +70,10 @@ exports[`model info > snapshot 1`] = `
       },
       {
         "bounds": {
-          "height": 100,
-          "width": 100,
-          "x": 0,
-          "y": 120,
+          "height": 116,
+          "width": 116,
+          "x": 48,
+          "y": 556,
         },
         "column": 0,
         "feedbackType": "none",
@@ -86,10 +86,10 @@ exports[`model info > snapshot 1`] = `
       },
       {
         "bounds": {
-          "height": 100,
-          "width": 100,
-          "x": 240,
-          "y": 120,
+          "height": 116,
+          "width": 116,
+          "x": 571,
+          "y": 556,
         },
         "column": 2,
         "feedbackType": "none",
@@ -102,8 +102,8 @@ exports[`model info > snapshot 1`] = `
       },
     ],
     "faceSize": {
-      "height": 220,
-      "width": 340,
+      "height": 734,
+      "width": 744,
     },
     "features": {
       "brightness": false,
@@ -341,10 +341,10 @@ exports[`model info > snapshot 1`] = `
       },
       {
         "bounds": {
-          "height": 40,
+          "height": 70,
           "width": 118,
           "x": 23,
-          "y": 520,
+          "y": 480,
         },
         "column": 0,
         "feedbackType": "none",
@@ -357,10 +357,10 @@ exports[`model info > snapshot 1`] = `
       },
       {
         "bounds": {
-          "height": 40,
+          "height": 70,
           "width": 118,
-          "x": 339,
-          "y": 520,
+          "x": 181,
+          "y": 480,
         },
         "column": 1,
         "feedbackType": "none",
@@ -373,7 +373,7 @@ exports[`model info > snapshot 1`] = `
       },
     ],
     "faceSize": {
-      "height": 560,
+      "height": 550,
       "width": 480,
     },
     "features": {

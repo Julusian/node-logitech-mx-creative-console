@@ -108,7 +108,7 @@ const devices = await reopenMXCreativeConsoleDevices()
 console.log(devices[0]?.modelInfo.name)
 ```
 
-For the Keypad, the `bounds` are in panel pixels, so the bounds of a button are also the region it occupies in an image filling the panel. The page buttons below the panel, and every control on the Dialpad, are currently estimates rather than measured.
+For the Keypad, the `bounds` are in panel pixels, so the bounds of a button are also the region it occupies in an image filling the panel. The Dialpad uses the same units, so the two can be drawn to scale. The controls outside the panel are measured from a product photo, so are approximate.
 
 ## Contributing
 
